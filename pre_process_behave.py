@@ -1,5 +1,5 @@
-from .datasets.dataloader import CreateDataLoader
-from .datasets.train_options import TrainOptions
+from dataset.dataloader import CreateDataLoader
+from dataset.train_options import TrainOptions
 import wandb
 
 
