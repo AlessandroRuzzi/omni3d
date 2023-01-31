@@ -104,7 +104,7 @@ class BaseOptions():
 
         # added by yc
         self.opt.device = 'cuda'
-
+        """
         if self.opt.model in ['vqvae', 'pvqvae']:
             configs = OmegaConf.load(self.opt.vq_cfg)
             mparam = configs.model.params
@@ -121,7 +121,7 @@ class BaseOptions():
             )
         elif self.opt.model in ['rand_tf']:
             configs = OmegaConf.load(self.opt.tf_cfg)
-
+        
         # if is in training phase, make the logs_dir more verbose about hyper-parameters
         if self.opt.isTrain:
             if 'transformer' in self.opt.model:
@@ -144,9 +144,9 @@ class BaseOptions():
                 name = self.opt.name
         else:
             name = self.opt.name
-
+        
         self.opt.name = name
-
+        """
         self.opt.gpu_ids_str = self.opt.gpu_ids
 
         str_ids = self.opt.gpu_ids.split(',')
