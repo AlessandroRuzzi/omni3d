@@ -162,29 +162,5 @@ class BaseOptions():
 
         args = vars(self.opt)
 
-        print('------------ Options -------------')
-        for k, v in sorted(args.items()):
-            print('%s: %s' % (str(k), str(v)))
-        print('-------------- End ----------------')
-
-        # save to the disk
-        if self.opt.isTrain:
-            expr_dir = os.path.join(self.opt.logs_dir, self.opt.name)
-
-            utils.util.mkdirs(expr_dir)
-            file_name = os.path.join(expr_dir, 'opt.txt')
-            with open(file_name, 'wt') as opt_file:
-                opt_file.write('------------ Options -------------\n')
-                for k, v in sorted(args.items()):
-                    opt_file.write('%s: %s\n' % (str(k), str(v)))
-                opt_file.write('-------------- End ----------------\n')
-
-            # tensorboard writer
-            tb_dir = '%s/tboard' % expr_dir
-            if not os.path.exists(tb_dir):
-                os.makedirs(tb_dir)
-            self.opt.tb_dir = tb_dir
-            writer = SummaryWriter(log_dir=tb_dir)
-            self.opt.writer = writer
 
         return self.opt
