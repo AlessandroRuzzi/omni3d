@@ -28,7 +28,7 @@ def __calc_patch_coord(bbox_center, projector, nP, l):
         # Then we need to project them to the image plane
         res.append(projector[i](xyz))
 
-        return np.array(res).view(N, nP, nP, nP, 2)
+        return torch.from_numpy(np.array(res)).view(N, nP, nP, nP, 2).detach().cpu().numpy()
 
 def calc_patch_coord(bbox, projector):
     bbox_center = bbox[:, :3]
