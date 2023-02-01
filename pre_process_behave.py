@@ -102,6 +102,7 @@ for id_data,dl in enumerate([(train_dl,"Train"), (val_dl,"Validation"), (test_dl
         patch_coord_projected, bbox_corners = calc_patch_coord(data['bbox'].cuda(), projector)
 
         bbox = data['bbox'].detach().cpu().numpy()
+        obj_length = float(bbox[0,3])
 
         print(bbox,patch_coord_projected.shape, bbox_corners.shape)
 
@@ -119,7 +120,7 @@ for id_data,dl in enumerate([(train_dl,"Train"), (val_dl,"Validation"), (test_dl
                             "bbox2D_trunc"	  : [],			# 2D corners projected from bbox3D then truncated
                             "bbox3D_cam"	  : bbox_corners.tolist(),
                             "center_cam"	  : bbox[0,:3].tolist(),				
-                            #"dimensions"	  : [bbox[0,3], bbox[0,3], bbox[0,3]],
+                            "dimensions"	  : [obj_length, obj_length, obj_length],
                             "R_cam"		      : np.eye(3).tolist(),	
 
                             "behind_camera"	  : -1,				
