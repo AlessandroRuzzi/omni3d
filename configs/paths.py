@@ -28,10 +28,10 @@ else:
     dataroot = 'data'
     logroot = 'logs'
     # BEHAVE dataset paths
-    behave_objs_path = '/content/drive/MyDrive/Drive/Datasets/FullBehave/objects'
-    behave_seqs_path = '/content/drive/MyDrive/Drive/Datasets/FullBehave/sequences'
-    behave_calibs_path = '/content/drive/MyDrive/Drive/Datasets/FullBehave/calibs'
+    behave_objs_path = '/data/xiwang/behave/objects'
+    behave_seqs_path = '/data/xiwang/behave/sequences'
+    behave_calibs_path = '/data/xiwang/behave/calibs'
     smpl_assets_root = "lib_smpl/assets"
-    smpl_model_root= "/content/drive/MyDrive/Drive/Models/mano_v1_2/models" 
-    code = "/content/drive/MyDrive/Drive/Models/interaction-learning/AutoSDF-code" # path to your project main folder
+    smpl_model_root= "/local/home/aruzzi/interaction-learning/AutoSDF-code/saved_ckpt/mano_v1_2/models"
+    code = "/local/aruzzi/interaction-learning/AutoSDF-code" # path to your project main folder
 
