@@ -81,7 +81,7 @@ for id_data,dl in enumerate([(train_dl,"Train"), (val_dl,"Validation"), (test_dl
                             "width"			  : 2048,
                             "height"		  : 1536,
                             "file_path"		  : data["img_path"],
-                            "K"			      : data['calibration_matrix'] ,
+                            "K"			      : data['calibration_matrix'].detach().cpu().numpy() ,
                             "src_90_rotate"	  : 0,			
                             "src_flagged"	  : False,	
 
@@ -101,7 +101,7 @@ for id_data,dl in enumerate([(train_dl,"Train"), (val_dl,"Validation"), (test_dl
 
         bbox = data['bbox'].detach().cpu().numpy()
 
-        print(bbox,patch_coord_projected, bbox_corners)
+        print(bbox,patch_coord_projected)
 
         object.append({
 
