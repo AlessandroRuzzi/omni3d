@@ -81,7 +81,7 @@ for id_data,dl in enumerate([(train_dl,"Train"), (val_dl,"Validation"), (test_dl
                             "width"			  : 2048,
                             "height"		  : 1536,
                             "file_path"		  : data["img_path"],
-                            "K"			      : data['calibration_matrix'].detach().cpu().numpy() ,
+                            "K"			      : data['calibration_matrix'].detach().cpu().numpy().tolist() ,
                             "src_90_rotate"	  : 0,			
                             "src_flagged"	  : False,	
 
@@ -112,12 +112,12 @@ for id_data,dl in enumerate([(train_dl,"Train"), (val_dl,"Validation"), (test_dl
                             
                             "valid3D"		  : True,				   
                             "bbox2D_tight"	  : [-1,-1,-1,-1],		
-                            "bbox2D_proj"	  : patch_coord_projected,			# 2D corners projected from bbox3D
+                            "bbox2D_proj"	  : patch_coord_projected.tolist(),			# 2D corners projected from bbox3D
                             "bbox2D_trunc"	  : [],			# 2D corners projected from bbox3D then truncated
-                            "bbox3D_cam"	  : bbox_corners,
-                            "center_cam"	  : [bbox[0,:3]],				
+                            "bbox3D_cam"	  : bbox_corners.tolist(),
+                            "center_cam"	  : [bbox[0,:3]].tolist(),				
                             "dimensions"	  : [bbox[0,3], bbox[0,3], bbox[0,3]],
-                            "R_cam"		      : np.eye(3),	
+                            "R_cam"		      : np.eye(3).tolist(),	
 
                             "behind_camera"	  : -1,				
                             "visibility"	  : -1, 		
