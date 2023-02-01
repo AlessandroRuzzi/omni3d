@@ -97,7 +97,7 @@ for id_data,dl in enumerate([(train_dl,"Train"), (val_dl,"Validation"), (test_dl
         bcu.get_local_projector(c, d) for c, d in zip(calibration_matrix, dist_coefs)
          ]
 
-        patch_coord_projected, bbox_corners = calc_patch_coord(data['bbox'], projector)
+        patch_coord_projected, bbox_corners = calc_patch_coord(data['bbox'].cuda(), projector)
 
         bbox = data['bbox'].detach().cpu().numpy()
 
