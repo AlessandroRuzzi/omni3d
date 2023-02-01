@@ -119,7 +119,7 @@ for id_data,dl in enumerate([(train_dl,"Train"), (val_dl,"Validation"), (test_dl
                             "bbox2D_trunc"	  : [],			# 2D corners projected from bbox3D then truncated
                             #"bbox3D_cam"	  : bbox_corners.tolist(),
                             #"center_cam"	  : bbox[0,:3].tolist(),				
-                            #"dimensions"	  : [bbox[0,3], bbox[0,3], bbox[0,3]],
+                            "dimensions"	  : [bbox[0,3], bbox[0,3], bbox[0,3]],
                             "R_cam"		      : np.eye(3).tolist(),	
 
                             "behind_camera"	  : -1,				
