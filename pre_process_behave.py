@@ -116,9 +116,9 @@ for id_data,dl in enumerate([(train_dl,"Train"), (val_dl,"Validation"), (test_dl
                             
                             "valid3D"		  : True,				   
                             "bbox2D_tight"	  : [-1,-1,-1,-1],		
-                            "bbox2D_proj"	  : patch_coord_projected.tolist(),			# 2D corners projected from bbox3D
-                            "bbox2D_trunc"	  : [],			# 2D corners projected from bbox3D then truncated
-                            "bbox3D_cam"	  : bbox_corners.tolist(),
+                            "bbox2D_proj"	  : [],			
+                            "bbox2D_trunc"	  : [],			
+                            "bbox3D_cam"	  : [],
                             "center_cam"	  : bbox[0,:3].tolist(),				
                             "dimensions"	  : [obj_length, obj_length, obj_length],
                             "R_cam"		      : np.eye(3).tolist(),	
