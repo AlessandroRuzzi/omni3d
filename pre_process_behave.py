@@ -105,6 +105,7 @@ for id_data,dl in enumerate([(train_dl,"Train"), (val_dl,"Validation"), (test_dl
 
         print(bbox,patch_coord_projected.shape, bbox_corners.shape)
 
+        """
         object.append({
 
                             "id"			  : i,					
@@ -114,7 +115,7 @@ for id_data,dl in enumerate([(train_dl,"Train"), (val_dl,"Validation"), (test_dl
                             
                             "valid3D"		  : True,				   
                             "bbox2D_tight"	  : [-1,-1,-1,-1],		
-                            "bbox2D_proj"	  : patch_coord_projected.tolist(),			# 2D corners projected from bbox3D
+                            "bbox2D_proj"	  : float(patch_coord_projected).tolist(),			# 2D corners projected from bbox3D
                             "bbox2D_trunc"	  : [],			# 2D corners projected from bbox3D then truncated
                             "bbox3D_cam"	  : bbox_corners.tolist(),
                             "center_cam"	  : bbox[0,:3].tolist(),				
@@ -129,6 +130,7 @@ for id_data,dl in enumerate([(train_dl,"Train"), (val_dl,"Validation"), (test_dl
                             "depth_error"	  : -1,				
        
                     })
+        """
         break
 
     dataset['info'] = info
