@@ -103,7 +103,7 @@ for id_data,dl in enumerate([(train_dl,"Train"), (val_dl,"Validation"), (test_dl
 
         bbox = data['bbox'].detach().cpu().numpy()
 
-        print(bbox,patch_coord_projected)
+        print(bbox,patch_coord_projected.shape, bbox_corners.shape)
 
         object.append({
 
