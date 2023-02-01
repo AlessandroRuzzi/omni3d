@@ -7,6 +7,8 @@ import numpy as np
 import torch
 from dataset import behave_camera_utils as bcu
 
+wandb.init(project = "Omni3D")
+
 def __calc_patch_coord(bbox_center, projector, nP, l):
     N = bbox_center.shape[0]
     res = []
