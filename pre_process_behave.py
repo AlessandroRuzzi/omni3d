@@ -59,7 +59,7 @@ train_ds, test_ds = train_dl.dataset, test_dl.dataset
 
 val_ds = val_dl.dataset if val_dl is not None else None
 
-for id_data,dl in enumerate([(train_dl,"Train"), (val_dl,"Validation"), (test_dl,"Test")]):
+for id_data,dl in enumerate([(train_dl,"Train"), (test_dl,"Test")]):
     dataset = {}
     info = {
 
@@ -134,9 +134,9 @@ for id_data,dl in enumerate([(train_dl,"Train"), (val_dl,"Validation"), (test_dl
         #break
 
     dataset['info'] = info
-    dataset['image'] = image
-    dataset['cateogory'] = category
-    dataset['object'] = object
+    dataset['images'] = image
+    dataset['categories'] = category
+    dataset['annotations'] = object
 
     out_file = open(f'/data/aruzzi/Behave/Behave_{dl[1]}.json',"w") 
     json.dump(dataset, out_file, indent = 2)
