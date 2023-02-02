@@ -13,6 +13,7 @@ from pytorch3d.transforms.so3 import (
 from matplotlib.path import Path
 
 from cubercnn import util
+import wandb
 
 def interp_color(dist, bounds=[0, 1], color_lo=(0,0, 250), color_hi=(0, 250, 250)):
 
@@ -179,7 +180,9 @@ def visualize_from_instances(detections, dataset, dataset_name, min_size_test, o
                 draw_3d_box(im, K, [x3d, y3d, z3d, w3d, h3d, l3d], ry3d, color=color, thickness=int(np.round(3*im.shape[0]/500)), draw_back=False)
                 draw_text(im, '{}, z={:.1f}, s={:.2f}'.format(cat, z3d, score), [x1, y1, w, h], scale=0.50*im.shape[0]/500, bg_color=color)
 
-        if write_sample:
+        if write_sample:    
+            images = wandb.Image(im, caption="Image with predicted 3D bounding boxes")
+            wandb.log({"BBOX Detected" : images})
             util.imwrite(im, os.path.join(vis_folder, '{:06d}.jpg'.format(imind)))
     
     # safety in case all rotation matrices failed. 
