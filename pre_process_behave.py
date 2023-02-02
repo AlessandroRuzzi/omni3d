@@ -131,7 +131,7 @@ for id_data,dl in enumerate([(train_dl,"Train"), (val_dl,"Validation"), (test_dl
                             "depth_error"	  : -1,				
        
                     })
-        break
+        #break
 
     dataset['info'] = info
     dataset['image'] = image
