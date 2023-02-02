@@ -81,10 +81,10 @@ def get_filter_settings_from_cfg(cfg=None):
 
 def is_ignore(anno, filter_settings, image_height):
     
-    ignore = anno['behind_camera'] 
-    print("#1 ",ignore)
+    #ignore = anno['behind_camera'] 
+    #print("#1 ",ignore)
     ignore |= (not bool(anno['valid3D']))
-    print("#2 ",ignore)
+    #print("#2 ",ignore)
     if ignore:
         return ignore
 
