@@ -11,8 +11,8 @@ TEST:
 VIS_PERIOD: 111360
 OUTPUT_DIR: "output/behave_example_run"
 DATASETS:
-  TRAIN: ('Behave_Train')
-  TEST: ('Behave_Test') 
+  TRAIN: ('Behave_Train',)
+  TEST: ('Behave_Test',) 
   CATEGORY_NAMES: ('backpack', 'basketball', 'boxlarge', 'boxlong', 'boxmedium','boxsmall', 'boxtiny', 'chairblack','chairwood', 'keyboard', 'monitor', 'plasticcontainer', 'stool', 'suitcase', 'tablesmall', 'tablesquare', 'toolbox', 'trashbin', 'yogaball', 'yogamat')
 MODEL:
   ROI_HEADS:
