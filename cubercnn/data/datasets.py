@@ -83,7 +83,7 @@ def is_ignore(anno, filter_settings, image_height):
     
     #ignore = anno['behind_camera'] 
     #print("#1 ",ignore)
-    ignore |= (not bool(anno['valid3D']))
+    ignore = (not bool(anno['valid3D']))
     #print("#2 ",ignore)
     if ignore:
         return ignore
