@@ -82,8 +82,9 @@ def get_filter_settings_from_cfg(cfg=None):
 def is_ignore(anno, filter_settings, image_height):
     
     ignore = anno['behind_camera'] 
-    ignore |= (not bool(anno['valid3D']))
     print("#1 ",ignore)
+    ignore |= (not bool(anno['valid3D']))
+    print("#2 ",ignore)
     if ignore:
         return ignore
 
@@ -94,8 +95,6 @@ def is_ignore(anno, filter_settings, image_height):
     ignore |= (anno['lidar_pts'] == 0)
     ignore |= (anno['segmentation_pts'] == 0)
     ignore |= (anno['depth_error'] > 0.5)
-
-    print("#2 ",ignore)
     
     # tightly annotated 2D boxes are not always available.
     if filter_settings['modal_2D_boxes'] and 'bbox2D_tight' in anno and anno['bbox2D_tight'][0] != -1:
