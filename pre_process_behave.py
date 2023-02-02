@@ -131,6 +131,7 @@ for id_data,dl in enumerate([(train_dl,"Train"), (test_dl,"Test")]):
                             "depth_error"	  : -1,				
        
                     })
+        print(object)
         #break
 
     dataset['info'] = info
