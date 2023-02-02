@@ -111,6 +111,11 @@ def build_model(cfg, priors=None):
     """
     meta_arch = cfg.MODEL.META_ARCHITECTURE
     model = META_ARCH_REGISTRY.get(meta_arch)(cfg, priors=priors)
+
+    #load checkpoint here
+    #check_dict = torch.load( "checkpoint/cubercnn_Res34_FPN.pth", map_location=torch.device("cpu"))
+    #model.load_state_dict(check_dict)
+
     model.to(torch.device(cfg.MODEL.DEVICE))
     _log_api_usage("modeling.meta_arch." + meta_arch)
     return model

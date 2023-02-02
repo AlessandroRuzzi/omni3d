@@ -93,11 +93,11 @@ for id_data,dl in enumerate([(train_dl,"Train"), (val_dl,"Validation"), (test_dl
             if elem['name'] == data["cat_str"]:
                     pos_category = j
 
-        calibration_matrix = data['calibration_matrix'].cpu().numpy()
-        dist_coefs = data['dist_coefs'].cpu().numpy()
-        projector = [
-        bcu.get_local_projector(c, d) for c, d in zip(calibration_matrix, dist_coefs)
-         ]
+        #calibration_matrix = data['calibration_matrix'].cpu().numpy()
+        #dist_coefs = data['dist_coefs'].cpu().numpy()
+        #projector = [
+        #bcu.get_local_projector(c, d) for c, d in zip(calibration_matrix, dist_coefs)
+        # ]
 
         #patch_coord_projected, bbox_corners = calc_patch_coord(data['bbox'].cuda(), projector)
 
