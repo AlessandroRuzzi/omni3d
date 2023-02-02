@@ -149,6 +149,8 @@ class Omni3D(COCO):
             assert type(dataset)==dict, 'annotation file format {} not supported'.format(type(dataset))
             print('Done (t={:0.2f}s)'.format(time.time()- tic))
 
+            print(dataset['annotations'])
+
             if type(dataset['info']) == list:
                 dataset['info'] = dataset['info'][0]
                 
