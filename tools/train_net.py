@@ -594,6 +594,9 @@ def main(args):
         dataset_paths = [os.path.join('/data/aruzzi/Behave/', name + '.json') for name in cfg.DATASETS.TRAIN]
         datasets = data.Omni3D(dataset_paths, filter_settings=filter_settings)
 
+        print(dataset_paths)
+        
+
         # determine the meta data given the datasets used. 
         data.register_and_store_model_metadata(datasets, cfg.OUTPUT_DIR, filter_settings)
 
