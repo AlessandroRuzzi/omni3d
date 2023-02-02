@@ -80,7 +80,7 @@ def get_filter_settings_from_cfg(cfg=None):
 
 
 def is_ignore(anno, filter_settings, image_height):
-
+    print("#1 ",ignore)
     ignore = anno['behind_camera'] 
     ignore |= (not bool(anno['valid3D']))
 
@@ -94,6 +94,8 @@ def is_ignore(anno, filter_settings, image_height):
     ignore |= (anno['lidar_pts'] == 0)
     ignore |= (anno['segmentation_pts'] == 0)
     ignore |= (anno['depth_error'] > 0.5)
+
+    print("#2 ",ignore)
     
     # tightly annotated 2D boxes are not always available.
     if filter_settings['modal_2D_boxes'] and 'bbox2D_tight' in anno and anno['bbox2D_tight'][0] != -1:
@@ -222,7 +224,6 @@ class Omni3D(COCO):
 
                 ignore = is_ignore(anno, filter_settings, im_height)
 
-                print(ignore)
                 
                 if filter_settings['trunc_2D_boxes'] and 'bbox2D_trunc' in anno and not np.all([val==-1 for val in anno['bbox2D_trunc']]):
                     bbox2D =  BoxMode.convert(anno['bbox2D_trunc'], BoxMode.XYXY_ABS, BoxMode.XYWH_ABS)
