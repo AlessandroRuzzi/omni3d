@@ -105,11 +105,12 @@ def is_ignore(anno, filter_settings, image_height):
 
     # use the projected 3D --> 2D box, which requires a visible 3D cuboid.
     elif 'bbox2D_proj' in anno:
+        print("here")
+        print(anno['bbox2D_proj'])
+        print(anno['bbox'])
         bbox2D =  BoxMode.convert(anno['bbox2D_proj'], BoxMode.XYXY_ABS, BoxMode.XYWH_ABS)
 
     else:
-        print("here")
-        print(anno['bbox'])
         bbox2D = anno['bbox']
 
     ignore |= bbox2D[3] <= filter_settings['min_height_thres']*image_height
