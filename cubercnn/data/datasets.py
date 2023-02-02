@@ -109,6 +109,7 @@ def is_ignore(anno, filter_settings, image_height):
 
     else:
         print("here")
+        print(anno['bbox'])
         bbox2D = anno['bbox']
 
     ignore |= bbox2D[3] <= filter_settings['min_height_thres']*image_height
