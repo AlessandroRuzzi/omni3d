@@ -118,7 +118,7 @@ for id_data,dl in enumerate([(train_dl,"Train"), (val_dl,"Validation"), (test_dl
                             "bbox2D_tight"	  : [-1,-1,-1,-1],		
                             "bbox2D_proj"	  : [-1,-1,-1,-1],			
                             "bbox2D_trunc"	  : [-1,-1,-1,-1],			
-                            "bbox3D_cam"	  : [],
+                            "bbox3D_cam"	  : ones.tolist(),
                             "center_cam"	  : bbox[0,:3].tolist(),				
                             "dimensions"	  : [obj_length, obj_length, obj_length],
                             "R_cam"		      : np.eye(3).tolist(),	
@@ -131,7 +131,7 @@ for id_data,dl in enumerate([(train_dl,"Train"), (val_dl,"Validation"), (test_dl
                             "depth_error"	  : -1,				
        
                     })
-        #break
+        break
 
     dataset['info'] = info
     dataset['image'] = image
