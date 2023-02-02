@@ -594,7 +594,8 @@ def main(args):
         dataset_paths = [os.path.join('/data/aruzzi/Behave/', name + '.json') for name in cfg.DATASETS.TRAIN]
         datasets = data.Omni3D(dataset_paths, filter_settings=filter_settings)
 
-        print(datasets.dataset['info'])
+        print(datasets.dataset['images'])
+        print(datasets.dataset['categories'])
         print(datasets.dataset["annotations"])
 
         print(dataset_paths)
