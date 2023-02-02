@@ -99,14 +99,14 @@ for id_data,dl in enumerate([(train_dl,"Train"), (val_dl,"Validation"), (test_dl
         bcu.get_local_projector(c, d) for c, d in zip(calibration_matrix, dist_coefs)
          ]
 
-        patch_coord_projected, bbox_corners = calc_patch_coord(data['bbox'].cuda(), projector)
+        #patch_coord_projected, bbox_corners = calc_patch_coord(data['bbox'].cuda(), projector)
 
         bbox = data['bbox'].detach().cpu().numpy()
         obj_length = float(bbox[0,3])
 
-        print(bbox,patch_coord_projected.shape, bbox_corners.shape)
-
- 
+        #print(bbox,patch_coord_projected.shape, bbox_corners.shape)
+        ones = -1 * np.ones(32).reshape(8,4)
+        print(ones.shape, ones)
         object.append({
 
                             "id"			  : i,					
@@ -116,8 +116,8 @@ for id_data,dl in enumerate([(train_dl,"Train"), (val_dl,"Validation"), (test_dl
                             
                             "valid3D"		  : True,				   
                             "bbox2D_tight"	  : [-1,-1,-1,-1],		
-                            "bbox2D_proj"	  : [],			
-                            "bbox2D_trunc"	  : [],			
+                            "bbox2D_proj"	  : [-1,-1,-1,-1],			
+                            "bbox2D_trunc"	  : [-1,-1,-1,-1],			
                             "bbox3D_cam"	  : [],
                             "center_cam"	  : bbox[0,:3].tolist(),				
                             "dimensions"	  : [obj_length, obj_length, obj_length],

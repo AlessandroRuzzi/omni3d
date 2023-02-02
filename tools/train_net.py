@@ -47,6 +47,9 @@ from cubercnn.modeling.meta_arch import RCNN3D, build_model
 from cubercnn.modeling.backbone import build_dla_from_vision_fpn_backbone
 from cubercnn import util, vis, data
 import cubercnn.vis.logperf as utils_logperf
+import wandb
+
+wandb.init(project = "Omni3D")
 
 
 MAX_TRAINING_ATTEMPTS = 10
@@ -588,7 +591,7 @@ def main(args):
     else: 
 
         # setup and join the data.
-        dataset_paths = [os.path.join('datasets', 'Omni3D', name + '.json') for name in cfg.DATASETS.TRAIN]
+        dataset_paths = [os.path.join('/data/aruzzi/Behave/', name + '.json') for name in cfg.DATASETS.TRAIN]
         datasets = data.Omni3D(dataset_paths, filter_settings=filter_settings)
 
         # determine the meta data given the datasets used. 
