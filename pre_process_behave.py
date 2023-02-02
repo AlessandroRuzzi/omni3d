@@ -106,7 +106,7 @@ for id_data,dl in enumerate([(train_dl,"Train"), (val_dl,"Validation"), (test_dl
 
         #print(bbox,patch_coord_projected.shape, bbox_corners.shape)
         ones = -1 * np.ones(32).reshape(8,4)
-        print(ones.shape, ones)
+        #print(ones.shape, ones)
         object.append({
 
                             "id"			  : i,					
@@ -131,7 +131,7 @@ for id_data,dl in enumerate([(train_dl,"Train"), (val_dl,"Validation"), (test_dl
                             "depth_error"	  : -1,				
        
                     })
-        break
+        #break
 
     dataset['info'] = info
     dataset['image'] = image
