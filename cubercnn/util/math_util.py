@@ -356,6 +356,7 @@ def compute_priors(cfg, datasets, max_cluster_rounds=1000, min_points_for_std=5)
         scale = np.sqrt(h**2 + w**2)
 
         if (not ignore) and category_name in category_names:
+            print("------------------------here")
             data_raw.append([category_name, w, h, x3d, y3d, z3d, w3d, h3d, l3d, w3d*h3d*l3d, dataset_id, image_id, fy, f, scale])
 
     # TODO pandas is fairly inefficient to rely on for large scale.
@@ -380,7 +381,7 @@ def compute_priors(cfg, datasets, max_cluster_rounds=1000, min_points_for_std=5)
 
     # Each prior is pre-computed per category
     for cat in category_names:
-        
+        print(cat)
         df_cat = df_raw[df_raw.name == cat]        
 
         '''
