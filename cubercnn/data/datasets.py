@@ -215,14 +215,14 @@ class Omni3D(COCO):
             for im_obj in self.dataset['images']:
                 im_height_map[im_obj['id']] = im_obj['height']
 
-            print(self.dataset['annotations'])
-
             # Filter out annotations
             for anno_idx, anno in enumerate(self.dataset['annotations']):
                 
                 im_height = im_height_map[anno['image_id']]
 
                 ignore = is_ignore(anno, filter_settings, im_height)
+
+                print(ignore)
                 
                 if filter_settings['trunc_2D_boxes'] and 'bbox2D_trunc' in anno and not np.all([val==-1 for val in anno['bbox2D_trunc']]):
                     bbox2D =  BoxMode.convert(anno['bbox2D_trunc'], BoxMode.XYXY_ABS, BoxMode.XYWH_ABS)
