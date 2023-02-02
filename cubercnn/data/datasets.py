@@ -87,7 +87,7 @@ def is_ignore(anno, filter_settings, image_height):
     #print("#2 ",ignore)
     if ignore:
         return ignore
-
+    print("#1 ",ignore)
     ignore |= anno['dimensions'][0] <= 0
     ignore |= anno['dimensions'][1] <= 0
     ignore |= anno['dimensions'][2] <= 0
@@ -95,7 +95,7 @@ def is_ignore(anno, filter_settings, image_height):
     ignore |= (anno['lidar_pts'] == 0)
     ignore |= (anno['segmentation_pts'] == 0)
     ignore |= (anno['depth_error'] > 0.5)
-    
+    print("#2 ",ignore)
     # tightly annotated 2D boxes are not always available.
     if filter_settings['modal_2D_boxes'] and 'bbox2D_tight' in anno and anno['bbox2D_tight'][0] != -1:
         bbox2D =  BoxMode.convert(anno['bbox2D_tight'], BoxMode.XYXY_ABS, BoxMode.XYWH_ABS)
@@ -119,7 +119,7 @@ def is_ignore(anno, filter_settings, image_height):
     
     if 'ignore_names' in filter_settings:
         ignore |= anno['category_name'] in filter_settings['ignore_names']
-
+    print("#3 ",ignore)
     return ignore
 
 class Omni3D(COCO):
