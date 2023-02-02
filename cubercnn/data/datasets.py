@@ -149,8 +149,6 @@ class Omni3D(COCO):
             assert type(dataset)==dict, 'annotation file format {} not supported'.format(type(dataset))
             print('Done (t={:0.2f}s)'.format(time.time()- tic))
 
-            print(dataset['annotations'])
-
             if type(dataset['info']) == list:
                 dataset['info'] = dataset['info'][0]
                 
@@ -216,6 +214,8 @@ class Omni3D(COCO):
 
             for im_obj in self.dataset['images']:
                 im_height_map[im_obj['id']] = im_obj['height']
+
+            print(self.dataset['annotations'])
 
             # Filter out annotations
             for anno_idx, anno in enumerate(self.dataset['annotations']):
