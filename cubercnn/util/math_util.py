@@ -299,7 +299,7 @@ def compute_priors(cfg, datasets, max_cluster_rounds=1000, min_points_for_std=5)
 
     annIds = datasets.getAnnIds()
     anns = datasets.loadAnns(annIds)
-
+    print(anns)
     data_raw = []
 
     category_names = MetadataCatalog.get('omni3d_model').thing_classes
