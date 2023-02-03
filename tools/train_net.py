@@ -554,9 +554,7 @@ def simple_register(cfg, dataset_name, filter_settings, filter_empty=False):
 
     path_to_json = os.path.join('/data/aruzzi/Behave/', dataset_name + '.json') 
     path_to_image_root = ''
-
-    print("----------processing data")
-
+    print(dataset_name)
     DatasetCatalog.register(dataset_name, lambda: load_omni3d_json(
         path_to_json, path_to_image_root, 
         dataset_name, filter_settings, filter_empty=filter_empty

@@ -313,7 +313,7 @@ def register_and_store_model_metadata(datasets, output_dir, filter_settings=None
 
 
 def load_omni3d_json(json_file, image_root, dataset_name, filter_settings, filter_empty=False):
-    
+    print("----------processing data")
     # read in the dataset
     timer = Timer()
     json_file = PathManager.get_local_path(json_file)
