@@ -372,6 +372,8 @@ def load_omni3d_json(json_file, image_root, dataset_name, filter_settings, filte
         has_valid_annotation = False
 
         record = {}
+        print(image_root)
+        print(img_dict["file_path"])
         record["file_name"] = os.path.join(image_root, img_dict["file_path"])
         record["dataset_id"] = img_dict["dataset_id"]
         record["height"] = img_dict["height"]
