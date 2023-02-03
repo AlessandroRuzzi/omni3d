@@ -81,13 +81,13 @@ def transform_img(img_path, bbox_corners):
     bottom = int(torch.max(bbox_corners[:, :, 1], dim=1)[0].int())
     right = int(torch.max(bbox_corners[:, :, 0], dim=1)[0].int())
 
-    #img = cv2.imread(img_path[0])
+    img = cv2.imread(img_path[0])
     xyxy = [left,top, right, bottom]
-    #print((xyxy))
-    #plot_box_and_label(img, max(round(sum(img.shape) / 2 * 0.003), 2), xyxy, color=generate_colors(1, True))
+    print((xyxy))
+    plot_box_and_label(img, max(round(sum(img.shape) / 2 * 0.003), 2), xyxy, color=generate_colors(1, True))
 
-    #images = wandb.Image(img, caption="Image with projected bounding boxes")
-    #wandb.log({"Image YOLOv6" : images})
+    images = wandb.Image(img, caption="Image with projected bounding boxes")
+    wandb.log({"Image YOLOv6" : images})
 
     return xyxy
 
@@ -153,9 +153,13 @@ for id_data,dl in enumerate([(train_dl,"Train"), (test_dl,"Test")]):
         bbox = data['bbox'].detach().cpu().numpy()
         obj_length = float(bbox[0,3])
 
-        #print(bbox,patch_coord_projected.shape, bbox_corners.shape)
+
         ones = -1 * np.ones(32).reshape(8,4)
-        #print(ones.shape, ones)
+
+        print("-------------------------")
+        print("Normal BBox --> ",bbox)
+        print("Inverted Axis --> ",bbox_project)
+        print("-------------------------")
         object.append({
 
                             "id"			  : i,					
@@ -189,6 +193,6 @@ for id_data,dl in enumerate([(train_dl,"Train"), (test_dl,"Test")]):
     dataset['categories'] = category
     dataset['annotations'] = object
 
-    out_file = open(f'/data/aruzzi/Behave/Behave_{dl[1]}.json',"w") 
-    json.dump(dataset, out_file, indent = 2)
-    out_file.close()
+    #out_file = open(f'/data/aruzzi/Behave/Behave_{dl[1]}.json',"w") 
+    #json.dump(dataset, out_file, indent = 2)
+    #out_file.close()
