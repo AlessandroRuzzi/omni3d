@@ -373,7 +373,7 @@ def load_omni3d_json(json_file, image_root, dataset_name, filter_settings, filte
 
         record = {}
         #record["file_name"] = os.path.join(image_root, img_dict["file_path"])
-        record["file_name"] = img_dict["file_path"]
+        record["file_name"] = img_dict["file_path"][0]
         record["dataset_id"] = img_dict["dataset_id"]
         record["height"] = img_dict["height"]
         record["width"] = img_dict["width"]
