@@ -319,7 +319,7 @@ def compute_priors(cfg, datasets, max_cluster_rounds=1000, min_points_for_std=5)
         ignore = ann['ignore']
         dataset_id = ann['dataset_id']
         image_id = ann['image_id']
-        print(datasets.imgs.keys())
+        print(datasets.imgs[image_id]['K'].shape)
         fy = datasets.imgs[image_id]['K'][1][1]
         im_h = datasets.imgs[image_id]['height']
         im_w = datasets.imgs[image_id]['width']
