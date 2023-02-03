@@ -84,7 +84,7 @@ def transform_img(img_path, bbox_corners):
     img = cv2.imread(img_path[0])
     xyxy = [left,top, right, bottom]
 
-    plot_box_and_label(img, max(round(sum(img.shape) / 2 * 0.003), 2), xyxy, "object", color=generate_colors(1, True))
+    plot_box_and_label(img, max(round(sum(img.shape) / 2 * 0.003), 2), xyxy, color=generate_colors(1, True))
 
     images = wandb.Image(img, caption="Image with projected bounding boxes")
     wandb.log({"Image YOLOv6" : images})
