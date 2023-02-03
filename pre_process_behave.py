@@ -82,7 +82,7 @@ def transform_img(img_path, bbox_corners):
     right = torch.max(bbox_corners[:, :, 0], dim=1)[0].int()
 
     #img = cv2.imread(img_path[0])
-    xyxy = [left,top, right, bottom]
+    xyxy = int([left,top, right, bottom])
     print((xyxy))
     #plot_box_and_label(img, max(round(sum(img.shape) / 2 * 0.003), 2), xyxy, color=generate_colors(1, True))
 
@@ -169,7 +169,7 @@ for id_data,dl in enumerate([(train_dl,"Train"), (test_dl,"Test")]):
                             "bbox2D_trunc"	  : [-1,-1,-1,-1],			
                             "bbox3D_cam"	  : ones.tolist(),
                             #"center_cam"	  : bbox[0,:3].tolist(),		
-                            "center_cam"	  : (bbox_project[0,:3]).detach().cpu().numpy().tolist(),			
+                            "center_cam"	  : bbox_project[0,:3].detach().cpu().numpy().tolist(),			
                             "dimensions"	  : [obj_length, obj_length, obj_length],
                             "R_cam"		      : np.eye(3).tolist(),	
 
