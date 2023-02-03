@@ -175,7 +175,8 @@ def visualize_from_instances(detections, dataset, dataset_name, min_size_test, o
             x3d, y3d, z3d = (K_inv @ (z3d*cen_2d))
 
             # let us visualize the detections now
-            if write_sample and score > thres:
+            #if write_sample and score > thres:
+            if write_sample:
                 color = util.get_color(instance['category_id'])
                 draw_3d_box(im, K, [x3d, y3d, z3d, w3d, h3d, l3d], ry3d, color=color, thickness=int(np.round(3*im.shape[0]/500)), draw_back=False)
                 draw_text(im, '{}, z={:.1f}, s={:.2f}'.format(cat, z3d, score), [x1, y1, w, h], scale=0.50*im.shape[0]/500, bg_color=color)
