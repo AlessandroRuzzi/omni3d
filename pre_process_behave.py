@@ -81,13 +81,13 @@ def transform_img(img_path, bbox_corners):
     bottom = torch.max(bbox_corners[:, :, 1], dim=1)[0].int()
     right = torch.max(bbox_corners[:, :, 0], dim=1)[0].int()
 
-    img = cv2.imread(img_path[0])
+    #img = cv2.imread(img_path[0])
     xyxy = [left,top, right, bottom]
 
-    plot_box_and_label(img, max(round(sum(img.shape) / 2 * 0.003), 2), xyxy, color=generate_colors(1, True))
+    #plot_box_and_label(img, max(round(sum(img.shape) / 2 * 0.003), 2), xyxy, color=generate_colors(1, True))
 
-    images = wandb.Image(img, caption="Image with projected bounding boxes")
-    wandb.log({"Image YOLOv6" : images})
+    #images = wandb.Image(img, caption="Image with projected bounding boxes")
+    #wandb.log({"Image YOLOv6" : images})
 
     return xyxy
 
@@ -165,10 +165,11 @@ for id_data,dl in enumerate([(train_dl,"Train"), (test_dl,"Test")]):
                             
                             "valid3D"		  : True,				   
                             "bbox2D_tight"	  : [-1,-1,-1,-1],		
-                            "bbox2D_proj"	  : [-1,-1,-1,-1],			
+                            "bbox2D_proj"	  : bbox2d,			
                             "bbox2D_trunc"	  : [-1,-1,-1,-1],			
                             "bbox3D_cam"	  : ones.tolist(),
-                            "center_cam"	  : bbox[0,:3].tolist(),				
+                            #"center_cam"	  : bbox[0,:3].tolist(),		
+                            "center_cam"	  : bbox_project[0,:3].tolist(),			
                             "dimensions"	  : [obj_length, obj_length, obj_length],
                             "R_cam"		      : np.eye(3).tolist(),	
 
