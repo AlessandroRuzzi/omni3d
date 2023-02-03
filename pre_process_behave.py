@@ -145,7 +145,9 @@ for id_data,dl in enumerate([(train_dl,"Train"), (test_dl,"Test")]):
         bcu.get_local_projector(c, d) for c, d in zip(calibration_matrix, dist_coefs)
          ]
 
-        patch_coord_projected, bbox_corners = calc_patch_coord(data['bbox'].cuda(), projector)
+        bbox_project = data['bbox'].cuda()
+        bbox_project[:, :2] = bbox_project[:, :2] * -1
+        patch_coord_projected, bbox_corners = calc_patch_coord(bbox_project, projector)
         bbox2d = transform_img(data["img_path"], bbox_corners)
 
         bbox = data['bbox'].detach().cpu().numpy()
