@@ -83,7 +83,7 @@ def transform_img(img_path, bbox_corners):
 
     #img = cv2.imread(img_path[0])
     xyxy = [left,top, right, bottom]
-    print((xyxy))
+    #print((xyxy))
     #plot_box_and_label(img, max(round(sum(img.shape) / 2 * 0.003), 2), xyxy, color=generate_colors(1, True))
 
     #images = wandb.Image(img, caption="Image with projected bounding boxes")
@@ -182,7 +182,7 @@ for id_data,dl in enumerate([(train_dl,"Train"), (test_dl,"Test")]):
        
                     })
         
-        break
+        #break
 
     dataset['info'] = info
     dataset['images'] = image
