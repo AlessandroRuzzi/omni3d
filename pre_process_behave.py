@@ -129,7 +129,7 @@ for id_data,dl in enumerate([(train_dl,"Train"), (test_dl,"Test")]):
                             "width"			  : 2048,
                             "height"		  : 1536,
                             "file_path"		  : data["img_path"],
-                            "K"			      : data['calibration_matrix'].detach().cpu().numpy().tolist() ,
+                            "K"			      : data['calibration_matrix'].detach().cpu().numpy().reshape(3,3).tolist() ,
                             "src_90_rotate"	  : 0,			
                             "src_flagged"	  : False,	
 
@@ -159,7 +159,8 @@ for id_data,dl in enumerate([(train_dl,"Train"), (test_dl,"Test")]):
         object.append({
 
                             "id"			  : i,					
-                            "image_id"		  : i,					
+                            "image_id"		  : i,	
+                            "dataset_id"	  : id_data,				
                             "category_id"	  : category[pos_category]['id'],					
                             "category_name"	  : category[pos_category]['name'],		
                             
