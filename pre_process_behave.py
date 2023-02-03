@@ -105,7 +105,8 @@ train_ds, test_ds = train_dl.dataset, test_dl.dataset
 
 val_ds = val_dl.dataset if val_dl is not None else None
 
-for id_data,dl in enumerate([(train_dl,"Train"), (test_dl,"Test")]):
+#for id_data,dl in enumerate([(train_dl,"Train"), (test_dl,"Test")]):
+for id_data,dl in enumerate([(test_dl,"Test")]):
     dataset = {}
     info = {
 
