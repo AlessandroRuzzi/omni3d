@@ -316,7 +316,7 @@ def compute_priors(cfg, datasets, max_cluster_rounds=1000, min_points_for_std=5)
     for ann_idx, ann in enumerate(anns):
 
         category_name = ann['category_name'].lower()
-
+        print(ann)
         ignore = ann['ignore']
         dataset_id = ann['dataset_id']
         image_id = ann['image_id']
