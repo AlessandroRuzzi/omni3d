@@ -82,8 +82,7 @@ def transform_img(img_path, bbox_corners):
     bottom = torch.max(bbox_corners[:, :, 1], dim=1)[0].int()
     right = torch.max(bbox_corners[:, :, 0], dim=1)[0].int()
 
-    print(img_path)
-    img = cv2.imread(img_path)
+    img = cv2.imread(img_path[0])
     xyxy = [left,top, right, bottom]
 
     plot_box_and_label(img, max(round(sum(img.shape) / 2 * 0.003), 2), xyxy, "object", color=generate_colors(1, True))
