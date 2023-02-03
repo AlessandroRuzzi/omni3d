@@ -76,13 +76,13 @@ def transform_img(img_path, bbox_corners):
     bbox_corners = torch.tensor(bbox_corners).view(N, -1, 2)
     bbox_corners = torch.reshape(bbox_corners, (N,-1,2))
 
-    top = torch.min(bbox_corners[:, :, 1], dim=1)[0].int()
-    left = torch.min(bbox_corners[:, :, 0], dim=1)[0].int()
-    bottom = torch.max(bbox_corners[:, :, 1], dim=1)[0].int()
-    right = torch.max(bbox_corners[:, :, 0], dim=1)[0].int()
+    top = int(torch.min(bbox_corners[:, :, 1], dim=1)[0].int())
+    left = int(torch.min(bbox_corners[:, :, 0], dim=1)[0].int())
+    bottom = int(torch.max(bbox_corners[:, :, 1], dim=1)[0].int())
+    right = int(torch.max(bbox_corners[:, :, 0], dim=1)[0].int())
 
     #img = cv2.imread(img_path[0])
-    xyxy = int([left,top, right, bottom])
+    xyxy = [left,top, right, bottom]
     print((xyxy))
     #plot_box_and_label(img, max(round(sum(img.shape) / 2 * 0.003), 2), xyxy, color=generate_colors(1, True))
 
