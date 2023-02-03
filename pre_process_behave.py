@@ -82,6 +82,7 @@ def transform_img(img_path, bbox_corners):
     bottom = torch.max(bbox_corners[:, :, 1], dim=1)[0].int()
     right = torch.max(bbox_corners[:, :, 0], dim=1)[0].int()
 
+    print(img_path)
     img = cv2.imread(img_path)
     xyxy = [left,top, right, bottom]
 
