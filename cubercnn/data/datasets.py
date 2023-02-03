@@ -239,6 +239,7 @@ class Omni3D(COCO):
                 height = bbox2D[3]
 
                 self.dataset['annotations'][anno_idx]['area'] = width*height
+                self.dataset['annotations'][anno_idx]['dataset_id'] = self.dataset['images'][anno_idx]['dataset_id']
                 self.dataset['annotations'][anno_idx]['iscrowd'] = False
                 self.dataset['annotations'][anno_idx]['ignore'] = ignore
                 self.dataset['annotations'][anno_idx]['ignore2D'] = ignore
