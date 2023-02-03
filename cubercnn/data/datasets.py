@@ -317,6 +317,7 @@ def load_omni3d_json(json_file, image_root, dataset_name, filter_settings, filte
     # read in the dataset
     timer = Timer()
     json_file = PathManager.get_local_path(json_file)
+    print(json_file)
     with contextlib.redirect_stdout(io.StringIO()):
         coco_api = COCO(json_file)
     if timer.seconds() > 1:
