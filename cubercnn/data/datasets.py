@@ -81,7 +81,7 @@ def get_filter_settings_from_cfg(cfg=None):
 
 def is_ignore(anno, filter_settings, image_height):
     
-    #ignore = anno['behind_camera'] 
+    ignore = anno['behind_camera'] 
     #print("#1 ",ignore)
     ignore = (not bool(anno['valid3D']))
     #print("#2 ",ignore)
@@ -105,9 +105,6 @@ def is_ignore(anno, filter_settings, image_height):
 
     # use the projected 3D --> 2D box, which requires a visible 3D cuboid.
     elif 'bbox2D_proj' in anno:
-        print("here")
-        print(anno['bbox2D_proj'])
-        print(anno['bbox'])
         bbox2D =  BoxMode.convert(anno['bbox2D_proj'], BoxMode.XYXY_ABS, BoxMode.XYWH_ABS)
 
     else:

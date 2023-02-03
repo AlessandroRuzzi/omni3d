@@ -6,8 +6,35 @@ import json
 import numpy as np
 import torch
 from dataset import behave_camera_utils as bcu
+import cv2
 
 wandb.init(project = "Omni3D")
+
+
+def plot_box_and_label(image, lw, box, label='', color=(128, 128, 128), txt_color=(255, 255, 255), font=cv2.FONT_HERSHEY_COMPLEX):
+    # Add one xyxy box to image with label
+    p1, p2 = (int(box[0]), int(box[1])), (int(box[2]), int(box[3]))
+    cv2.rectangle(image, p1, p2, color, thickness=lw, lineType=cv2.LINE_AA)
+    if label:
+        tf = max(lw - 1, 1)  # font thickness
+        w, h = cv2.getTextSize(label, 0, fontScale=lw / 3, thickness=tf)[0]  # text width, height
+        outside = p1[1] - h - 3 >= 0  # label fits outside box
+        p2 = p1[0] + w, p1[1] - h - 3 if outside else p1[1] + h + 3
+        cv2.rectangle(image, p1, p2, color, -1, cv2.LINE_AA)  # filled
+        cv2.putText(image, label, (p1[0], p1[1] - 2 if outside else p1[1] + h + 2), font, lw / 3, txt_color,
+                    thickness=tf, lineType=cv2.LINE_AA)
+
+@staticmethod
+def generate_colors(i, bgr=False):
+    hex = ('FF3838', 'FF9D97', 'FF701F', 'FFB21D', 'CFD231', '48F90A', '92CC17', '3DDB86', '1A9334', '00D4BB',
+            '2C99A8', '00C2FF', '344593', '6473FF', '0018EC', '8438FF', '520085', 'CB38FF', 'FF95C8', 'FF37C7')
+    palette = []
+    for iter in hex:
+        h = '#' + iter
+        palette.append(tuple(int(h[1 + i:1 + i + 2], 16) for i in (0, 2, 4)))
+    num = len(palette)
+    color = palette[int(i) % num]
+    return (color[2], color[1], color[0]) if bgr else color
 
 def __calc_patch_coord(bbox_center, projector, nP, l):
     N = bbox_center.shape[0]
@@ -44,6 +71,25 @@ def calc_patch_coord(bbox, projector):
     bbox_corners = __calc_patch_coord(bbox_center, projector, 2, l)
 
     return patch_coord_projected, bbox_corners
+
+def transform_img(img_path, bbox_corners):
+    N = bbox_corners.shape[0]
+    bbox_corners = bbox_corners.view(N, -1, 2)
+
+    top = torch.min(bbox_corners[:, :, 1], dim=1)[0].int()
+    left = torch.min(bbox_corners[:, :, 0], dim=1)[0].int()
+    bottom = torch.max(bbox_corners[:, :, 1], dim=1)[0].int()
+    right = torch.max(bbox_corners[:, :, 0], dim=1)[0].int()
+
+    img = cv2.imread(img_path)
+    xyxy = [left,top, right, bottom]
+
+    plot_box_and_label(img, max(round(sum(img.shape) / 2 * 0.003), 2), xyxy, "object", color=generate_colors(1, True))
+
+    images = wandb.Image(img, caption="Image with projected bounding boxes")
+    wandb.log({"Image YOLOv6" : images})
+
+    return xyxy
 
 category = [ {'id' : 0, 'name' : 'backpack', 'supercategory' : ""}, {'id' : 1, 'name' :'basketball', 'supercategory' : ""}, {'id' : 2, 'name' :'boxlarge', 'supercategory' : ""}, 
              {'id' : 3, 'name' :'boxlong', 'supercategory' : ""}, {'id' : 4, 'name' :'boxmedium', 'supercategory' : ""}, {'id' : 5, 'name' :'boxsmall', 'supercategory' : ""}, 
@@ -93,13 +139,14 @@ for id_data,dl in enumerate([(train_dl,"Train"), (test_dl,"Test")]):
             if elem['name'] == data["cat_str"]:
                     pos_category = j
 
-        #calibration_matrix = data['calibration_matrix'].cpu().numpy()
-        #dist_coefs = data['dist_coefs'].cpu().numpy()
-        #projector = [
-        #bcu.get_local_projector(c, d) for c, d in zip(calibration_matrix, dist_coefs)
-        # ]
+        calibration_matrix = data['calibration_matrix'].cpu().numpy()
+        dist_coefs = data['dist_coefs'].cpu().numpy()
+        projector = [
+        bcu.get_local_projector(c, d) for c, d in zip(calibration_matrix, dist_coefs)
+         ]
 
-        #patch_coord_projected, bbox_corners = calc_patch_coord(data['bbox'].cuda(), projector)
+        patch_coord_projected, bbox_corners = calc_patch_coord(data['bbox'].cuda(), projector)
+        bbox2d = transform_img(data["img_path"], bbox_corners)
 
         bbox = data['bbox'].detach().cpu().numpy()
         obj_length = float(bbox[0,3])
@@ -123,7 +170,7 @@ for id_data,dl in enumerate([(train_dl,"Train"), (test_dl,"Test")]):
                             "dimensions"	  : [obj_length, obj_length, obj_length],
                             "R_cam"		      : np.eye(3).tolist(),	
 
-                            "behind_camera"	  : -1,				
+                            "behind_camera"	  : False,				
                             "visibility"	  : -1, 		
                             "truncation"	  : -1, 				
                             "segmentation_pts": -1, 					
@@ -131,7 +178,7 @@ for id_data,dl in enumerate([(train_dl,"Train"), (test_dl,"Test")]):
                             "depth_error"	  : -1,				
        
                     })
-        print(object)
+        
         #break
 
     dataset['info'] = info
