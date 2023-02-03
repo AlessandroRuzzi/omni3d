@@ -83,7 +83,7 @@ def transform_img(img_path, bbox_corners):
 
     #img = cv2.imread(img_path[0])
     xyxy = [left,top, right, bottom]
-
+    print((xyxy))
     #plot_box_and_label(img, max(round(sum(img.shape) / 2 * 0.003), 2), xyxy, color=generate_colors(1, True))
 
     #images = wandb.Image(img, caption="Image with projected bounding boxes")
@@ -165,7 +165,7 @@ for id_data,dl in enumerate([(train_dl,"Train"), (test_dl,"Test")]):
                             
                             "valid3D"		  : True,				   
                             "bbox2D_tight"	  : [-1,-1,-1,-1],		
-                            "bbox2D_proj"	  : bbox2d,			
+                            "bbox2D_proj"	  : bbox2d.detach().cpu().numpy().tolist(),			
                             "bbox2D_trunc"	  : [-1,-1,-1,-1],			
                             "bbox3D_cam"	  : ones.tolist(),
                             #"center_cam"	  : bbox[0,:3].tolist(),		
@@ -182,7 +182,7 @@ for id_data,dl in enumerate([(train_dl,"Train"), (test_dl,"Test")]):
        
                     })
         
-        #break
+        break
 
     dataset['info'] = info
     dataset['images'] = image
