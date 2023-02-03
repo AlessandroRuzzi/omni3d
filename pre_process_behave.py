@@ -74,7 +74,7 @@ def calc_patch_coord(bbox, projector):
 
 def transform_img(img_path, bbox_corners):
     N = bbox_corners.shape[0]
-    #bbox_corners = bbox_corners.view(N, -1, 2)
+    bbox_corners = torch.tensor(bbox_corners).view(N, -1, 2)
     bbox_corners = torch.reshape(bbox_corners, (N,-1,2))
 
     top = torch.min(bbox_corners[:, :, 1], dim=1)[0].int()
