@@ -181,6 +181,7 @@ def visualize_from_instances(detections, dataset, dataset_name, min_size_test, o
                 draw_text(im, '{}, z={:.1f}, s={:.2f}'.format(cat, z3d, score), [x1, y1, w, h], scale=0.50*im.shape[0]/500, bg_color=color)
 
         if write_sample:    
+            im = cv2.cvtColor(im, cv2.COLOR_BGR2RGB)
             images = wandb.Image(im, caption="Image with predicted 3D bounding boxes")
             wandb.log({"BBOX Detected" : images})
             util.imwrite(im, os.path.join(vis_folder, '{:06d}.jpg'.format(imind)))
