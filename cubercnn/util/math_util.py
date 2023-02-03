@@ -378,7 +378,6 @@ def compute_priors(cfg, datasets, max_cluster_rounds=1000, min_points_for_std=5)
 
     # Each prior is pre-computed per category
     for cat in category_names:
-        print(cat)
         df_cat = df_raw[df_raw.name == cat]        
 
         '''

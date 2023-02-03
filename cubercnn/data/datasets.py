@@ -118,7 +118,7 @@ def is_ignore(anno, filter_settings, image_height):
     
     if 'ignore_names' in filter_settings:
         ignore |= anno['category_name'] in filter_settings['ignore_names']
-    print("#3 ",ignore)
+    #print("#3 ",ignore)
     return ignore
 
 class Omni3D(COCO):
