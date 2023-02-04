@@ -346,6 +346,8 @@ def do_train(cfg, model, dataset_id_to_unknown_cats, dataset_id_to_src, resume=F
     start_iter = (checkpointer.resume_or_load(cfg.MODEL.WEIGHTS, resume=resume).get("iteration", -1) + 1)
     iteration = start_iter
 
+    do_test(cfg, model)
+
     logger.info("Starting training from iteration {}".format(start_iter))
 
     if not cfg.MODEL.USE_BN:
@@ -667,6 +669,8 @@ def main(args):
                 model, device_ids=[comm.get_local_rank()], 
                 broadcast_buffers=False, find_unused_parameters=True
             )
+
+        
 
         # train full model, potentially with resume.
         if do_train(cfg, model, dataset_id_to_unknown_cats, dataset_id_to_src, resume=args.resume):
