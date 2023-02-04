@@ -9,11 +9,12 @@ SOLVER:
 TEST:
   EVAL_PERIOD: 1000
 VIS_PERIOD: 111360
-OUTPUT_DIR: "output/behave_example_run"
+OUTPUT_DIR: "output/behave_example_run_finetune"
 DATASETS:
   TRAIN: ('Behave_Train',)
   TEST: ('Behave_Test',) 
   CATEGORY_NAMES: ('backpack', 'basketball', 'boxlarge', 'boxlong', 'boxmedium','boxsmall', 'boxtiny', 'chairblack','chairwood', 'keyboard', 'monitor', 'plasticcontainer', 'stool', 'suitcase', 'tablesmall', 'tablesquare', 'toolbox', 'trashbin', 'yogaball', 'yogamat')
 MODEL:
+  WEIGHTS: "checkpoints/cubercnn_DLA34_FPN.pth"
   ROI_HEADS:
     NUM_CLASSES: 20
