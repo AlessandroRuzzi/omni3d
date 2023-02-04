@@ -81,13 +81,13 @@ def transform_img(img_path, bbox_corners):
     bottom = int(torch.max(bbox_corners[:, :, 1], dim=1)[0].int())
     right = int(torch.max(bbox_corners[:, :, 0], dim=1)[0].int())
 
-    #img = cv2.imread(img_path[0])
+    img = cv2.imread(img_path[0])
     xyxy = [left,top, right, bottom]
-    #print((xyxy))
-    #plot_box_and_label(img, max(round(sum(img.shape) / 2 * 0.003), 2), xyxy, color=generate_colors(1, True))
+    print((xyxy))
+    plot_box_and_label(img, max(round(sum(img.shape) / 2 * 0.003), 2), xyxy, color=generate_colors(1, True))
 
-    #images = wandb.Image(img, caption="Image with projected bounding boxes")
-    #wandb.log({"Image YOLOv6" : images})
+    images = wandb.Image(img, caption="Image with projected bounding boxes")
+    wandb.log({"Image YOLOv6" : images})
 
     return xyxy
 
@@ -105,8 +105,8 @@ train_ds, test_ds = train_dl.dataset, test_dl.dataset
 
 val_ds = val_dl.dataset if val_dl is not None else None
 
-#for id_data,dl in enumerate([(train_dl,"Train"), (test_dl,"Test")]):
-for id_data,dl in enumerate([(test_dl,"Test")]):
+for id_data,dl in enumerate([(train_dl,"Train"), (test_dl,"Test")]):
+#for id_data,dl in enumerate([(test_dl,"Test")]):
     dataset = {}
     info = {
 
@@ -147,7 +147,7 @@ for id_data,dl in enumerate([(test_dl,"Test")]):
          ]
 
         bbox_project = data['bbox'].cuda()
-        bbox_project[:, :2] = bbox_project[:, :2] * -1
+        bbox_project[:, :3] = bbox_project[:, :3] * -1
         patch_coord_projected, bbox_corners = calc_patch_coord(bbox_project, projector)
         bbox2d = transform_img(data["img_path"], bbox_corners)
 
