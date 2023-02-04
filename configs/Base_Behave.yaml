@@ -15,6 +15,6 @@ DATASETS:
   TEST: ('Behave_Test',) 
   CATEGORY_NAMES: ('backpack', 'basketball', 'boxlarge', 'boxlong', 'boxmedium','boxsmall', 'boxtiny', 'chairblack','chairwood', 'keyboard', 'monitor', 'plasticcontainer', 'stool', 'suitcase', 'tablesmall', 'tablesquare', 'toolbox', 'trashbin', 'yogaball', 'yogamat')
 MODEL:
-  WEIGHTS: "checkpoint/cubercnn_DLA34_FPN.pth"
+  WEIGHTS: "checkpoint/cubercnn_Res34_FPN.pth"
   ROI_HEADS:
     NUM_CLASSES: 20
