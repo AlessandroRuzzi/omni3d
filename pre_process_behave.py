@@ -105,8 +105,8 @@ train_ds, test_ds = train_dl.dataset, test_dl.dataset
 
 val_ds = val_dl.dataset if val_dl is not None else None
 
-#for id_data,dl in enumerate([(train_dl,"Train"), (test_dl,"Test")]):
-for id_data,dl in enumerate([(test_dl,"Test")]):
+for id_data,dl in enumerate([(train_dl,"Train")]):
+#for id_data,dl in enumerate([(test_dl,"Test")]):
     dataset = {}
     info = {
 
@@ -147,7 +147,7 @@ for id_data,dl in enumerate([(test_dl,"Test")]):
          ]
 
         bbox_project = data['bbox'].cuda()
-        bbox_project[:, :3] = bbox_project[:, :3] * -1
+        bbox_project[:, :2] = bbox_project[:, :2] * -1
         patch_coord_projected, bbox_corners = calc_patch_coord(bbox_project, projector)
         bbox2d = transform_img(data["img_path"], bbox_corners)
 
