@@ -51,8 +51,8 @@ class BaseOptions():
         self.parser.add_argument('--ratio', type=float, default=1., help='ratio of the dataset to use')
 
         self.parser.add_argument('--cat', type=str, default='chair', help='category for all datasets except BEHAVE')
-        #self.parser.add_argument('--max_dataset_size', default=100, type=int, help='chooses how datasets are loaded. [mnist, sdf, abc, snet-abc]')
-        self.parser.add_argument('--max_dataset_size', default=2147483648, type=int, help='chooses how datasets are loaded. [mnist, sdf, abc, snet-abc]')
+        self.parser.add_argument('--max_dataset_size', default=500, type=int, help='chooses how datasets are loaded. [mnist, sdf, abc, snet-abc]')
+        #self.parser.add_argument('--max_dataset_size', default=2147483648, type=int, help='chooses how datasets are loaded. [mnist, sdf, abc, snet-abc]')
         self.parser.add_argument('--nThreads', default=2, type=int, help='# threads for loading data')
         self.parser.add_argument('--serial_batches', action='store_true', help='if true, takes images in order to make batches, otherwise takes them randomly')
 
