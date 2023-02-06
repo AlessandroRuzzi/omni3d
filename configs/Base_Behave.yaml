@@ -15,5 +15,6 @@ DATASETS:
   TEST: ('Behave_Test',) 
   CATEGORY_NAMES: ('backpack', 'basketball', 'boxlarge', 'boxlong', 'boxmedium','boxsmall', 'boxtiny', 'chairblack','chairwood', 'keyboard', 'monitor', 'plasticcontainer', 'stool', 'suitcase', 'tablesmall', 'tablesquare', 'toolbox', 'trashbin', 'yogaball', 'yogamat')
 MODEL:
+  WEIGHTS: "output/behave_example_run_finetune/model_recent.pth"
   ROI_HEADS:
     NUM_CLASSES: 20
