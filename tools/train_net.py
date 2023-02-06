@@ -22,6 +22,7 @@ from detectron2.evaluation import (
 from detectron2.solver import build_lr_scheduler
 from detectron2.utils.events import EventStorage
 from detectron2.utils.logger import setup_logger
+import random
 
 logger = logging.getLogger("cubercnn")
 
@@ -566,6 +567,21 @@ def simple_register(cfg, dataset_name, filter_settings, filter_empty=False):
 
 
 def main(args):
+
+    torch.autograd.set_detect_anomaly(True)
+    torch.manual_seed(45)  # cpu
+    torch.cuda.manual_seed(55)  # gpu
+    np.random.seed(65)  # numpy
+    random.seed(75)  # random and transforms
+    torch.backends.cudnn.enabled = True
+    torch.backends.cudnn.deterministic = True  # cudnn
+    torch.backends.cudnn.benchmark = True
+    torch.backends.cuda.matmul.allow_tf32 = False
+    torch.backends.cudnn.allow_tf32 = False
+
+    os.environ["OMP_NUM_THREADS"] = "1"
+    os.environ["MKL_NUM_THREADS"] = "1"
+    torch.set_num_threads(1)
     
     cfg = setup(args)
 
