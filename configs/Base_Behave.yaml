@@ -9,12 +9,16 @@ SOLVER:
 TEST:
   EVAL_PERIOD: 1000
 VIS_PERIOD: 111360
-OUTPUT_DIR: "output/behave_example_run_finetune"
+OUTPUT_DIR: "output/behave_example_run_finetune_2"
 DATASETS:
   TRAIN: ('Behave_Train',)
   TEST: ('Behave_Test',) 
   CATEGORY_NAMES: ('backpack', 'basketball', 'boxlarge', 'boxlong', 'boxmedium','boxsmall', 'boxtiny', 'chairblack','chairwood', 'keyboard', 'monitor', 'plasticcontainer', 'stool', 'suitcase', 'tablesmall', 'tablesquare', 'toolbox', 'trashbin', 'yogaball', 'yogamat')
 MODEL:
-  WEIGHTS: "output/behave_example_run_finetune/model_recent.pth"
+  WEIGHTS: "output/behave_example_run_finetune_2/model_recent.pth"
+  BACKBONE:
+    NAME: 'build_dla_from_vision_fpn_backbone'
+  DLA:
+    TYPE: 'dla34'
   ROI_HEADS:
     NUM_CLASSES: 20
