@@ -127,6 +127,7 @@ def do_test(args, cfg, model):
                 "bbox_class": [cats[c] for c in dets.pred_classes.tolist()],
                 "bbox_orientation": dets.pred_pose.tolist()
             }
+        break
     with open('predictions/results.json', 'w') as f:
         json.dump({"best_score vs gt": res, "all_predicted": all_predicted}, f)
 
