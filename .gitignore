@@ -4,6 +4,8 @@
 .ipynb_checkpoints/
 .idea/
 output/
+predictions/*
+!predictions/.gitkeep
 cubercnn/external/
 
 # filetypes
