@@ -9,7 +9,7 @@ SOLVER:
 TEST:
   EVAL_PERIOD: 1000
 VIS_PERIOD: 111360
-OUTPUT_DIR: "output/behave_example_run_finetune_2"
+OUTPUT_DIR: "output/behave_no_finetune"
 DATASETS:
   TRAIN: ('Behave_Train',)
   TEST: ('Behave_Test',) 
