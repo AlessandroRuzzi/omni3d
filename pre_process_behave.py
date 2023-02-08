@@ -138,7 +138,6 @@ for id_data,dl in enumerate([(train_dl,"Train")]):
 
         for j,elem in enumerate(category):
             if elem['name'] == data["cat_str"][0]:
-                    print(elem['name'], data['cat_str'])
                     pos_category = j
                     break
 
