@@ -105,8 +105,8 @@ train_ds, test_ds = train_dl.dataset, test_dl.dataset
 
 val_ds = val_dl.dataset if val_dl is not None else None
 
-#for id_data,dl in enumerate([(train_dl,"Train")]):
-for id_data,dl in enumerate([(test_dl,"Test")]):
+for id_data,dl in enumerate([(train_dl,"Train")]):
+#for id_data,dl in enumerate([(test_dl,"Test")]):
     dataset = {}
     info = {
 
@@ -138,7 +138,9 @@ for id_data,dl in enumerate([(test_dl,"Test")]):
 
         for j,elem in enumerate(category):
             if elem['name'] == data["cat_str"]:
+                    print(elem['name'], data['cat_str'])
                     pos_category = j
+                    break
 
         calibration_matrix = data['calibration_matrix'].cpu().numpy()
         dist_coefs = data['dist_coefs'].cpu().numpy()
