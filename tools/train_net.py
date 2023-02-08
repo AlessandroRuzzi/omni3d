@@ -617,6 +617,7 @@ def main(args):
         data.register_and_store_model_metadata(datasets, cfg.OUTPUT_DIR, filter_settings)
 
         thing_classes = MetadataCatalog.get('omni3d_model').thing_classes
+        print(thing_classes)
         dataset_id_to_contiguous_id = MetadataCatalog.get('omni3d_model').thing_dataset_id_to_contiguous_id
         
         '''
