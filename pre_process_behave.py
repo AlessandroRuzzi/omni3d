@@ -122,6 +122,7 @@ for id_data,dl in enumerate([(test_dl,"Test")]):
     object = []
 
     for i, data in tqdm(enumerate(dl[0]), total=len(dl[0])):
+
         pos_category = -1
         image.append({
 

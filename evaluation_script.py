@@ -98,8 +98,8 @@ def calc_errors_on_high_prob_bbox(results):
  
 
 if __name__ == "__main__":
-    results = json.load(open("predictions/results.json"))["best_score vs gt"]
-    results_all = json.load(open("predictions/results.json"))["all_predicted"]
+    results = json.load(open("predictions/train_results.json"))["best_score vs gt"]
+    results_all = json.load(open("predictions/train_results.json"))["all_predicted"]
 
     calc_errors_on_high_prob_bbox(results)
 
