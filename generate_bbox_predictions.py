@@ -33,7 +33,7 @@ def do_test(args, cfg, model):
 
     import json
     
-    with open('/data/aruzzi/Behave/info.json', 'r') as f:
+    with open('/data/aruzzi/Behave/train_info.json', 'r') as f:
         info = json.load(f)
 
     list_of_ims = info['img_paths'] # util.list_files(os.path.join(args.input_folder, ''), '*.jpg')
@@ -128,7 +128,7 @@ def do_test(args, cfg, model):
                 "bbox_orientation": dets.pred_pose.tolist()
             }
         
-    with open('predictions/results.json', 'w') as f:
+    with open('predictions/train_results.json', 'w') as f:
         json.dump({"best_score vs gt": res, "all_predicted": all_predicted}, f)
 
 def setup(args):
