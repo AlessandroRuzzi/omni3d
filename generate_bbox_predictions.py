@@ -33,7 +33,7 @@ def do_test(args, cfg, model):
 
     import json
     
-    with open('/data/aruzzi/Behave/info_2.json', 'r') as f:
+    with open('/data/aruzzi/Behave/info.json', 'r') as f:
         info = json.load(f)
 
     list_of_ims = info['img_paths'] # util.list_files(os.path.join(args.input_folder, ''), '*.jpg')
