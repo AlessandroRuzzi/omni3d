@@ -288,7 +288,7 @@ if __name__ == "__main__":
         print(moved_er2)
 
         day_key = out['img_path'][len('/data/xiwang/behave/sequences/'):]
-        aligned_pare_dict[day_key] = moved_pare2
+        aligned_pare_dict[day_key] = moved_pare2.numpy().tolist()
 
     with open('/data/aruzzi/Behave/aligned_pare', 'w') as f:
         json.dump(aligned_pare_dict, f)
