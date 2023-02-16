@@ -279,10 +279,7 @@ class BehaveImgDataset(BaseDataset):
             day_key = data['img_path'][len('/data/xiwang/behave/sequences/'):]
             pare_verts = torch.from_numpy(self.pare[day_key]['smpl_vertices']).reshape(-1, 3)
             pare_camera = torch.from_numpy(self.pare[day_key]['orig_cam'][0])
-
-            print(pare_verts.shape)
-            print(pare_camera.shape)
-            
+       
             # print(pare_verts.shape, pare_camera.shape)
             
             ret['pare_verts'] = pare_verts

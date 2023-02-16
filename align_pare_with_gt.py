@@ -13,6 +13,7 @@ import cv2
 from dataset.behave_dataset_pare import BehaveImgDataset
 from torch.optim import Adam
 import wandb
+import json
 
 wandb.init(project = "PARE Alignment")
 
@@ -245,7 +246,9 @@ if __name__ == "__main__":
     dataset = BehaveImgDataset()
     dataset.initialize(opt, 'test', load_extra=True)
 
-    for i in range(dataset.__len__()):
+    aligned_pare = {}
+
+    for i in range(10):
         out = dataset[i]
 
         print(out['img_path'])
@@ -283,3 +286,10 @@ if __name__ == "__main__":
         print(aligned_er)
         # print(moved_er1)
         print(moved_er2)
+
+        day_key = out['img_path'][len('/data/xiwang/behave/sequences/'):]
+        aligned_pare[day_key] = moved_pare2
+
+    with open('/data/aruzzi/Behave/aligned_pare', 'w') as f:
+        json.dump(aligned_pare, f)
+
