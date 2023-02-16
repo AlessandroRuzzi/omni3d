@@ -12,6 +12,9 @@ from matplotlib.pyplot import figure
 import cv2
 from dataset.behave_dataset_pare import BehaveImgDataset
 from torch.optim import Adam
+import wandb
+
+wandb.init(project = "PARE Alignment")
 
 
 def show(img):
@@ -242,7 +245,7 @@ if __name__ == "__main__":
     dataset = BehaveImgDataset()
     dataset.initialize(opt, 'test', load_extra=True)
 
-    for i in range(dataset.__len__):
+    for i in range(dataset.__len__()):
         out = dataset[i]
 
         print(out['img_path'])
