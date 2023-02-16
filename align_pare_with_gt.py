@@ -248,7 +248,7 @@ if __name__ == "__main__":
 
     aligned_pare_dict = {}
 
-    for i in range(10):
+    for i in range(2):
         out = dataset[i]
 
         print(out['img_path'])
