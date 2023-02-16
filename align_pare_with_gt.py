@@ -251,7 +251,7 @@ if __name__ == "__main__":
     for i in range(2):
         out = dataset[i]
 
-        print(out['img_path'])
+        print(i," ---- ",out['img_path'])
 
         intrin = (
             out['calibration_matrix'],
@@ -290,6 +290,6 @@ if __name__ == "__main__":
         day_key = out['img_path'][len('/data/xiwang/behave/sequences/'):]
         aligned_pare_dict[day_key] = moved_pare2.numpy().tolist()
 
-    with open('/data/aruzzi/Behave/aligned_pare', 'w') as f:
+    with open('/data/aruzzi/Behave/aligned_pare.json', 'w') as f:
         json.dump(aligned_pare_dict, f)
 
