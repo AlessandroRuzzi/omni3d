@@ -152,7 +152,6 @@ class BehaveImgDataset(BaseDataset):
                         
                         # things needed for PARE and Omni3d
                         body_mesh = None
-                        pare = None
                         if self.load_extra:
                             body_mesh = smpl_path.replace(".pkl", ".ply")
 
@@ -189,7 +188,6 @@ class BehaveImgDataset(BaseDataset):
                                 'smpl_path': smpl_path,
                                 'date': seq.split("_")[0],
                                 'body_mesh': body_mesh,
-                                'pare': pare
                             })
                             pbar.update(1)
                         
@@ -204,7 +202,8 @@ class BehaveImgDataset(BaseDataset):
         self.N = len(self.data)
         self.to_tensor = transforms.ToTensor()
         self.pare = joblib.load(open("/data/aruzzi/Behave/pare_smpl_params.pkl", 'rb'))
-        print(self.pare)
+        print(self.pare.keys())
+        print(self.pare['smpl_vertices'].shape)
 
 
     def __getitem__(self, index):
