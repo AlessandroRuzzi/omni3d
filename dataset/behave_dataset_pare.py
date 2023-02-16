@@ -203,7 +203,7 @@ class BehaveImgDataset(BaseDataset):
 
         self.N = len(self.data)
         self.to_tensor = transforms.ToTensor()
-        self.pare = joblib.load(open("data/aruzzi/Behave/pare_smpl_params.pkl", 'rb'))
+        self.pare = joblib.load(open("/data/aruzzi/Behave/pare_smpl_params.pkl", 'rb'))
         print(self.pare)
 
 
