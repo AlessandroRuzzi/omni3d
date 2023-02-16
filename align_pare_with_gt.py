@@ -289,7 +289,7 @@ if __name__ == "__main__":
 
         day_key = out['img_path'][len('/data/xiwang/behave/sequences/'):]
         print(day_key)
-        aligned_pare[day_key] = moved_pare2
+        aligned_pare[day_key] = 0
 
     with open('/data/aruzzi/Behave/aligned_pare', 'w') as f:
         json.dump(aligned_pare, f)
