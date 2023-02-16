@@ -253,7 +253,7 @@ if __name__ == "__main__":
         day_key = out['img_path'][len('/data/xiwang/behave/sequences/'):]
         print(i," ---- ",out['img_path'])
 
-        if out['pare_verts'] != None:
+        if out['pare_verts'] != None and out['body_mesh_verts'].clone().cpu().float().T.numpy().shape[1] == out['pare_verts'].clone().cpu().T.numpy().shape[1]:
             intrin = (
                 out['calibration_matrix'],
                 out['dist_coefs']

@@ -97,6 +97,9 @@ def calc_errors_on_high_prob_bbox(results):
     print("Z Error: ", error_dict['z'] / error_dict['num_imgs'])
     print("Lenght Error: ", error_dict['l'] / error_dict['num_imgs'])
     print("-------------------------------------\n")
+
+def calc_errors_on_closest_bbox_human(results, results_all):
+    return
  
 
 if __name__ == "__main__":
@@ -107,5 +110,9 @@ if __name__ == "__main__":
 
     calc_errors_using_closest_bbox(results, results_all)
 
+    calc_errors_on_closest_bbox_human(results, results_all)
+
     calc_num_wrong_bbox(results)
+
+
 
