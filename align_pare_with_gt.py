@@ -248,47 +248,50 @@ if __name__ == "__main__":
 
     aligned_pare_dict = {}
 
-    for i in range(dataset.__len__()):
+    for i in range(100):
         out = dataset[i]
-
+        day_key = out['img_path'][len('/data/xiwang/behave/sequences/'):]
         print(i," ---- ",out['img_path'])
 
-        intrin = (
-            out['calibration_matrix'],
-            out['dist_coefs']
-        )
+        if out['pare_verts'] != None:
+            intrin = (
+                out['calibration_matrix'],
+                out['dist_coefs']
+            )
 
-        model2 = Model(out['pare_verts'].clone(), out['pare_camera'], intrin, out['img'], True, True).to('cuda')
+            model2 = Model(out['pare_verts'].clone(), out['pare_camera'], intrin, out['img'], True, True).to('cuda')
 
-        optimizer = Adam(model2.parameters(), lr=0.1)
+            optimizer = Adam(model2.parameters(), lr=0.1)
 
-        for i in range(500):
-            optimizer.zero_grad()
-            loss = model2()
-            loss.backward()
-            optimizer.step()
-            # if i % 500 == 0:
-            #     print(i, loss.detach().item())
-        print(loss.detach().item())
+            for i in range(500):
+                optimizer.zero_grad()
+                loss = model2()
+                loss.backward()
+                optimizer.step()
+                # if i % 500 == 0:
+                #     print(i, loss.detach().item())
+            print(loss.detach().item())
 
-        behave_verts = out['body_mesh_verts'].clone().cpu().float()
-        pare_verts = out['pare_verts'].clone().cpu()
+            behave_verts = out['body_mesh_verts'].clone().cpu().float()
+            pare_verts = out['pare_verts'].clone().cpu()
 
-        aligned_pare = compute_similarity_transform(pare_verts.T.numpy(), behave_verts.T.numpy())
-        aligned_pare = torch.from_numpy(aligned_pare.T).float()
-        # moved_pare1 = model1.get_moved_pare().detach().cpu()
-        moved_pare2 = model2.get_moved_pare().detach().cpu()
+            aligned_pare = compute_similarity_transform(pare_verts.T.numpy(), behave_verts.T.numpy())
+            aligned_pare = torch.from_numpy(aligned_pare.T).float()
+            # moved_pare1 = model1.get_moved_pare().detach().cpu()
+            moved_pare2 = model2.get_moved_pare().detach().cpu()
 
-        aligned_er = calc_error(behave_verts, aligned_pare)
-        # moved_er1 = calc_error(behave_verts, moved_pare1)
-        moved_er2 = calc_error(behave_verts, moved_pare2)
+            aligned_er = calc_error(behave_verts, aligned_pare)
+            # moved_er1 = calc_error(behave_verts, moved_pare1)
+            moved_er2 = calc_error(behave_verts, moved_pare2)
 
-        print(aligned_er)
-        # print(moved_er1)
-        print(moved_er2)
+            print(aligned_er)
+            # print(moved_er1)
+            print(moved_er2)
 
-        day_key = out['img_path'][len('/data/xiwang/behave/sequences/'):]
-        aligned_pare_dict[day_key] = moved_pare2.numpy().tolist()
+            
+            aligned_pare_dict[day_key] = moved_pare2.numpy().tolist()
+        else:
+            aligned_pare_dict[day_key] = None
 
     with open('/data/aruzzi/Behave/aligned_pare.json', 'w') as f:
         json.dump(aligned_pare_dict, f)
