@@ -202,8 +202,6 @@ class BehaveImgDataset(BaseDataset):
         self.N = len(self.data)
         self.to_tensor = transforms.ToTensor()
         self.pare = joblib.load(open("/data/aruzzi/Behave/pare_smpl_params.pkl", 'rb'))
-        print(self.pare.keys())
-        print(self.pare['smpl_vertices'].shape)
 
 
     def __getitem__(self, index):
@@ -278,9 +276,12 @@ class BehaveImgDataset(BaseDataset):
             ret['body_mesh_faces'] = faces_idx.reshape(-1, faces_idx.shape[-1])
             
             
+            day_key = data['img_path'][len('/data/xiwang/behave/sequences/'):]
+            pare_verts = torch.from_numpy(self.pare[day_key]['smpl_vertices']).reshape(-1, 3)
+            pare_camera = torch.from_numpy(self.pare[day_key]['orig_cam'][0])
 
-            pare_verts = torch.from_numpy(self.pare[index]['smpl_vertices']).reshape(-1, 3)
-            pare_camera = torch.from_numpy(self.pare[index]['orig_cam'][0])
+            print(pare_verts.shape)
+            print(pare_camera.shape)
             
             # print(pare_verts.shape, pare_camera.shape)
             
