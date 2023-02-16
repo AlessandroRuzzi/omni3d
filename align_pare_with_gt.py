@@ -17,6 +17,11 @@ import json
 
 wandb.init(project = "PARE Alignment")
 
+def check_shape(S1,S2):
+    if S1.shape[0] != 3 and S1.shape[0] != 2:
+        S1 = S1.T
+        S2 = S2.T
+    return S2.shape[1] == S1.shape[1]
 
 def show(img):
     figure(figsize=(8, 6), dpi=80)
@@ -253,7 +258,7 @@ if __name__ == "__main__":
         day_key = out['img_path'][len('/data/xiwang/behave/sequences/'):]
         print(i," ---- ",out['img_path'])
 
-        if out['pare_verts'] != None and out['body_mesh_verts'].clone().cpu().float().T.numpy().shape[1] == out['pare_verts'].clone().cpu().T.numpy().shape[1]:
+        if out['pare_verts'] != None and check_shape(out['body_mesh_verts'].clone().cpu().float().T.numpy(),out['pare_verts'].clone().cpu().T.numpy()):
             intrin = (
                 out['calibration_matrix'],
                 out['dist_coefs']
