@@ -248,7 +248,7 @@ if __name__ == "__main__":
 
     aligned_pare_dict = {}
 
-    for i in range(100):
+    for i in range(dataset.__len__()):
         out = dataset[i]
         day_key = out['img_path'][len('/data/xiwang/behave/sequences/'):]
         print(i," ---- ",out['img_path'])
