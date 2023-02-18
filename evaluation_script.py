@@ -78,9 +78,7 @@ def calc_errors_on_high_prob_bbox(results):
     error_dict = {'x' : 0, 'y' : 0, 'z': 0, 'l': 0 , 'num_imgs' : 0}
 
     for i,day in enumerate(results):
-        print(i)
         pred_dict = results[day]
-        print(pred_dict)
         gt_box = pred_dict["gt_bbox_center"]
         pred_box = pred_dict["pred_bbox_center"]
         gt_length = pred_dict["gt_bbox_size"][0]
