@@ -111,7 +111,7 @@ def calc_errors_on_closest_bbox_human(results, results_all, human_pare_all):
             print(verts.shape)
             human_center = [torch.min(verts[:,0]) + (torch.max(verts[:,0]) - torch.min(verts[:,0])) / 2.0, 
                             torch.min(verts[:,1]) + (torch.max(verts[:,1]) - torch.min(verts[:,1])) / 2.0,
-                            torch.min(verts[:,2]) + (torch.max(verts[:,2]) - torch.min(verts[:,2])) / 2.0].detach().numpy().cpu().tolist()
+                            torch.min(verts[:,2]) + (torch.max(verts[:,2]) - torch.min(verts[:,2])) / 2.0]
             
             print(human_center)
 
