@@ -111,9 +111,9 @@ def calc_errors_on_closest_bbox_human(results, results_all, human_pare_all):
         verts = torch.FloatTensor(human_pare_all[day])
         if verts != None:
             print(verts.shape)
-            human_center = [torch.min(verts[0,:,0]) + (torch.max(verts[0,:,0]) - torch.min(verts[0,:,0])) / 2.0, 
-                            torch.min(verts[0,:,1]) + (torch.max(verts[0,:,1]) - torch.min(verts[0,:,1])) / 2.0,
-                            torch.min(verts[0,:,2]) + (torch.max(verts[0,:,2]) - torch.min(verts[0,:,2])) / 2.0].detach().numpy().cpu().tolist()
+            human_center = [torch.min(verts[:,0]) + (torch.max(verts[:,0]) - torch.min(verts[:,0])) / 2.0, 
+                            torch.min(verts[:,1]) + (torch.max(verts[:,1]) - torch.min(verts[:,1])) / 2.0,
+                            torch.min(verts[:,2]) + (torch.max(verts[:,2]) - torch.min(verts[:,2])) / 2.0].detach().numpy().cpu().tolist()
             
             print(human_center)
 
@@ -145,9 +145,8 @@ def calc_errors_on_closest_bbox_human(results, results_all, human_pare_all):
 if __name__ == "__main__":
     results = json.load(open("predictions/results_2.json"))["best_score vs gt"]
     results_all = json.load(open("predictions/results_2.json"))["all_predicted"]
-    print("here")
     human_pare_all = json.load(open("/data/aruzzi/Behave/aligned_pare.json"))
-    print("here2")
+    
 
     calc_errors_on_high_prob_bbox(results)
 
