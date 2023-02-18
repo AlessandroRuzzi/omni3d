@@ -145,7 +145,9 @@ def calc_errors_on_closest_bbox_human(results, results_all, human_pare_all):
 if __name__ == "__main__":
     results = json.load(open("predictions/results_2.json"))["best_score vs gt"]
     results_all = json.load(open("predictions/results_2.json"))["all_predicted"]
+    print("here")
     human_pare_all = json.load(open("/data/aruzzi/Behave/aligned_pare.json"))
+    print("here2")
 
     calc_errors_on_high_prob_bbox(results)
 
