@@ -200,6 +200,8 @@ for id_data,dl in enumerate([(train_dl,"Train")]):
                 (torch.min(verts[:,1]) + (torch.max(verts[:,1]) - torch.min(verts[:,1])) / 2.0).detach().cpu().float(),
                 (torch.min(verts[:,2]) + (torch.max(verts[:,2]) - torch.min(verts[:,2])) / 2.0).detach().cpu().float()]
         
+        human_center = [float(i) for i in human_center]
+
         bbox_project = human_center
         obj_length = max((torch.max(verts[:,0]) - torch.min(verts[:,0])).detach().cpu().numpy(), (torch.max(verts[:,1]) - torch.min(verts[:,1])).detach().cpu().numpy(),
                           (torch.max(verts[:,2]) - torch.min(verts[:,2])).detach().cpu().numpy())
