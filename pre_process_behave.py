@@ -161,10 +161,15 @@ for id_data,dl in enumerate([(train_dl,"Train")]):
 
                     })
 
+            
+        print(pos_category)
+        print(data["cat_str"][0])
         for j,elem in enumerate(category):
             if elem['name'] == data["cat_str"][0]:
+                    print("here")
                     pos_category = j
                     break
+        print(pos_category)
 
         calibration_matrix = data['calibration_matrix'].cpu().numpy()
         dist_coefs = data['dist_coefs'].cpu().numpy()
