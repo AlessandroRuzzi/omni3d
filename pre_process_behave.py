@@ -238,7 +238,7 @@ for id_data,dl in enumerate([(train_dl,"Train")]):
                             "bbox2D_trunc"	  : [-1,-1,-1,-1],			
                             "bbox3D_cam"	  : ones.tolist(),
                             #"center_cam"	  : bbox[0,:3].tolist(),		
-                            "center_cam"	  : bbox_project,			
+                            "center_cam"	  : bbox_project.tolist(),			
                             "dimensions"	  : [obj_length, obj_length, obj_length],
                             "R_cam"		      : np.eye(3).tolist(),	
 
