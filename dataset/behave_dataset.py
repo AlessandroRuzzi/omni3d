@@ -12,6 +12,7 @@ import re
 import torchvision.transforms as transforms
 from dataset import behave_camera_utils as bcu
 from tqdm import tqdm
+from pytorch3d.io import load_ply
 import cv2
 
 split = {
@@ -111,6 +112,14 @@ class BehaveImgDataset(BaseDataset):
         self.intrinsics = [bcu.load_intrinsics(os.path.join(behave_calibs_path, "intrinsics"), i) for i in range(4)]
 
         seq_list = [seq for seq in os.listdir(behave_seqs_path) if seq.split("_")[0] in self.dates]
+
+        self.camera_params = {}
+        for i in range(1, 8):
+            self.camera_params[f"Date0{i}"] = bcu.load_kinect_poses_back(
+                os.path.join(behave_calibs_path, f"Date0{i}", "config"),
+                [0,1,2,3],
+                True
+            )
 
         pbar = tqdm(desc="Number of loaded images", unit="images")
         for seq in seq_list:
@@ -227,6 +236,18 @@ class BehaveImgDataset(BaseDataset):
             'dist_coefs': dist_coefs, 'bbox': bbox, 'smpl_path': data['smpl_path'], #'human_joints': 0,
             'obj_path': mesh_obj_path
         }
+        rt = (
+            self.camera_params[data['date']][0][data['kid']],
+            self.camera_params[data['date']][1][data['kid']],
+        )
+        behave_verts, faces_idx = load_ply(data['body_mesh'])
+        behave_verts = behave_verts.reshape(-1, 3).numpy()
+        behave_verts = bcu.global2local(behave_verts, rt[0], rt[1])
+            
+        behave_verts[:, :2] *= -1
+        # print(behave_verts.shape, faces_idx.shape)
+        # theMesh = Meshes(verts=[torch.from_numpy(behave_verts).float()], faces=faces_idx)
+        ret['body_mesh_verts'] = torch.from_numpy(behave_verts)
         return ret
 
     def __len__(self):

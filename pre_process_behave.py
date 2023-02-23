@@ -81,13 +81,13 @@ def transform_img(img_path, bbox_corners):
     bottom = int(torch.max(bbox_corners[:, :, 1], dim=1)[0].int())
     right = int(torch.max(bbox_corners[:, :, 0], dim=1)[0].int())
 
-    #img = cv2.imread(img_path[0])
+    img = cv2.imread(img_path[0])
     xyxy = [left,top, right, bottom]
     #print((xyxy))
-    #plot_box_and_label(img, max(round(sum(img.shape) / 2 * 0.003), 2), xyxy, color=generate_colors(1, True))
+    plot_box_and_label(img, max(round(sum(img.shape) / 2 * 0.003), 2), xyxy, color=generate_colors(1, True))
 
-    #images = wandb.Image(img, caption="Image with projected bounding boxes")
-    #wandb.log({"Image YOLOv6" : images})
+    images = wandb.Image(img, caption="Image with projected bounding boxes")
+    wandb.log({"Image YOLOv6" : images})
 
     return xyxy
 
@@ -97,7 +97,7 @@ category = [ {'id' : 0, 'name' : 'backpack', 'supercategory' : ""}, {'id' : 1, '
              {'id' : 9, 'name' :'keyboard', 'supercategory' : ""},{'id' : 10, 'name' :'monitor', 'supercategory' : ""}, {'id' : 11, 'name' :'plasticcontainer', 'supercategory' : ""}, 
              {'id' : 12, 'name' :'stool', 'supercategory' : ""}, {'id' : 13, 'name' :'suitcase', 'supercategory' : ""}, {'id' : 14, 'name' :'tablesmall', 'supercategory' : ""}, 
              {'id' : 15, 'name' :'tablesquare', 'supercategory' : ""}, {'id' : 16, 'name' :'toolbox', 'supercategory' : ""}, {'id' : 17, 'name' :'trashbin', 'supercategory' : ""}, 
-             {'id' : 18, 'name' :'yogaball', 'supercategory' : ""}, {'id' : 19, 'name' :'yogamat', 'supercategory' : ""}]
+             {'id' : 18, 'name' :'yogaball', 'supercategory' : ""}, {'id' : 19, 'name' :'yogamat', 'supercategory' : ""}, {'id' : 20, 'name' :'person', 'supercategory' : ""}]
 
 opt = TrainOptions().parse()
 train_dl, val_dl, test_dl = CreateDataLoader(opt)
@@ -159,9 +159,12 @@ for id_data,dl in enumerate([(test_dl,"Test")]):
 
         ones = -1 * np.ones(24).reshape(8,3)
 
+        print(bbox_project)
+        print(obj_length)
+
         object.append({
 
-                            "id"			  : i,					
+                            "id"			  : i * 2,					
                             "image_id"		  : i,	
                             "dataset_id"	  : id_data,				
                             "category_id"	  : category[pos_category]['id'],					
@@ -185,14 +188,65 @@ for id_data,dl in enumerate([(test_dl,"Test")]):
                             "depth_error"	  : -1,				
        
                     })
+
+        calibration_matrix = data['calibration_matrix'].cpu().numpy()
+        dist_coefs = data['dist_coefs'].cpu().numpy()
+        projector = [
+        bcu.get_local_projector(c, d) for c, d in zip(calibration_matrix, dist_coefs)
+         ]
         
-        #break
+        verts = data['body_mesh_verts']
+        human_center = [torch.min(verts[:,0]) + (torch.max(verts[:,0]) - torch.min(verts[:,0])) / 2.0, 
+                torch.min(verts[:,1]) + (torch.max(verts[:,1]) - torch.min(verts[:,1])) / 2.0,
+                torch.min(verts[:,2]) + (torch.max(verts[:,2]) - torch.min(verts[:,2])) / 2.0]
+        bbox_project = human_center
+        #bbox_project[:, :2] = bbox_project[:, :2] * -1
+
+        patch_coord_projected, bbox_corners = calc_patch_coord(bbox_project, projector)
+        bbox2d = transform_img(data["img_path"], bbox_corners)
+
+        obj_length = max(torch.max(verts[:,0]) - torch.min(verts[:,0]), torch.max(verts[:,1]) - torch.min(verts[:,1]), torch.max(verts[:,2]) - torch.min(verts[:,2]))
+
+        print(bbox_project)
+        print(obj_length)
+
+        print("-----------------------------")
+        
+
+        object.append({
+
+                            "id"			  : (i * 2)+1,					
+                            "image_id"		  : i,	
+                            "dataset_id"	  : id_data,				
+                            "category_id"	  : category[pos_category]['id'],					
+                            "category_name"	  : category[pos_category]['name'],		
+                            
+                            "valid3D"		  : True,				   
+                            "bbox2D_tight"	  : [-1,-1,-1,-1],		
+                            "bbox2D_proj"	  : bbox2d,			
+                            "bbox2D_trunc"	  : [-1,-1,-1,-1],			
+                            "bbox3D_cam"	  : ones.tolist(),
+                            #"center_cam"	  : bbox[0,:3].tolist(),		
+                            "center_cam"	  : bbox_project,			
+                            "dimensions"	  : [obj_length, obj_length, obj_length],
+                            "R_cam"		      : np.eye(3).tolist(),	
+
+                            "behind_camera"	  : False,				
+                            "visibility"	  : -1, 		
+                            "truncation"	  : -1, 				
+                            "segmentation_pts": -1, 					
+                            "lidar_pts" 	  : -1, 					
+                            "depth_error"	  : -1,				
+       
+                    })
+        if i == 2:
+            break
 
     dataset['info'] = info
     dataset['images'] = image
     dataset['categories'] = category
     dataset['annotations'] = object
 
-    out_file = open(f'/data/aruzzi/Behave/Behave_{dl[1]}.json',"w") 
+    out_file = open(f'/data/aruzzi/Behave/Behave_person_{dl[1]}.json',"w") 
     json.dump(dataset, out_file, indent = 2)
     out_file.close()
