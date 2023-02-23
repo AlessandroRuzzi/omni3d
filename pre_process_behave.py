@@ -196,19 +196,21 @@ for id_data,dl in enumerate([(train_dl,"Train")]):
          ]
         
         verts = data['body_mesh_verts']
-        human_center = [torch.min(verts[:,0]) + (torch.max(verts[:,0]) - torch.min(verts[:,0])) / 2.0, 
-                torch.min(verts[:,1]) + (torch.max(verts[:,1]) - torch.min(verts[:,1])) / 2.0,
-                torch.min(verts[:,2]) + (torch.max(verts[:,2]) - torch.min(verts[:,2])) / 2.0]
+        human_center = [(torch.min(verts[:,0]) + (torch.max(verts[:,0]) - torch.min(verts[:,0])) / 2.0).detach().cpu().numpy(), 
+                (torch.min(verts[:,1]) + (torch.max(verts[:,1]) - torch.min(verts[:,1])) / 2.0).detach().cpu().numpy(),
+                (torch.min(verts[:,2]) + (torch.max(verts[:,2]) - torch.min(verts[:,2])) / 2.0).detach().cpu().numpy()]
         
         bbox_project = human_center
-        obj_length = max(torch.max(verts[:,0]) - torch.min(verts[:,0]), torch.max(verts[:,1]) - torch.min(verts[:,1]), torch.max(verts[:,2]) - torch.min(verts[:,2]))
-        bbox_to_project = human_center.copy()
-        bbox_project.append(obj_length)
-        bbox_project = [bbox_project]
+        obj_length = max((torch.max(verts[:,0]) - torch.min(verts[:,0])).detach().cpu().numpy(), (torch.max(verts[:,1]) - torch.min(verts[:,1])).detach().cpu().numpy(),
+                          (torch.max(verts[:,2]) - torch.min(verts[:,2])).detach().cpu().numpy())
+        bbox_to_project = torch.FloatTensor(human_center)
+        bbox_to_project.append(obj_length)
+        bbox_to_project = [bbox_to_project]
         #bbox_project[:, :2] = bbox_project[:, :2] * -1
 
         print(bbox_project)
         print(bbox_to_project)
+        print(bbox_to_project.shape)
         print(obj_length)
 
         patch_coord_projected, bbox_corners = calc_patch_coord(bbox_to_project, projector)
