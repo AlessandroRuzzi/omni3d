@@ -196,9 +196,9 @@ for id_data,dl in enumerate([(train_dl,"Train")]):
          ]
         
         verts = data['body_mesh_verts']
-        human_center = [(torch.min(verts[:,0]) + (torch.max(verts[:,0]) - torch.min(verts[:,0])) / 2.0).detach().cpu().numpy(), 
-                (torch.min(verts[:,1]) + (torch.max(verts[:,1]) - torch.min(verts[:,1])) / 2.0).detach().cpu().numpy(),
-                (torch.min(verts[:,2]) + (torch.max(verts[:,2]) - torch.min(verts[:,2])) / 2.0).detach().cpu().numpy()]
+        human_center = [(torch.min(verts[:,0]) + (torch.max(verts[:,0]) - torch.min(verts[:,0])) / 2.0).detach().cpu() 
+                (torch.min(verts[:,1]) + (torch.max(verts[:,1]) - torch.min(verts[:,1])) / 2.0).detach().cpu(),
+                (torch.min(verts[:,2]) + (torch.max(verts[:,2]) - torch.min(verts[:,2])) / 2.0).detach().cpu()]
         
         bbox_project = human_center
         obj_length = max((torch.max(verts[:,0]) - torch.min(verts[:,0])).detach().cpu().numpy(), (torch.max(verts[:,1]) - torch.min(verts[:,1])).detach().cpu().numpy(),
@@ -238,7 +238,7 @@ for id_data,dl in enumerate([(train_dl,"Train")]):
                             "bbox2D_trunc"	  : [-1,-1,-1,-1],			
                             "bbox3D_cam"	  : ones.tolist(),
                             #"center_cam"	  : bbox[0,:3].tolist(),		
-                            "center_cam"	  : bbox_project.tolist(),			
+                            "center_cam"	  : bbox_project,			
                             "dimensions"	  : [obj_length, obj_length, obj_length],
                             "R_cam"		      : np.eye(3).tolist(),	
 
