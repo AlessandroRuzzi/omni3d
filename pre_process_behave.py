@@ -147,7 +147,7 @@ for id_data,dl in enumerate([(train_dl,"Train")]):
 
     for i, data in tqdm(enumerate(dl[0]), total=len(dl[0])):
 
-        pos_category = -1
+        pos_category = None
         image.append({
 
                         	"id"			  : i,
@@ -163,7 +163,7 @@ for id_data,dl in enumerate([(train_dl,"Train")]):
 
             
         print(pos_category)
-        print(data["cat_str"])
+        print(data["cat_str"][0])
         for j,elem in enumerate(category):
             if elem['name'] == data["cat_str"][0]:
                     print("here")
@@ -275,7 +275,7 @@ for id_data,dl in enumerate([(train_dl,"Train")]):
                             "depth_error"	  : -1,				
        
                     })
-        if i == 2:
+        if i == 10:
             break
 
     dataset['info'] = info
