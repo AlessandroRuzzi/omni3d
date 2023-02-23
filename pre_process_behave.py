@@ -196,6 +196,7 @@ for id_data,dl in enumerate([(train_dl,"Train")]):
          ]
         
         verts = data['body_mesh_verts']
+        print(torch.min(verts[:,1]), torch.max(verts[:,1]))
         human_center = [(torch.min(verts[:,0]) + (torch.max(verts[:,0]) - torch.min(verts[:,0])) / 2.0).detach().cpu().float(), 
                 (torch.min(verts[:,1]) + (torch.max(verts[:,1]) - torch.min(verts[:,1])) / 2.0).detach().cpu().float(),
                 (torch.min(verts[:,2]) + (torch.max(verts[:,2]) - torch.min(verts[:,2])) / 2.0).detach().cpu().float()]
