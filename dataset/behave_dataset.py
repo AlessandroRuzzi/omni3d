@@ -15,6 +15,7 @@ from dataset import behave_camera_utils as bcu
 from tqdm import tqdm
 from pytorch3d.io import load_ply
 import cv2
+import json
 
 split = {
     "train": {"Date01", "Date02", "Date05", "Date06", "Date07"},
@@ -251,9 +252,10 @@ class BehaveImgDataset(BaseDataset):
 
         smpl = get_smplh([data['smpl_path']], "male" , "cpu")
         verts, jtr, tposed, naked = smpl()
-        verts = torch.matmul(verts[0] + torch.Tensor(rt[1]).reshape(1,3) , torch.Tensor(rt[0]).reshape(3,3) )
-            
-        verts[:, :2] *= -1
+        cam_ext = json.load(open(os.path.join("/data/xiwang/behave/calibs", f"{data['date']}/config/{data['kid']}/config.json")))
+        #verts = torch.matmul(verts[0] - torch.Tensor(rt[1]).reshape(1,3) , torch.Tensor(rt[0]).reshape(3,3) )
+        verts = torch.matmul(verts[0] - torch.Tensor(cam_ext["translation"]).reshape(1,-1,3) , torch.Tensor(cam_ext["rotation"]).reshape(3,3) ) 
+        #verts[:, :2] *= -1
         # theMesh = Meshes(verts=[torch.from_numpy(behave_verts).float()], faces=faces_idx)
         ret['body_mesh_verts'] = torch.from_numpy(verts.reshape(-1, 3).detach().cpu().numpy())
         return ret
