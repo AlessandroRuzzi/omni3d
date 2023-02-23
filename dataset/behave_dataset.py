@@ -249,7 +249,7 @@ class BehaveImgDataset(BaseDataset):
         #behave_verts = behave_verts.reshape(-1, 3).numpy()
         #behave_verts = bcu.global2local(behave_verts, rt[0], rt[1])
 
-        smpl = get_smplh(data['smpl_path'], "male" , "cpu")
+        smpl = get_smplh([data['smpl_path']], "male" , "cpu")
         verts, jtr, tposed, naked = smpl()
         verts = torch.matmul(verts[0] - torch.Tensor(rt[0]).reshape(1,-1,3) , torch.Tensor(rt[1]).reshape(3,3) )
             
