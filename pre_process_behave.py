@@ -7,6 +7,7 @@ import numpy as np
 import torch
 from dataset import behave_camera_utils as bcu
 import cv2
+from functools import partial
 
 wandb.init(project = "Omni3D")
 
@@ -90,6 +91,29 @@ def transform_img(img_path, bbox_corners):
     wandb.log({"Image YOLOv6" : images})
 
     return xyxy
+
+def project_points(points, R, t, calibration_matrix, dist_coefs):
+        """
+        given points in the color camera coordinate, project it into color image
+        points: (N, 3)
+        R: (3, 3)
+        t: (3)
+        calibration_matrix: (3, 3)
+        dist_coefs:(8)
+        return: (N, 2)
+        """
+        return cv2.projectPoints(points[..., np.newaxis],
+                                    R, t, calibration_matrix, dist_coefs)[0].reshape(-1, 2)
+
+def get_local_projector(calibration_matrix, dist_coefs):
+    return partial(project_points, R=np.eye(3), t=np.zeros(3), calibration_matrix=calibration_matrix, dist_coefs=dist_coefs)
+
+def show_projection(ver, img):
+    #print(ver)
+    for i in range(ver.shape[0]):
+        img = cv2.circle(img, (ver[i, 0].int().item(), ver[i, 1].int().item()), 2, (255, 0, 0), 1)
+    images = wandb.Image(img, caption="Image with SMPL predictions")
+    wandb.log({"Image SMPL" : images})
 
 category = [ {'id' : 0, 'name' : 'backpack', 'supercategory' : ""}, {'id' : 1, 'name' :'basketball', 'supercategory' : ""}, {'id' : 2, 'name' :'boxlarge', 'supercategory' : ""}, 
              {'id' : 3, 'name' :'boxlong', 'supercategory' : ""}, {'id' : 4, 'name' :'boxmedium', 'supercategory' : ""}, {'id' : 5, 'name' :'boxsmall', 'supercategory' : ""}, 
@@ -220,9 +244,9 @@ for id_data,dl in enumerate([(train_dl,"Train")]):
         patch_coord_projected, bbox_corners = calc_patch_coord(bbox_to_project, projector)
         bbox2d = transform_img(data["img_path"], bbox_corners)
 
-        
 
-        
+        projector = get_local_projector(calibration_matrix, dist_coefs)
+        show_projection(torch.from_numpy(projector(verts[0].detach().cpu().numpy())), cv2.imread(data["img_path"][0])[:,:,::-1].copy())
 
         print("-----------------------------")
         
