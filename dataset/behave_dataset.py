@@ -242,10 +242,6 @@ class BehaveImgDataset(BaseDataset):
             'dist_coefs': dist_coefs, 'bbox': bbox, 'smpl_path': data['smpl_path'], #'human_joints': 0,
             'obj_path': mesh_obj_path
         }
-        rt = (
-            self.camera_params[data['date']][0][data['kid']],
-            self.camera_params[data['date']][1][data['kid']],
-        )
         #behave_verts, faces_idx = load_ply(data['body_mesh'])
         #behave_verts = behave_verts.reshape(-1, 3).numpy()
         #behave_verts = bcu.global2local(behave_verts, rt[0], rt[1])
@@ -253,10 +249,7 @@ class BehaveImgDataset(BaseDataset):
         smpl = get_smplh([data['smpl_path']], "male" , "cpu")
         verts, jtr, tposed, naked = smpl()
         cam_ext = json.load(open(os.path.join("/data/xiwang/behave/calibs", f"{data['date']}/config/{data['kid']}/config.json")))
-        #verts = torch.matmul(verts[0] - torch.Tensor(rt[1]).reshape(1,3) , torch.Tensor(rt[0]).reshape(3,3) )
         verts = torch.matmul(verts[0] - torch.Tensor(cam_ext["translation"]).reshape(1,-1,3) , torch.Tensor(cam_ext["rotation"]).reshape(3,3) ) 
-        #verts[:, :2] *= -1
-        # theMesh = Meshes(verts=[torch.from_numpy(behave_verts).float()], faces=faces_idx)
         ret['body_mesh_verts'] = torch.from_numpy(verts.reshape(-1, 3).detach().cpu().numpy())
         return ret
 

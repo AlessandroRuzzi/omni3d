@@ -82,13 +82,13 @@ def transform_img(img_path, bbox_corners):
     bottom = int(torch.max(bbox_corners[:, :, 1], dim=1)[0].int())
     right = int(torch.max(bbox_corners[:, :, 0], dim=1)[0].int())
 
-    img = cv2.imread(img_path[0])
+    #img = cv2.imread(img_path[0])
     xyxy = [left,top, right, bottom]
     #print((xyxy))
-    plot_box_and_label(img, max(round(sum(img.shape) / 2 * 0.003), 2), xyxy, color=generate_colors(1, True))
+    #plot_box_and_label(img, max(round(sum(img.shape) / 2 * 0.003), 2), xyxy, color=generate_colors(1, True))
 
-    images = wandb.Image(img, caption="Image with projected bounding boxes")
-    wandb.log({"Image YOLOv6" : images})
+    #images = wandb.Image(img, caption="Image with projected bounding boxes")
+    #wandb.log({"Image YOLOv6" : images})
 
     return xyxy
 
@@ -183,9 +183,6 @@ for id_data,dl in enumerate([(train_dl,"Train")]):
 
         ones = -1 * np.ones(24).reshape(8,3)
 
-        print(bbox_project)
-        print(obj_length)
-
         object.append({
 
                             "id"			  : i * 2,					
@@ -220,7 +217,6 @@ for id_data,dl in enumerate([(train_dl,"Train")]):
          ]
         
         verts = data['body_mesh_verts']
-        print(torch.min(verts[0,:,1]), torch.max(verts[0,:,1]))
         human_center = [(torch.min(verts[0,:,0]) + (torch.max(verts[0,:,0]) - torch.min(verts[0,:,0])) / 2.0).detach().cpu().float(), 
                 (torch.min(verts[0,:,1]) + (torch.max(verts[0,:,1]) - torch.min(verts[0,:,1])) / 2.0).detach().cpu().float(),
                 (torch.min(verts[0,:,2]) + (torch.max(verts[0,:,2]) - torch.min(verts[0,:,2])) / 2.0).detach().cpu().float()]
@@ -236,25 +232,16 @@ for id_data,dl in enumerate([(train_dl,"Train")]):
         bbox_to_project = torch.FloatTensor(np.array(bbox_to_project)).cuda()
         #bbox_project[:, :2] = bbox_project[:, :2] * -1
 
-        print(bbox_project)
-        print(bbox_to_project)
-        print(bbox_to_project.shape)
-        print(obj_length)
+
 
         patch_coord_projected, bbox_corners = calc_patch_coord(bbox_to_project, projector)
         bbox2d = transform_img(data["img_path"], bbox_corners)
 
 
-        projector = get_local_projector(calibration_matrix[0], dist_coefs[0])
-        print(calibration_matrix.shape)
-        print(dist_coefs.shape)
-        image_show = cv2.imread(data["img_path"][0])[:,:,::-1].copy()
-        print(image_show.shape)
-        print(verts.shape)
-        print(verts[0][0])
-        show_projection(torch.from_numpy(projector(verts[0].detach().cpu().numpy())), image_show )
+        #projector = get_local_projector(calibration_matrix[0], dist_coefs[0])
+        #image_show = cv2.imread(data["img_path"][0])[:,:,::-1].copy()
 
-        print("-----------------------------")
+        #show_projection(torch.from_numpy(projector(verts[0].detach().cpu().numpy())), image_show )
         
 
         object.append({
@@ -262,8 +249,8 @@ for id_data,dl in enumerate([(train_dl,"Train")]):
                             "id"			  : (i * 2)+1,					
                             "image_id"		  : i,	
                             "dataset_id"	  : id_data,				
-                            "category_id"	  : category[pos_category]['id'],					
-                            "category_name"	  : category[pos_category]['name'],		
+                            "category_id"	  : 20,					
+                            "category_name"	  : 'person',		
                             
                             "valid3D"		  : True,				   
                             "bbox2D_tight"	  : [-1,-1,-1,-1],		
