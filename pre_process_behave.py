@@ -250,6 +250,7 @@ for id_data,dl in enumerate([(train_dl,"Train")]):
         print(dist_coefs.shape)
         image_show = cv2.imread(data["img_path"][0])[:,:,::-1].copy()
         print(image_show.shape)
+        print(verts[0].shape)
         show_projection(torch.from_numpy(projector(verts[0].detach().cpu().numpy())), image_show )
 
         print("-----------------------------")
