@@ -143,6 +143,8 @@ class BehaveImgDataset(BaseDataset):
                         mask_path = os.path.join(par, f"k{kid}.obj_rend_mask.jpg")
                         smpl_path = os.path.join(par, 'person', 'fit02', 'person_fit.pkl')
 
+                        body_mesh = smpl_path.replace(".pkl", ".ply")
+
                         # filter out images with high occlusion for test-chore
                         if phase == "test-chore":
                             full_mask_path = os.path.join(par, f"k{kid}.obj_rend_full.jpg")
@@ -170,7 +172,9 @@ class BehaveImgDataset(BaseDataset):
                                 'h5_path': h5_path,
                                 'category': category,
                                 'kid': kid,
+                                'date': seq.split("_")[0],
                                 'smpl_path': smpl_path,
+                                'body_mesh': body_mesh,
                             })
                             pbar.update(1)
                         
