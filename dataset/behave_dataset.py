@@ -119,7 +119,7 @@ class BehaveImgDataset(BaseDataset):
             self.camera_params[f"Date0{i}"] = bcu.load_kinect_poses_back(
                 os.path.join(behave_calibs_path, f"Date0{i}", "config"),
                 [0,1,2,3],
-                True
+                False
             )
 
         pbar = tqdm(desc="Number of loaded images", unit="images")
@@ -253,7 +253,7 @@ class BehaveImgDataset(BaseDataset):
         verts, jtr, tposed, naked = smpl()
         verts = torch.matmul(verts[0] - torch.Tensor(rt[1]).reshape(1,3) , torch.Tensor(rt[0]).reshape(3,3) )
             
-        verts[:, :2] *= -1
+        #verts[:, :2] *= -1
         # theMesh = Meshes(verts=[torch.from_numpy(behave_verts).float()], faces=faces_idx)
         ret['body_mesh_verts'] = torch.from_numpy(verts.reshape(-1, 3).detach().cpu().numpy())
         return ret
