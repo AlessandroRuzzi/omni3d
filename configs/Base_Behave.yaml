@@ -9,11 +9,11 @@ SOLVER:
 TEST:
   EVAL_PERIOD: 1000
 VIS_PERIOD: 111360
-OUTPUT_DIR: "output/behave_no_finetune"
+OUTPUT_DIR: "output/behave_person"
 DATASETS:
-  TRAIN: ('Behave_Train',)
-  TEST: ('Behave_Test',) 
+  TRAIN: ('Behave_person_Train',)
+  TEST: ('Behave_person_Test',) 
   CATEGORY_NAMES: ('backpack', 'basketball', 'boxlarge', 'boxlong', 'boxmedium','boxsmall', 'boxtiny', 'chairblack','chairwood', 'keyboard', 'monitor', 'plasticcontainer', 'stool', 'suitcase', 'tablesmall', 'tablesquare', 'toolbox', 'trashbin', 'yogaball', 'yogamat', 'person')
 MODEL:
   ROI_HEADS:
-    NUM_CLASSES: 20
+    NUM_CLASSES: 21
