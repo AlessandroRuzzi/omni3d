@@ -248,7 +248,9 @@ for id_data,dl in enumerate([(train_dl,"Train")]):
         projector = get_local_projector(calibration_matrix[0], dist_coefs[0])
         print(calibration_matrix.shape)
         print(dist_coefs.shape)
-        show_projection(torch.from_numpy(projector(verts[0].detach().cpu().numpy())), cv2.imread(data["img_path"][0])[:,:,::-1].copy())
+        image_show = cv2.imread(data["img_path"][0])[:,:,::-1].copy()
+        print(image_show.shape)
+        show_projection(torch.from_numpy(projector(verts[0].detach().cpu().numpy())), image_show )
 
         print("-----------------------------")
         
