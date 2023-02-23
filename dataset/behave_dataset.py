@@ -251,13 +251,11 @@ class BehaveImgDataset(BaseDataset):
 
         smpl = get_smplh([data['smpl_path']], "male" , "cpu")
         verts, jtr, tposed, naked = smpl()
-        print(verts.shape, rt[0].shape, rt[1].shape)
         verts = torch.matmul(verts[0] - torch.Tensor(rt[1]).reshape(1,-1,3) , torch.Tensor(rt[0]).reshape(3,3) )
             
         #behave_verts[:, :2] *= -1
-        print(verts.shape, rt[0].shape, rt[1].shape)
         # theMesh = Meshes(verts=[torch.from_numpy(behave_verts).float()], faces=faces_idx)
-        ret['body_mesh_verts'] = torch.from_numpy(verts)
+        ret['body_mesh_verts'] = verts
         return ret
 
     def __len__(self):
