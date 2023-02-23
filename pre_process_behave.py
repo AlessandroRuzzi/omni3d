@@ -203,9 +203,10 @@ for id_data,dl in enumerate([(train_dl,"Train")]):
         bbox_project = human_center
         obj_length = max((torch.max(verts[:,0]) - torch.min(verts[:,0])).detach().cpu().numpy(), (torch.max(verts[:,1]) - torch.min(verts[:,1])).detach().cpu().numpy(),
                           (torch.max(verts[:,2]) - torch.min(verts[:,2])).detach().cpu().numpy())
-        bbox_to_project = torch.FloatTensor(human_center)
+        bbox_to_project = human_center.clone()
         bbox_to_project.append(obj_length)
         bbox_to_project = [bbox_to_project]
+        bbox_to_project = torch.FloatTensor(np.array(human_center))
         #bbox_project[:, :2] = bbox_project[:, :2] * -1
 
         print(bbox_project)
