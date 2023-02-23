@@ -221,15 +221,15 @@ for id_data,dl in enumerate([(train_dl,"Train")]):
         
         verts = data['body_mesh_verts']
         print(torch.min(verts[:,1]), torch.max(verts[:,1]))
-        human_center = [(torch.min(verts[:,0]) + (torch.max(verts[:,0]) - torch.min(verts[:,0])) / 2.0).detach().cpu().float(), 
-                (torch.min(verts[:,1]) + (torch.max(verts[:,1]) - torch.min(verts[:,1])) / 2.0).detach().cpu().float(),
-                (torch.min(verts[:,2]) + (torch.max(verts[:,2]) - torch.min(verts[:,2])) / 2.0).detach().cpu().float()]
+        human_center = [(torch.min(verts[0,:,0]) + (torch.max(verts[0,:,0]) - torch.min(verts[0,:,0])) / 2.0).detach().cpu().float(), 
+                (torch.min(verts[0,:,1]) + (torch.max(verts[0,:,1]) - torch.min(verts[0,:,1])) / 2.0).detach().cpu().float(),
+                (torch.min(verts[0,:,2]) + (torch.max(verts[0,:,2]) - torch.min(verts[0,:,2])) / 2.0).detach().cpu().float()]
         
         human_center = [float(i) for i in human_center]
 
         bbox_project = human_center
-        obj_length = float(max((torch.max(verts[:,0]) - torch.min(verts[:,0])).detach().cpu().numpy(), (torch.max(verts[:,1]) - torch.min(verts[:,1])).detach().cpu().numpy(),
-                          (torch.max(verts[:,2]) - torch.min(verts[:,2])).detach().cpu().numpy()))
+        obj_length = float(max((torch.max(verts[0,:,0]) - torch.min(verts[0,:,0])).detach().cpu().numpy(), (torch.max(verts[0,:,1]) - torch.min(verts[0,:,1])).detach().cpu().numpy(),
+                          (torch.max(verts[0,:,2]) - torch.min(verts[0,:,2])).detach().cpu().numpy()))
         bbox_to_project = human_center.copy()
         bbox_to_project.append(obj_length)
         bbox_to_project = [bbox_to_project]
@@ -246,7 +246,9 @@ for id_data,dl in enumerate([(train_dl,"Train")]):
 
 
         projector = get_local_projector(calibration_matrix, dist_coefs)
-        show_projection(torch.from_numpy(projector(verts.detach().cpu().numpy())), cv2.imread(data["img_path"][0])[:,:,::-1].copy())
+        print(calibration_matrix.shape)
+        print(dist_coefs.shape)
+        show_projection(torch.from_numpy(projector(verts[0].detach().cpu().numpy())), cv2.imread(data["img_path"][0])[:,:,::-1].copy())
 
         print("-----------------------------")
         
