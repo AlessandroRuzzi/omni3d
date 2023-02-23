@@ -255,7 +255,7 @@ class BehaveImgDataset(BaseDataset):
             
         #behave_verts[:, :2] *= -1
         # theMesh = Meshes(verts=[torch.from_numpy(behave_verts).float()], faces=faces_idx)
-        ret['body_mesh_verts'] = verts
+        ret['body_mesh_verts'] = torch.from_numpy(verts.detach().cpu().numpy())
         return ret
 
     def __len__(self):
