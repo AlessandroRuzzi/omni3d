@@ -199,13 +199,18 @@ for id_data,dl in enumerate([(train_dl,"Train")]):
         human_center = [torch.min(verts[:,0]) + (torch.max(verts[:,0]) - torch.min(verts[:,0])) / 2.0, 
                 torch.min(verts[:,1]) + (torch.max(verts[:,1]) - torch.min(verts[:,1])) / 2.0,
                 torch.min(verts[:,2]) + (torch.max(verts[:,2]) - torch.min(verts[:,2])) / 2.0]
+        
         bbox_project = human_center
+        obj_length = max(torch.max(verts[:,0]) - torch.min(verts[:,0]), torch.max(verts[:,1]) - torch.min(verts[:,1]), torch.max(verts[:,2]) - torch.min(verts[:,2]))
+        bbox_to_project = human_center.copy()
+        bbox_project.append(obj_length)
+        bbox_project = [bbox_project]
         #bbox_project[:, :2] = bbox_project[:, :2] * -1
 
         patch_coord_projected, bbox_corners = calc_patch_coord(bbox_project, projector)
         bbox2d = transform_img(data["img_path"], bbox_corners)
 
-        obj_length = max(torch.max(verts[:,0]) - torch.min(verts[:,0]), torch.max(verts[:,1]) - torch.min(verts[:,1]), torch.max(verts[:,2]) - torch.min(verts[:,2]))
+        
 
         print(bbox_project)
         print(obj_length)
