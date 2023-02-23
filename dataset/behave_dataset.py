@@ -132,7 +132,8 @@ class BehaveImgDataset(BaseDataset):
                     if re.match(r".*_fit_k\d_sdf.h5", f):
                         
                         kid = int(f.split("_")[-2][1])
-                        category = f.split("_")[0]
+                        #category = f.split("_")[0]
+                        category = seq.split("_")[2]
                         
                         h5_path = os.path.join(root,f)
 
