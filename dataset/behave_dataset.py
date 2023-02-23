@@ -9,6 +9,7 @@ import h5py
 import torch
 from PIL import Image
 import re
+from lib_smpl.smpl_utils import *
 import torchvision.transforms as transforms
 from dataset import behave_camera_utils as bcu
 from tqdm import tqdm
@@ -244,14 +245,18 @@ class BehaveImgDataset(BaseDataset):
             self.camera_params[data['date']][0][data['kid']],
             self.camera_params[data['date']][1][data['kid']],
         )
-        behave_verts, faces_idx = load_ply(data['body_mesh'])
-        behave_verts = behave_verts.reshape(-1, 3).numpy()
-        behave_verts = bcu.global2local(behave_verts, rt[0], rt[1])
+        #behave_verts, faces_idx = load_ply(data['body_mesh'])
+        #behave_verts = behave_verts.reshape(-1, 3).numpy()
+        #behave_verts = bcu.global2local(behave_verts, rt[0], rt[1])
+
+        smpl = get_smplh(data['smpl_path'], "male" , "cpu")
+        verts, jtr, tposed, naked = smpl()
+        verts = torch.matmul(verts[0] - torch.Tensor(rt[0]).reshape(1,-1,3) , torch.Tensor(rt[1]).reshape(3,3) )
             
-        behave_verts[:, :2] *= -1
-        # print(behave_verts.shape, faces_idx.shape)
+        #behave_verts[:, :2] *= -1
+        print(verts.shape, rt[0].shape, rt[1].shape)
         # theMesh = Meshes(verts=[torch.from_numpy(behave_verts).float()], faces=faces_idx)
-        ret['body_mesh_verts'] = torch.from_numpy(behave_verts)
+        ret['body_mesh_verts'] = torch.from_numpy(verts)
         return ret
 
     def __len__(self):
