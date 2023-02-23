@@ -207,13 +207,16 @@ for id_data,dl in enumerate([(train_dl,"Train")]):
         bbox_project = [bbox_project]
         #bbox_project[:, :2] = bbox_project[:, :2] * -1
 
-        patch_coord_projected, bbox_corners = calc_patch_coord(bbox_project, projector)
+        print(bbox_project)
+        print(bbox_to_project)
+        print(obj_length)
+
+        patch_coord_projected, bbox_corners = calc_patch_coord(bbox_to_project, projector)
         bbox2d = transform_img(data["img_path"], bbox_corners)
 
         
 
-        print(bbox_project)
-        print(obj_length)
+        
 
         print("-----------------------------")
         
