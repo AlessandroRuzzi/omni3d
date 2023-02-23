@@ -196,9 +196,9 @@ for id_data,dl in enumerate([(train_dl,"Train")]):
          ]
         
         verts = data['body_mesh_verts']
-        human_center = [(torch.min(verts[:,0]) + (torch.max(verts[:,0]) - torch.min(verts[:,0])) / 2.0).detach().cpu() 
-                (torch.min(verts[:,1]) + (torch.max(verts[:,1]) - torch.min(verts[:,1])) / 2.0).detach().cpu(),
-                (torch.min(verts[:,2]) + (torch.max(verts[:,2]) - torch.min(verts[:,2])) / 2.0).detach().cpu()]
+        human_center = [(torch.min(verts[:,0]) + (torch.max(verts[:,0]) - torch.min(verts[:,0])) / 2.0).detach().cpu().float(), 
+                (torch.min(verts[:,1]) + (torch.max(verts[:,1]) - torch.min(verts[:,1])) / 2.0).detach().cpu().float(),
+                (torch.min(verts[:,2]) + (torch.max(verts[:,2]) - torch.min(verts[:,2])) / 2.0).detach().cpu().float()]
         
         bbox_project = human_center
         obj_length = max((torch.max(verts[:,0]) - torch.min(verts[:,0])).detach().cpu().numpy(), (torch.max(verts[:,1]) - torch.min(verts[:,1])).detach().cpu().numpy(),
