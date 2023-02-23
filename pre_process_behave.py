@@ -206,7 +206,7 @@ for id_data,dl in enumerate([(train_dl,"Train")]):
         bbox_to_project = human_center.copy()
         bbox_to_project.append(obj_length)
         bbox_to_project = [bbox_to_project]
-        bbox_to_project = torch.FloatTensor(np.array(bbox_to_project))
+        bbox_to_project = torch.FloatTensor(np.array(bbox_to_project)).cuda()
         #bbox_project[:, :2] = bbox_project[:, :2] * -1
 
         print(bbox_project)
