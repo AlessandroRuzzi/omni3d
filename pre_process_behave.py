@@ -129,8 +129,8 @@ train_ds, test_ds = train_dl.dataset, test_dl.dataset
 
 val_ds = val_dl.dataset if val_dl is not None else None
 
-#for id_data,dl in enumerate([(train_dl,"Train")]):
-for id_data,dl in enumerate([(test_dl,"Test")]):
+for id_data,dl in enumerate([(train_dl,"Train")]):
+#for id_data,dl in enumerate([(test_dl,"Test")]):
     dataset = {}
     info = {
 
@@ -260,7 +260,7 @@ for id_data,dl in enumerate([(test_dl,"Test")]):
                             "bbox3D_cam"	  : ones.tolist(),
                             #"center_cam"	  : bbox[0,:3].tolist(),		
                             "center_cam"	  : bbox_project,			
-                            "dimensions"	  : [obj_length, obj_length, obj_length],
+                            "dimensions"	  : [float((torch.max(verts[0,:,0]) - torch.min(verts[0,:,0])).detach().cpu().numpy()), float((torch.max(verts[0,:,1]) - torch.min(verts[0,:,1])).detach().cpu().numpy()), float((torch.max(verts[0,:,2]) - torch.min(verts[0,:,2])).detach().cpu().numpy())],
                             "R_cam"		      : np.eye(3).tolist(),	
 
                             "behind_camera"	  : False,				
@@ -271,14 +271,14 @@ for id_data,dl in enumerate([(test_dl,"Test")]):
                             "depth_error"	  : -1,				
        
                     })
-        #if i == 10:
-        #    break
+        if i == 10:
+            break
 
     dataset['info'] = info
     dataset['images'] = image
     dataset['categories'] = category
     dataset['annotations'] = object
 
-    out_file = open(f'/data/aruzzi/Behave/Behave_person_{dl[1]}.json',"w") 
+    out_file = open(f'/data/aruzzi/Behave/Behave_person_tight_{dl[1]}.json',"w") 
     json.dump(dataset, out_file, indent = 2)
     out_file.close()
