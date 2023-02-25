@@ -9,7 +9,7 @@ SOLVER:
 TEST:
   EVAL_PERIOD: 1000
 VIS_PERIOD: 111360
-OUTPUT_DIR: "output/behave_person_check"
+OUTPUT_DIR: "output/behave_person_tight_check"
 DATASETS:
   TRAIN: ('Behave_person_tight_Train',)
   TEST: ('Behave_person_tight_Test',) 
