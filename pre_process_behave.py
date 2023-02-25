@@ -271,8 +271,8 @@ for id_data,dl in enumerate([(train_dl,"Train")]):
                             "depth_error"	  : -1,				
        
                     })
-        if i == 10:
-            break
+        #if i == 10:
+        #    break
 
     dataset['info'] = info
     dataset['images'] = image
