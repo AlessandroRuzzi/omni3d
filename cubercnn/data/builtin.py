@@ -40,7 +40,7 @@ def get_omni3d_categories(dataset="omni3d"):
     elif dataset in ["nuScenes_train", "nuScenes_val", "nuScenes_test"]:
         cats = set({'pedestrian', 'car', 'truck', 'traffic cone', 'barrier', 'motorcycle', 'bicycle', 'bus', 'trailer'})
         assert len(cats) == 9
-    elif dataset in ["Behave_Train", "Behave_Test", "Behave_person_Train", "Behave_person_Test"]:
+    elif dataset in ["Behave_Train", "Behave_Test", "Behave_person_Train", "Behave_person_Test","Behave_person_tight_Train", "Behave_person_tight_Test"]:
         cats = set({'backpack', 'basketball', 'boxlarge', 'boxlong', 'boxmedium','boxsmall', 'boxtiny', 'chairblack','chairwood', 'keyboard', 'monitor', 'plasticcontainer', 'stool', 'suitcase', 'tablesmall', 'tablesquare', 'toolbox', 'trashbin', 'yogaball', 'yogamat', 'person'})
         assert len(cats) == 21
     else:
