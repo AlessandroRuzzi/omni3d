@@ -169,11 +169,17 @@ def do_test(args, cfg, model):
         if n_det_person > 0:
             print(n_det_person)
             human_predicted[im_name] = {}
+
             max_idx = torch.argmax(torch.FloatTensor(dets_person["scores"])).item()
+            print(dets_person["scores"])
+            print(dets_person["scores"][max_idx])
             human_predicted[im_name]['pred_bbox_center'] = dets_person["pred_center_cam"][max_idx]
+            print(human_predicted[im_name]['pred_bbox_center'])
             human_predicted[im_name]['pred_bbox_size'] = dets_person["pred_dimensions"][max_idx]
             human_predicted[im_name]['pred_bbox_score'] = dets_person["scores"][max_idx]
+            print(human_predicted[im_name]['pred_bbox_score'])
             human_predicted[im_name]['pred_bbox_class'] = cats[dets_person["pred_classes"][max_idx]]
+            print(human_predicted[im_name]['pred_bbox_class'])
             human_predicted[im_name]['pred_bbox_orientation'] = dets_person["pred_pose"][max_idx]
 
         if len(res.keys()) > 2:
