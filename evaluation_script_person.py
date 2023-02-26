@@ -103,16 +103,12 @@ def calc_errors_on_closest_bbox_human(results, results_all, human_pare_all):
     for day in results:
         pred_dict = results[day]
         pred_all = results_all[day]
+        pred_human= human_pare_all[day]
         gt_box = pred_dict["gt_bbox_center"]
         gt_length = pred_dict["gt_bbox_size"][0]
-
-        verts = human_pare_all[day]
-        if verts != None:
-            verts = torch.FloatTensor(verts)
-            human_center = [torch.min(verts[:,0]) + (torch.max(verts[:,0]) - torch.min(verts[:,0])) / 2.0, 
-                            torch.min(verts[:,1]) + (torch.max(verts[:,1]) - torch.min(verts[:,1])) / 2.0,
-                            torch.min(verts[:,2]) + (torch.max(verts[:,2]) - torch.min(verts[:,2])) / 2.0]
-    
+       
+        if pred_human != None:
+            human_center = pred_human["pred_bbox_center"]
 
             object_dist_list = []
             for i, bbox in enumerate(pred_all["bbox_center"]):
