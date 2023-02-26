@@ -168,6 +168,7 @@ def do_test(args, cfg, model):
             }
         if n_det_person > 0:
             print(n_det_person)
+            human_predicted[im_name] = {}
             max_idx = torch.argmax(torch.FloatTensor(dets_person["scores"])).item()
             human_predicted[im_name]['pred_bbox_center'] = dets_person["pred_center_cam"][max_idx]
             human_predicted[im_name]['pred_bbox_size'] = dets_person["pred_dimensions"][max_idx]
@@ -175,7 +176,7 @@ def do_test(args, cfg, model):
             human_predicted[im_name]['pred_bbox_class'] = cats[dets_person["pred_classes"][max_idx]]
             human_predicted[im_name]['pred_bbox_orientation'] = dets_person["pred_pose"][max_idx]
 
-        if len(res.keys()) > 10:
+        if len(res.keys()) > 2:
              break
 
     with open('predictions/results_person_large.json', 'w') as f:
