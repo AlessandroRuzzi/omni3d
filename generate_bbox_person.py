@@ -102,7 +102,7 @@ def do_test(args, cfg, model):
         }]
 
         dets = model(batched)[0]['instances']
-        
+        print(type(dets))
 
         meshes = []
         meshes_text = []
@@ -168,7 +168,7 @@ def do_test(args, cfg, model):
             human_predicted[im_name]['pred_bbox_score'] = dets_person.scores[max_idx].item()
             human_predicted[im_name]['pred_bbox_class'] = cats[dets_person.pred_classes[max_idx].item()]
             human_predicted[im_name]['pred_bbox_orientation'] = dets_person.pred_pose[max_idx].tolist()
-            
+
         if len(res.keys()) > 10:
              break
 
