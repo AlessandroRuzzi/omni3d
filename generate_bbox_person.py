@@ -142,36 +142,38 @@ def do_test(args, cfg, model):
                     dets_no_person["pred_classes"].append(dets.pred_classes[i])
                     dets_no_person["pred_pose"].append(dets.pred_pose[i])               
 
-        n_det_objects = len(dets_no_person)
-        n_det_person = len(dets_person)
+        n_det_objects = len(dets_no_person["scores"])
+        n_det_person = len(dets_person["scores"])
 
         if n_det_objects > 0:
             print(n_det_objects)
             max_idx = torch.argmax(torch.FloatTensor(dets_no_person["scores"])).item()
             print(dets_no_person["scores"])
             print(dets_no_person["scores"][max_idx])
-            res[im_name]['pred_bbox_center'] = dets_no_person["pred_center_cam"][max_idx].tolist()
+            res[im_name]['pred_bbox_center'] = dets_no_person["pred_center_cam"][max_idx]
             print(res[im_name]['pred_bbox_center'])
-            res[im_name]['pred_bbox_size'] = dets_no_person["pred_dimensions"][max_idx].tolist()
+            res[im_name]['pred_bbox_size'] = dets_no_person["pred_dimensions"][max_idx]
             res[im_name]['pred_bbox_score'] = dets_no_person["scores"][max_idx].item()
+            print(res[im_name]['pred_bbox_score'])
             res[im_name]['pred_bbox_class'] = cats[dets_no_person["pred_classes"][max_idx].item()]
-            res[im_name]['pred_bbox_orientation'] = dets_no_person["pred_pose"][max_idx].tolist()
+            print(res[im_name]['pred_bbox_class'])
+            res[im_name]['pred_bbox_orientation'] = dets_no_person["pred_pose"][max_idx]
             
             all_predicted[im_name] = {
-                "bbox_center": dets_no_person["pred_center_cam"].tolist(),
-                "bbox_size": dets_no_person["pred_dimensions"].tolist(),
-                "bbox_score": dets_no_person["scores"].tolist(),
-                "bbox_class": [cats[c] for c in dets_no_person["pred_classes"].tolist()],
-                "bbox_orientation": dets_no_person["pred_pose"].tolist()
+                "bbox_center": dets_no_person["pred_center_cam"],
+                "bbox_size": dets_no_person["pred_dimensions"],
+                "bbox_score": dets_no_person["scores"],
+                "bbox_class": [cats[c] for c in dets_no_person["pred_classes"]],
+                "bbox_orientation": dets_no_person["pred_pose"]
             }
         if n_det_person > 0:
             print(n_det_person)
             max_idx = torch.argmax(torch.FloatTensor(dets_person["scores"])).item()
-            human_predicted[im_name]['pred_bbox_center'] = dets_person["pred_center_cam"][max_idx].tolist()
-            human_predicted[im_name]['pred_bbox_size'] = dets_person["pred_dimensions"][max_idx].tolist()
+            human_predicted[im_name]['pred_bbox_center'] = dets_person["pred_center_cam"][max_idx]
+            human_predicted[im_name]['pred_bbox_size'] = dets_person["pred_dimensions"][max_idx]
             human_predicted[im_name]['pred_bbox_score'] = dets_person["scores"][max_idx].item()
             human_predicted[im_name]['pred_bbox_class'] = cats[dets_person["pred_classes"][max_idx].item()]
-            human_predicted[im_name]['pred_bbox_orientation'] = dets_person["pred_pose"][max_idx].tolist()
+            human_predicted[im_name]['pred_bbox_orientation'] = dets_person["pred_pose"][max_idx]
 
         if len(res.keys()) > 10:
              break
