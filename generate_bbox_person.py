@@ -129,18 +129,18 @@ def do_test(args, cfg, model):
         for i in range(len(dets.scores)):
             print(cats[dets.pred_classes[i].item()])
             if cats[dets.pred_classes[i].item()] == "person":
-                    dets_person["pred_center_cam"].append(dets.pred_center_cam[i])
-                    dets_person["pred_dimensions"].append(dets.pred_dimensions[i])
-                    dets_person["scores"].append(dets.scores[i])
-                    dets_person["pred_classes"].append(dets.pred_classes[i])
-                    dets_person["pred_pose"].append(dets.pred_pose[i])
+                    dets_person["pred_center_cam"].append(dets.pred_center_cam[i].tolist())
+                    dets_person["pred_dimensions"].append(dets.pred_dimensions[i].tolist())
+                    dets_person["scores"].append(dets.scores[i].tolist())
+                    dets_person["pred_classes"].append(dets.pred_classes[i].tolist())
+                    dets_person["pred_pose"].append(dets.pred_pose[i].tolist())
 
             else:
-                    dets_no_person["pred_center_cam"].append(dets.pred_center_cam[i])
-                    dets_no_person["pred_dimensions"].append(dets.pred_dimensions[i])
-                    dets_no_person["scores"].append(dets.scores[i])
-                    dets_no_person["pred_classes"].append(dets.pred_classes[i])
-                    dets_no_person["pred_pose"].append(dets.pred_pose[i])               
+                    dets_no_person["pred_center_cam"].append(dets.pred_center_cam[i].tolist())
+                    dets_no_person["pred_dimensions"].append(dets.pred_dimensions[i].tolist())
+                    dets_no_person["scores"].append(dets.scores[i].tolist())
+                    dets_no_person["pred_classes"].append(dets.pred_classes[i].tolist())
+                    dets_no_person["pred_pose"].append(dets.pred_pose[i].tolist())               
 
         n_det_objects = len(dets_no_person["scores"])
         n_det_person = len(dets_person["scores"])
