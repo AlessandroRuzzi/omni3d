@@ -127,7 +127,6 @@ def do_test(args, cfg, model):
         dets_person["pred_pose"] = []
 
         for i in range(len(dets.scores)):
-            print(cats[dets.pred_classes[i].item()])
             if cats[dets.pred_classes[i].item()] == "person":
                     dets_person["pred_center_cam"].append(dets.pred_center_cam[i].tolist())
                     dets_person["pred_dimensions"].append(dets.pred_dimensions[i].tolist())
