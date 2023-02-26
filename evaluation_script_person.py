@@ -103,11 +103,12 @@ def calc_errors_on_closest_bbox_human(results, results_all, human_pare_all):
     for day in results:
         pred_dict = results[day]
         pred_all = results_all[day]
-        pred_human= human_pare_all[day]
+        
         gt_box = pred_dict["gt_bbox_center"]
         gt_length = pred_dict["gt_bbox_size"][0]
        
-        if pred_human != None:
+        try:
+            pred_human= human_pare_all[day]
             human_center = pred_human["pred_bbox_center"]
 
             object_dist_list = []
@@ -117,7 +118,8 @@ def calc_errors_on_closest_bbox_human(results, results_all, human_pare_all):
             pos, element = min(enumerate(object_dist_list), key=itemgetter(1))
             pred_box = pred_all["bbox_center"][pos]
             pred_length = pred_all["bbox_size"][pos][0]
-        else:
+        except:
+            print("here")
             pred_box = pred_dict["pred_bbox_center"]
             pred_length = pred_dict["pred_bbox_size"][0]
     
