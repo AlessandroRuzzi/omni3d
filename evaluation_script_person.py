@@ -99,7 +99,7 @@ def calc_errors_on_high_prob_bbox(results):
 
 def calc_errors_on_closest_bbox_human(results, results_all, human_pare_all):
     error_dict = {'x' : 0, 'y' : 0, 'z': 0, 'l': 0 , 'num_imgs' : 0}
-
+    counter = 0
     for day in results:
         pred_dict = results[day]
         pred_all = results_all[day]
@@ -119,16 +119,16 @@ def calc_errors_on_closest_bbox_human(results, results_all, human_pare_all):
             pred_box = pred_all["bbox_center"][pos]
             pred_length = pred_all["bbox_size"][pos][0]
         except:
-            print("here")
+            counter+=1
             pred_box = pred_dict["pred_bbox_center"]
             pred_length = pred_dict["pred_bbox_size"][0]
-    
+
         error_dict['x'] += (abs((abs(pred_box[0]-gt_box[0]))/gt_length)) * 100.0
         error_dict['y'] += (abs((abs(pred_box[1]-gt_box[1]))/gt_length)) * 100.0
         error_dict['z'] += (abs((abs(pred_box[2]-gt_box[2]))/gt_length)) * 100.0
         error_dict['l'] += (abs((abs(pred_length - gt_length))/gt_length)) * 100.0
         error_dict['num_imgs'] += 1
-
+    print(counter)
     print("-------------------------------------")
     print("X Error: ", error_dict['x'] / error_dict['num_imgs'])
     print("Y Error: ", error_dict['y'] / error_dict['num_imgs'])
