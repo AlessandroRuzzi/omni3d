@@ -128,12 +128,13 @@ def calc_errors_on_closest_bbox_human(results, results_all, human_pare_all):
         error_dict['z'] += (abs((abs(pred_box[2]-gt_box[2]))/gt_length)) * 100.0
         error_dict['l'] += (abs((abs(pred_length - gt_length))/gt_length)) * 100.0
         error_dict['num_imgs'] += 1
-    print(counter)
+    
     print("-------------------------------------")
     print("X Error: ", error_dict['x'] / error_dict['num_imgs'])
     print("Y Error: ", error_dict['y'] / error_dict['num_imgs'])
     print("Z Error: ", error_dict['z'] / error_dict['num_imgs'])
     print("Lenght Error: ", error_dict['l'] / error_dict['num_imgs'])
+    print(f"Person not detected {counter} times")
     print("-------------------------------------\n")
  
 
