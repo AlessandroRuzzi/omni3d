@@ -57,6 +57,7 @@ def calc_errors_using_closest_bbox(results, results_all):
         for i, bbox in enumerate(pred_all["bbox_center"]):
             object_dist_list.append(math.dist(gt_box, bbox))
 
+        print("human distance: ",math.dist(pred_all["bbox_center"][pos], gt_box), " Confidence: ", (1-pred_all["bbox_score"][pos]))
         pos, element = min(enumerate(object_dist_list), key=itemgetter(1))
         pred_box = pred_all["bbox_center"][pos]
         pred_length = pred_all["bbox_size"][pos][0]
@@ -113,8 +114,8 @@ def calc_errors_on_closest_bbox_human(results, results_all, human_pare_all):
 
             object_dist_list = []
             for i, bbox in enumerate(pred_all["bbox_center"]):
-                print("human distance: ",math.dist(human_center, bbox), " Confidence: ", (1-pred_all["bbox_score"][i]))
-                object_dist_list.append(math.dist(human_center, bbox)/3.0 + (1-pred_all["bbox_score"][i]))
+                #print("human distance: ",math.dist(human_center, bbox), " Confidence: ", (1-pred_all["bbox_score"][i]))
+                object_dist_list.append(math.dist(human_center, bbox) + (1-pred_all["bbox_score"][i]))
 
             pos, element = min(enumerate(object_dist_list), key=itemgetter(1))
             pred_box = pred_all["bbox_center"][pos]
