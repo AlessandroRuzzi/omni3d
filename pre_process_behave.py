@@ -297,6 +297,7 @@ for id_data,dl in enumerate([(test_dl,"Test")]):
         dimensions = [x_max-x_min, y_max - y_min, z_max - z_min]
 
         bbox_to_project = [(x_max+x_min)/2.0, (y_max+y_min)/2.0, (z_max + z_min)/2.0]
+        bbox_project = bbox_to_project.copy()
 
         bbox_to_project.append(max(dimensions))
         bbox_to_project = [bbox_to_project]
