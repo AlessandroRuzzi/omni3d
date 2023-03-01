@@ -82,13 +82,13 @@ def transform_img(img_path, bbox_corners):
     bottom = int(torch.max(bbox_corners[:, :, 1], dim=1)[0].int())
     right = int(torch.max(bbox_corners[:, :, 0], dim=1)[0].int())
 
-    #img = cv2.imread(img_path[0])
+    img = cv2.imread(img_path[0])
     xyxy = [left,top, right, bottom]
     #print((xyxy))
-    #plot_box_and_label(img, max(round(sum(img.shape) / 2 * 0.003), 2), xyxy, color=generate_colors(1, True))
+    plot_box_and_label(img, max(round(sum(img.shape) / 2 * 0.003), 2), xyxy, color=generate_colors(1, True))
 
-    #images = wandb.Image(img, caption="Image with projected bounding boxes")
-    #wandb.log({"Image YOLOv6" : images})
+    images = wandb.Image(img, caption="Image with projected bounding boxes")
+    wandb.log({"Image YOLOv6" : images})
 
     return xyxy
 
