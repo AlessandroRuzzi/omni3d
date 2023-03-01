@@ -234,8 +234,6 @@ for id_data,dl in enumerate([(test_dl,"Test")]):
         bbox_to_project = torch.FloatTensor(np.array(bbox_to_project)).cuda()
         #bbox_project[:, :2] = bbox_project[:, :2] * -1
 
-        print(obj_length)
-
         patch_coord_projected, bbox_corners = calc_patch_coord(bbox_to_project, projector)
         bbox2d = transform_img(data["img_path"], bbox_corners)
 
@@ -297,6 +295,7 @@ for id_data,dl in enumerate([(test_dl,"Test")]):
 
         print(x_min, x_max, y_min, y_max, z_min, z_max)
         dimensions = [x_max-x_min, y_max - y_min, z_max - z_min]
+        print(dimensions)
 
         bbox_to_project = [(x_max+x_min)/2.0, (y_max+y_min)/2.0, (z_max + z_min)/2.0]
         bbox_project = bbox_to_project.copy()
