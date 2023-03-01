@@ -285,7 +285,7 @@ for id_data,dl in enumerate([(test_dl,"Test")]):
         human_length = object[-1]['dimensions']
 
 
-        #print(object_center, object_length, human_center, human_length)
+        print(object_center, object_length, human_center, human_length)
 
         x_max = max(object_center[0] + object_length[0]/2.0, human_center[0] + human_length[0]/2.0)
         x_min = min(object_center[0] - object_length[0]/2.0, human_center[0] - human_length[0]/2.0)
@@ -294,6 +294,8 @@ for id_data,dl in enumerate([(test_dl,"Test")]):
         z_max = max(object_center[2] + object_length[2]/2.0, human_center[2] + human_length[2]/2.0)
         z_min = min(object_center[2] - object_length[2]/2.0, human_center[2] - human_length[2]/2.0)
 
+
+        print(x_min, x_max, y_min, y_max, z_min, z_max)
         dimensions = [x_max-x_min, y_max - y_min, z_max - z_min]
 
         bbox_to_project = [(x_max+x_min)/2.0, (y_max+y_min)/2.0, (z_max + z_min)/2.0]
@@ -303,7 +305,7 @@ for id_data,dl in enumerate([(test_dl,"Test")]):
         bbox_to_project = [bbox_to_project]
         bbox_to_project = torch.FloatTensor(np.array(bbox_to_project)).cuda()
 
-        print(max(dimensions))
+        
         patch_coord_projected, bbox_corners = calc_patch_coord(bbox_to_project, projector)
         bbox2d = transform_img(data["img_path"], bbox_corners)
         
