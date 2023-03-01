@@ -121,7 +121,8 @@ category = [ {'id' : 0, 'name' : 'backpack', 'supercategory' : ""}, {'id' : 1, '
              {'id' : 9, 'name' :'keyboard', 'supercategory' : ""},{'id' : 10, 'name' :'monitor', 'supercategory' : ""}, {'id' : 11, 'name' :'plasticcontainer', 'supercategory' : ""}, 
              {'id' : 12, 'name' :'stool', 'supercategory' : ""}, {'id' : 13, 'name' :'suitcase', 'supercategory' : ""}, {'id' : 14, 'name' :'tablesmall', 'supercategory' : ""}, 
              {'id' : 15, 'name' :'tablesquare', 'supercategory' : ""}, {'id' : 16, 'name' :'toolbox', 'supercategory' : ""}, {'id' : 17, 'name' :'trashbin', 'supercategory' : ""}, 
-             {'id' : 18, 'name' :'yogaball', 'supercategory' : ""}, {'id' : 19, 'name' :'yogamat', 'supercategory' : ""}, {'id' : 20, 'name' :'person', 'supercategory' : ""}]
+             {'id' : 18, 'name' :'yogaball', 'supercategory' : ""}, {'id' : 19, 'name' :'yogamat', 'supercategory' : ""}, {'id' : 20, 'name' :'person', 'supercategory' : ""},
+             {'id' : 21, 'name' :'interaction', 'supercategory' : ""}]
 
 opt = TrainOptions().parse()
 train_dl, val_dl, test_dl = CreateDataLoader(opt)
@@ -186,7 +187,7 @@ for id_data,dl in enumerate([(test_dl,"Test")]):
 
         object.append({
 
-                            "id"			  : i * 2,					
+                            "id"			  : i * 3,					
                             "image_id"		  : i,	
                             "dataset_id"	  : id_data,				
                             "category_id"	  : category[pos_category]['id'],					
@@ -247,7 +248,7 @@ for id_data,dl in enumerate([(test_dl,"Test")]):
 
         object.append({
 
-                            "id"			  : (i * 2)+1,					
+                            "id"			  : (i * 3)+1,					
                             "image_id"		  : i,	
                             "dataset_id"	  : id_data,				
                             "category_id"	  : 20,					
@@ -271,14 +272,72 @@ for id_data,dl in enumerate([(test_dl,"Test")]):
                             "depth_error"	  : -1,				
        
                     })
-        #if i == 10:
-        #    break
+        
+        calibration_matrix = data['calibration_matrix'].cpu().numpy()
+        dist_coefs = data['dist_coefs'].cpu().numpy()
+        projector = [
+        bcu.get_local_projector(c, d) for c, d in zip(calibration_matrix, dist_coefs)
+         ]
+
+        object_center = object[-2]['center_cam']
+        object_length = object[-2]['dimensions']
+        human_center = object[-1]['center_cam']
+        human_length = object[-1]['dimensions']
+
+        x_max = max(object_center[0] + obj_length[0], human_center[0] + human_length[0])
+        x_min = min(object_center[0] - obj_length[0], human_center[0] - human_length[0])
+        y_max = max(object_center[1] + obj_length[1], human_center[1] + human_length[1])
+        y_min = min(object_center[1] - obj_length[1], human_center[1] - human_length[1])
+        z_max = max(object_center[2] + obj_length[2], human_center[2] + human_length[2])
+        z_min = min(object_center[2] - obj_length[2], human_center[2] - human_length[2])
+
+        dimensions = [x_max-x_min, y_max - y_min, z_max - z_min]
+
+        bbox_to_project = [(x_max+x_min)/2.0, (y_max+y_min)/2.0, (z_max + z_min)/2.0]
+
+        bbox_to_project.append(max(dimensions))
+        bbox_to_project = [bbox_to_project]
+        bbox_to_project = torch.FloatTensor(np.array(bbox_to_project)).cuda()
+
+
+        patch_coord_projected, bbox_corners = calc_patch_coord(bbox_to_project, projector)
+        bbox2d = transform_img(data["img_path"], bbox_corners)
+        
+        
+        object.append({
+
+                            "id"			  : (i * 3)+2,					
+                            "image_id"		  : i,	
+                            "dataset_id"	  : id_data,				
+                            "category_id"	  : 21,					
+                            "category_name"	  : 'interaction',		
+                            
+                            "valid3D"		  : True,				   
+                            "bbox2D_tight"	  : [-1,-1,-1,-1],		
+                            "bbox2D_proj"	  : bbox2d,			
+                            "bbox2D_trunc"	  : [-1,-1,-1,-1],			
+                            "bbox3D_cam"	  : ones.tolist(),
+                            #"center_cam"	  : bbox[0,:3].tolist(),		
+                            "center_cam"	  : bbox_project,			
+                            "dimensions"	  : [x_max-x_min, y_max - y_min, z_max - z_min],
+                            "R_cam"		      : np.eye(3).tolist(),	
+
+                            "behind_camera"	  : False,				
+                            "visibility"	  : -1, 		
+                            "truncation"	  : -1, 				
+                            "segmentation_pts": -1, 					
+                            "lidar_pts" 	  : -1, 					
+                            "depth_error"	  : -1,				
+       
+                    })
+        if i == 10:
+            break
 
     dataset['info'] = info
     dataset['images'] = image
     dataset['categories'] = category
     dataset['annotations'] = object
 
-    out_file = open(f'/data/aruzzi/Behave/Behave_person_tight_{dl[1]}.json',"w") 
+    out_file = open(f'/data/aruzzi/Behave/Behave_interaction_{dl[1]}.json',"w") 
     json.dump(dataset, out_file, indent = 2)
     out_file.close()
