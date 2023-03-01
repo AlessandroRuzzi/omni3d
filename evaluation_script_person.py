@@ -112,18 +112,23 @@ def calc_errors_on_closest_bbox_human(results, results_all, human_pare_all):
        
         try:
             pred_human= human_pare_all[day]
-            human_center = pred_human["pred_bbox_center"]
+            if pred_human["pred_bbox_score"] > 0.7:
+                human_center = pred_human["pred_bbox_center"]
 
-            object_dist_list = []
-            for i, bbox in enumerate(pred_all["bbox_center"]):
-                #print("human distance: ",math.dist(human_center, bbox), " Confidence: ", (1-pred_all["bbox_score"][i]))
-                object_dist_list.append(math.dist(human_center, bbox) + (1-pred_all["bbox_score"][i]))
+                object_dist_list = []
+                for i, bbox in enumerate(pred_all["bbox_center"]):
+                    #print("human distance: ",math.dist(human_center, bbox), " Confidence: ", (1-pred_all["bbox_score"][i]))
+                    object_dist_list.append(math.dist(human_center, bbox) + (1-pred_all["bbox_score"][i]))
 
-            pos, element = min(enumerate(object_dist_list), key=itemgetter(1))
-            pred_box = pred_all["bbox_center"][pos]
-            pred_length = pred_all["bbox_size"][pos][0]
+                pos, element = min(enumerate(object_dist_list), key=itemgetter(1))
+                pred_box = pred_all["bbox_center"][pos]
+                pred_length = pred_all["bbox_size"][pos][0]
+            else:
+                counter+=1
+                pred_box = pred_dict["pred_bbox_center"]
+                pred_length = pred_dict["pred_bbox_size"][0]
         except:
-            counter+=1
+            #counter+=1
             pred_box = pred_dict["pred_bbox_center"]
             pred_length = pred_dict["pred_bbox_size"][0]
 
@@ -208,7 +213,7 @@ if __name__ == "__main__":
 
     calc_errors_on_closest_bbox_human(results, results_all, human_pare_all)
 
-    calc_errors_on_closest_bbox_human_by_class(results, results_all, human_pare_all)
+    #calc_errors_on_closest_bbox_human_by_class(results, results_all, human_pare_all)
 
     calc_num_wrong_bbox(results)
 
