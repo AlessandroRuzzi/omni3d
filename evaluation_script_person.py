@@ -112,7 +112,7 @@ def calc_errors_on_closest_bbox_human(results, results_all, human_pare_all):
        
         try:
             pred_human= human_pare_all[day]
-            if pred_human["pred_bbox_score"] > 0.15:
+            if pred_human["pred_bbox_score"] > 0.4:
                 human_center = pred_human["pred_bbox_center"]
 
                 object_dist_list = []
