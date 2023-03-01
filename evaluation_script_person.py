@@ -156,7 +156,7 @@ def calc_errors_on_closest_bbox_human_by_class(results, results_all, human_pare_
         
         gt_box = pred_dict["gt_bbox_center"]
         gt_length = pred_dict["gt_bbox_size"][0]
-        print(pred_dict["gt_bbox_size"])
+
         try:
             pred_human= human_pare_all[day]
             human_center = pred_human["pred_bbox_center"]
@@ -178,13 +178,13 @@ def calc_errors_on_closest_bbox_human_by_class(results, results_all, human_pare_
         error_dict[cat_curr]['y'] += (abs((abs(pred_box[1]-gt_box[1]))/gt_length)) * 100.0
         error_dict[cat_curr]['z'] += (abs((abs(pred_box[2]-gt_box[2]))/gt_length)) * 100.0
         error_dict[cat_curr]['l'] += (abs((abs(pred_length - gt_length))/gt_length)) * 100.0
-        error_dict[cat_curr]['gt_l'] = gt_length.copy()
+        error_dict[cat_curr]['gt_l'] += gt_length
         error_dict[cat_curr]['num_imgs'] += 1
     
     for cat in classes:
         print("-------------------------------------")
         print("CLASS: ", cat)
-        print("Lenght of the object: ", error_dict[cat_curr]['gt_l'] )#/ error_dict[cat]['num_imgs'])
+        print("Lenght of the object: ", error_dict[cat]['gt_l'] / error_dict[cat]['num_imgs'])
         print("X Error: ", error_dict[cat]['x'] / error_dict[cat]['num_imgs'])
         print("Y Error: ", error_dict[cat]['y'] / error_dict[cat]['num_imgs'])
         print("Z Error: ", error_dict[cat]['z'] / error_dict[cat]['num_imgs'])
