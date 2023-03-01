@@ -284,6 +284,9 @@ for id_data,dl in enumerate([(test_dl,"Test")]):
         human_center = object[-1]['center_cam']
         human_length = object[-1]['dimensions']
 
+
+        print(object_center, object_length, human_center, human_length)
+
         x_max = max(object_center[0] + obj_length[0], human_center[0] + human_length[0])
         x_min = min(object_center[0] - obj_length[0], human_center[0] - human_length[0])
         y_max = max(object_center[1] + obj_length[1], human_center[1] + human_length[1])
