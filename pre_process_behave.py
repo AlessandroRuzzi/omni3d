@@ -130,8 +130,8 @@ train_ds, test_ds = train_dl.dataset, test_dl.dataset
 
 val_ds = val_dl.dataset if val_dl is not None else None
 
-#for id_data,dl in enumerate([(train_dl,"Train")]):
-for id_data,dl in enumerate([(test_dl,"Test")]):
+for id_data,dl in enumerate([(train_dl,"Train")]):
+#for id_data,dl in enumerate([(test_dl,"Test")]):
     dataset = {}
     info = {
 
@@ -283,8 +283,6 @@ for id_data,dl in enumerate([(test_dl,"Test")]):
         human_length = object[-1]['dimensions']
 
 
-        print(object_center, object_length, human_center, human_length)
-
         x_max = max(object_center[0] + object_length[0]/2.0, human_center[0] + human_length[0]/2.0)
         x_min = min(object_center[0] - object_length[0]/2.0, human_center[0] - human_length[0]/2.0)
         y_max = max(object_center[1] + object_length[1]/2.0, human_center[1] + human_length[1]/2.0)
@@ -293,9 +291,8 @@ for id_data,dl in enumerate([(test_dl,"Test")]):
         z_min = min(object_center[2] - object_length[2]/2.0, human_center[2] - human_length[2]/2.0)
 
 
-        print(x_min, x_max, y_min, y_max, z_min, z_max)
         dimensions = [x_max-x_min, y_max - y_min, z_max - z_min]
-        print(dimensions)
+
 
         bbox_to_project = [(x_max+x_min)/2.0, (y_max+y_min)/2.0, (z_max + z_min)/2.0]
         bbox_project = bbox_to_project.copy()
@@ -335,8 +332,8 @@ for id_data,dl in enumerate([(test_dl,"Test")]):
                             "depth_error"	  : -1,				
        
                     })
-        if i == 10:
-            break
+        #if i == 10:
+            #break
 
     dataset['info'] = info
     dataset['images'] = image
