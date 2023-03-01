@@ -158,10 +158,10 @@ def calc_errors_on_closest_bbox_human(results, results_all, human_pare_all):
        
         try:
             pred_human= human_pare_all[day]
-            if pred_dict["pred_bbox_score"] > 0.7:
+            if pred_dict["pred_bbox_score"] > 0.95:
                 pred_box = pred_dict["pred_bbox_center"]
                 pred_length = pred_dict["pred_bbox_size"][0]
-            elif pred_human["pred_bbox_score"] > 0.7:
+            elif pred_human["pred_bbox_score"] > 0.1:
                 human_center = pred_human["pred_bbox_center"]
 
                 object_dist_list = []
@@ -172,7 +172,7 @@ def calc_errors_on_closest_bbox_human(results, results_all, human_pare_all):
                 pos, element = min(enumerate(object_dist_list), key=itemgetter(1))
                 pred_box = pred_all["bbox_center"][pos]
                 pred_length = pred_all["bbox_size"][pos][0]
-            elif pred_dict["pred_bbox_score"] < 0.3:
+            elif pred_dict["pred_bbox_score"] < 0.1:
                 human_center = pred_human["pred_bbox_center"]
 
                 object_dist_list = []
