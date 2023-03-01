@@ -152,7 +152,7 @@ def calc_errors_on_closest_bbox_human_by_class(results, results_all, human_pare_
     for day in results:
         pred_dict = results[day]
         pred_all = results_all[day]
-        cat_curr = day.split("/")[0]
+        cat_curr = (day.split("/")[0]).split("_")[2]
         
         gt_box = pred_dict["gt_bbox_center"]
         gt_length = pred_dict["gt_bbox_size"][0]
