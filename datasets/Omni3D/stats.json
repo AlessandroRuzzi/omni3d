@@ -6,5 +6,6 @@
 {"id" : 9, "name" :"keyboard", "supercategory" : ""},{"id" : 10, "name" :"monitor", "supercategory" : ""}, {"id" : 11, "name" :"plasticcontainer", "supercategory" : ""}, 
 {"id" : 12, "name" :"stool", "supercategory" : ""}, {"id" : 13, "name" :"suitcase", "supercategory" : ""}, {"id" : 14, "name" :"tablesmall", "supercategory" : ""}, 
 {"id" : 15, "name" :"tablesquare", "supercategory" : ""}, {"id" : 16, "name" :"toolbox", "supercategory" : ""}, {"id" : 17, "name" :"trashbin", "supercategory" : ""}, 
-{"id" : 18, "name" :"yogaball", "supercategory" : ""}, {"id" : 19, "name" :"yogamat", "supercategory" : ""}]
+{"id" : 18, "name" :"yogaball", "supercategory" : ""}, {"id" : 19, "name" :"yogamat", "supercategory" : ""},  {"id" : 20, "name" :"person", "supercategory" : ""},
+{"id" : 21, "name" :"interaction", "supercategory" : ""}]
 }
