@@ -52,7 +52,7 @@ import wandb
 
 wandb.init(project = "Omni3D")
 
-torch.autograd.set_detect_anomaly(True)
+#torch.autograd.set_detect_anomaly(True)
 
 
 MAX_TRAINING_ATTEMPTS = 10
@@ -388,7 +388,6 @@ def do_train(cfg, model, dataset_id_to_unknown_cats, dataset_id_to_src, resume=F
             loss_dict = model(data)
             losses = sum(loss_dict.values())
 
-            print(losses)
 
             # reduce
             loss_dict_reduced = {k: v.item() for k, v in allreduce_dict(loss_dict).items()}
@@ -423,7 +422,6 @@ def do_train(cfg, model, dataset_id_to_unknown_cats, dataset_id_to_src, resume=F
         
             # backward and step
 
-            print(losses)
    
             optimizer.zero_grad()
             losses.backward()
