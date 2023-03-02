@@ -421,6 +421,7 @@ def do_train(cfg, model, dataset_id_to_unknown_cats, dataset_id_to_src, resume=F
                 optimizer.zero_grad()
                 losses.backward()
             except:
+                print("not fine")
                 continue
             print("fine")
 
