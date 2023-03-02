@@ -320,7 +320,7 @@ if __name__ == "__main__":
 
     #calc_errors_on_closest_bbox_human_by_class_relative(results, results_all, human_pare_all)
 
-    calc_errors_on_closest_bbox_human_by_class_absolute(results, results_all, human_pare_all)
+    #calc_errors_on_closest_bbox_human_by_class_absolute(results, results_all, human_pare_all)
 
     calc_num_wrong_bbox(results)
 
