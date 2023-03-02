@@ -133,7 +133,8 @@ def do_test(args, cfg, model):
                     dets_person["scores"].append(dets.scores[i].tolist())
                     dets_person["pred_classes"].append(dets.pred_classes[i].tolist())
                     dets_person["pred_pose"].append(dets.pred_pose[i].tolist())
-
+            elif cats[dets.pred_classes[i].item()] == "interaction":
+                 continue
             else:
                     dets_no_person["pred_center_cam"].append(dets.pred_center_cam[i].tolist())
                     dets_no_person["pred_dimensions"].append(dets.pred_dimensions[i].tolist())
