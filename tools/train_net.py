@@ -380,8 +380,7 @@ def do_train(cfg, model, dataset_id_to_unknown_cats, dataset_id_to_src, resume=F
         while True:
 
             data = next(data_iter)
-            print(data["bbox3D"])
-            print(data["category_name"])
+            print(data)
             storage.iter = iteration
             # forward
             loss_dict = model(data)
