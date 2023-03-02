@@ -9,11 +9,11 @@ SOLVER:
 TEST:
   EVAL_PERIOD: 1000
 VIS_PERIOD: 111360
-OUTPUT_DIR: "output/behave_interaction_2"
+OUTPUT_DIR: "output/behave_interaction_3"
 DATASETS:
-  TRAIN: ('Behave_interaction_Train',)
-  TEST: ('Behave_interaction_Test',) 
-  CATEGORY_NAMES: ('backpack', 'basketball', 'boxlarge', 'boxlong', 'boxmedium','boxsmall', 'boxtiny', 'chairblack','chairwood', 'keyboard', 'monitor', 'plasticcontainer', 'stool', 'suitcase', 'tablesmall', 'tablesquare', 'toolbox', 'trashbin', 'yogaball', 'yogamat', 'person', 'interaction')
+  TRAIN: ('Behave_person_tight_Train',)
+  TEST: ('Behave_person_tight_Test',) 
+  CATEGORY_NAMES: ('backpack', 'basketball', 'boxlarge', 'boxlong', 'boxmedium','boxsmall', 'boxtiny', 'chairblack','chairwood', 'keyboard', 'monitor', 'plasticcontainer', 'stool', 'suitcase', 'tablesmall', 'tablesquare', 'toolbox', 'trashbin', 'yogaball', 'yogamat', 'person')
 MODEL:
   ROI_HEADS:
     NUM_CLASSES: 22
