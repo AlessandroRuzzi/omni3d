@@ -52,6 +52,8 @@ import wandb
 
 wandb.init(project = "Omni3D")
 
+torch.autograd.set_detect_anomaly(True)
+
 
 MAX_TRAINING_ATTEMPTS = 10
 
