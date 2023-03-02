@@ -44,13 +44,14 @@ class DatasetMapper3D(DatasetMapper):
             K = np.array(dataset_dict['K'])
 
             unknown_categories = self.dataset_id_to_unknown_cats[dataset_id]
-
+            print(unknown_categories)
             # transform and pop off annotations
             annos = [
                 transform_instance_annotations(obj, transforms, K=K)
                 for obj in dataset_dict.pop("annotations") if obj.get("iscrowd", 0) == 0
             ]
-
+            print(annos)
+            print(unknown_categories)
             # convert to instance format
             instances = annotations_to_instances(annos, image_shape, unknown_categories)
             dataset_dict["instances"] = detection_utils.filter_empty_instances(instances)
