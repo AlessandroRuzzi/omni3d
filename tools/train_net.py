@@ -380,6 +380,8 @@ def do_train(cfg, model, dataset_id_to_unknown_cats, dataset_id_to_src, resume=F
         while True:
 
             data = next(data_iter)
+            print(data["bbox3D"])
+            print(data["category_name"])
             storage.iter = iteration
             # forward
             loss_dict = model(data)
@@ -419,6 +421,8 @@ def do_train(cfg, model, dataset_id_to_unknown_cats, dataset_id_to_src, resume=F
                 storage.put_scalars(total_loss=losses_reduced, **loss_dict_reduced)
         
             # backward and step
+
+            print(losses)
    
             optimizer.zero_grad()
             losses.backward()
