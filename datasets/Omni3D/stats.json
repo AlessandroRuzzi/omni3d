@@ -1,10 +1,11 @@
 {"n_datasets": 2, "n_ims": 57472, "n_anns": 57472, 
-"category_names": ["backpack", "basketball", "boxlarge", "boxlong", "boxmedium","boxsmall", "boxtiny", "chairblack","chairwood", "keyboard", "monitor", "plasticcontainer", "stool", "suitcase", "tablesmall", "tablesquare", "toolbox", "trashbin", "yogaball", "yogamat", "person"], 
+"category_names": ["backpack", "basketball", "boxlarge", "boxlong", "boxmedium","boxsmall", "boxtiny", "chairblack","chairwood", "keyboard", "monitor", "plasticcontainer", "stool", "suitcase", "tablesmall", "tablesquare", "toolbox", "trashbin", "yogaball", "yogamat", "person", "interaction"], 
 "categories": [ {"id" : 0, "name" : "backpack", "supercategory" : ""}, {"id" : 1, "name" :"basketball", "supercategory" : ""}, {"id" : 2, "name" :"boxlarge", "supercategory" : ""}, 
 {"id" : 3, "name" :"boxlong", "supercategory" : ""}, {"id" : 4, "name" :"boxmedium", "supercategory" : ""}, {"id" : 5, "name" :"boxsmall", "supercategory" : ""}, 
 {"id" : 6, "name" :"boxtiny", "supercategory" : ""}, {"id" : 7, "name" :"chairblack", "supercategory" : ""},{"id" : 8, "name" :"chairwood", "supercategory" : ""},
 {"id" : 9, "name" :"keyboard", "supercategory" : ""},{"id" : 10, "name" :"monitor", "supercategory" : ""}, {"id" : 11, "name" :"plasticcontainer", "supercategory" : ""}, 
 {"id" : 12, "name" :"stool", "supercategory" : ""}, {"id" : 13, "name" :"suitcase", "supercategory" : ""}, {"id" : 14, "name" :"tablesmall", "supercategory" : ""},
 {"id" : 15, "name" :"tablesquare", "supercategory" : ""}, {"id" : 16, "name" :"toolbox", "supercategory" : ""}, {"id" : 17, "name" :"trashbin", "supercategory" : ""}, 
-{"id" : 18, "name" :"yogaball", "supercategory" : ""}, {"id" : 19, "name" :"yogamat", "supercategory" : ""},  {"id" : 20, "name" :"person", "supercategory" : ""}]
+{"id" : 18, "name" :"yogaball", "supercategory" : ""}, {"id" : 19, "name" :"yogamat", "supercategory" : ""},  {"id" : 20, "name" :"person", "supercategory" : ""},
+{"id" : 21, "name" :"interaction", "supercategory" : ""}]
 }
