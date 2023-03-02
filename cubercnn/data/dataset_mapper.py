@@ -44,14 +44,11 @@ class DatasetMapper3D(DatasetMapper):
             K = np.array(dataset_dict['K'])
 
             unknown_categories = self.dataset_id_to_unknown_cats[dataset_id]
-            print(unknown_categories)
             # transform and pop off annotations
             annos = [
                 transform_instance_annotations(obj, transforms, K=K)
                 for obj in dataset_dict.pop("annotations") if obj.get("iscrowd", 0) == 0
             ]
-            print(annos)
-            print(unknown_categories)
             # convert to instance format
             instances = annotations_to_instances(annos, image_shape, unknown_categories)
             dataset_dict["instances"] = detection_utils.filter_empty_instances(instances)
@@ -138,6 +135,7 @@ def annotations_to_instances(annos, image_size, unknown_categories):
     
     # add classes, 2D boxes, 3D boxes and poses
     target.gt_classes = torch.tensor([int(obj["category_id"]) for obj in annos], dtype=torch.int64)
+    print(target.gt_classes)
     target.gt_boxes = Boxes([BoxMode.convert(obj["bbox"], obj["bbox_mode"], BoxMode.XYXY_ABS) for obj in annos])
     target.gt_boxes3D = torch.FloatTensor([anno['center_cam_proj'] + anno['dimensions'] + anno['center_cam'] for anno in annos])
     target.gt_poses = torch.FloatTensor([anno['pose'] for anno in annos])
