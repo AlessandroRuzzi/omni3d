@@ -417,8 +417,12 @@ def do_train(cfg, model, dataset_id_to_unknown_cats, dataset_id_to_src, resume=F
                 storage.put_scalars(total_loss=losses_reduced, **loss_dict_reduced)
         
             # backward and step
-            optimizer.zero_grad()
-            losses.backward()
+            try:
+                optimizer.zero_grad()
+                losses.backward()
+            except:
+                continue
+            print("fine")
 
             # if the loss is not too high, 
             # we still want to check gradients.
