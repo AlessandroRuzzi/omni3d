@@ -347,7 +347,7 @@ def do_train(cfg, model, dataset_id_to_unknown_cats, dataset_id_to_src, resume=F
     start_iter = (checkpointer.resume_or_load(cfg.MODEL.WEIGHTS, resume=resume).get("iteration", -1) + 1)
     iteration = start_iter
 
-    #do_test(cfg, model)
+    do_test(cfg, model)
 
     logger.info("Starting training from iteration {}".format(start_iter))
 
