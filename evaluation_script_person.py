@@ -306,8 +306,9 @@ def calc_errors_on_closest_bbox_human_by_class_absolute(results, results_all, hu
  
 def calc_chamfer_on_different_iou(data_path):
         all_images_dict = json.load(open(os.path.join(data_path,"per_image_result.json")))
-        low_iou_dict = {'chamfer': 0.0, 'num_imgs': 0}
-        high_iou_dict = {'chamfer': 0.0, 'num_imgs': 0}
+        low_iou_images = set()
+        low_iou_dict = {'chamfer_mean': 0.0, 'chamfer_std': 0.0, 'num_imgs': 0}
+        high_iou_dict = {'chamfer_mean': 0.0, 'chamfer_std': 0.0, 'num_imgs': 0}
 
         folders_path = os.path.join(data_path, "behave_iou")
 
@@ -320,11 +321,24 @@ def calc_chamfer_on_different_iou(data_path):
                 image = f.readline()
                 if not image:
                     break
-                #print(image)
+                print((image.split("/")[-1])[:-12])
+                low_iou_images.add((image.split("/")[-1])[:-12])
+        
+        for image in all_images_dict.keys():
+            if image in low_iou_images:
+                low_iou_dict['chamfer_mean'] += all_images_dict[image][0]
+                low_iou_dict['chamfer_std'] += all_images_dict[image][1]
+                low_iou_dict['num_imgs'] +=1
+            else:
+                high_iou_dict['chamfer_mean'] += all_images_dict[image][0]
+                high_iou_dict['chamfer_std'] += all_images_dict[image][1]
+                high_iou_dict['num_imgs'] +=1               
         
         print("-------------------------------------")
-        print("IOU < 0.3 results: ", low_iou_dict['chamfer'] / low_iou_dict['num_imgs'])
-        print("IOU > 0.3 results: ", high_iou_dict['chamfer'] / high_iou_dict['num_imgs'])
+        print("IOU < 0.3 mean: ", low_iou_dict['chamfer_mean'] / low_iou_dict['num_imgs'])
+        print("IOU < 0.3 std: ", low_iou_dict['chamfer_std'] / low_iou_dict['num_imgs'])
+        print("IOU > 0.3 mean: ", high_iou_dict['chamfer_mean'] / high_iou_dict['num_imgs'])
+        print("IOU > 0.3 std: ", high_iou_dict['chamfer_std'] / high_iou_dict['num_imgs'])
         print(f"Low IOU images: {low_iou_dict['num_imgs']}, High IOU image: {high_iou_dict['num_imgs']}, Total images: {low_iou_dict['num_imgs'] + high_iou_dict['num_imgs']}")
         print("-------------------------------------")
 
