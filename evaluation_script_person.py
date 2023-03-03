@@ -318,8 +318,10 @@ def calc_chamfer_on_different_iou(data_path):
             f = open(folder, 'r')
             while(True):
                 image = f.readline()
+                if not image:
+                    break
                 #print(image)
-        return
+        
         print("-------------------------------------")
         print("IOU < 0.3 results: ", low_iou_dict['chamfer'] / low_iou_dict['num_imgs'])
         print("IOU > 0.3 results: ", high_iou_dict['chamfer'] / high_iou_dict['num_imgs'])
