@@ -316,15 +316,14 @@ def calc_chamfer_on_different_iou(data_path):
         original_files = [x for x in glob("%s/*.txt" % files_path) if "_original" in x]
 
         for file in original_files:
-            print(file)
             detectable_classes.add((file.split("/")[-1]).split("_")[0])
             f = open(file, 'r')
             while(True):
                 image = f.readline()
                 if not image:
                     break
-                #print((image.split("/")[-1])[:-12])
                 if "k1" in image:
+                    print((image.split("/")[-1])[:-12])
                     low_iou_images.add((image.split("/")[-1])[:-12])
 
         return
