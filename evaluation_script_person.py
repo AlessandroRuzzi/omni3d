@@ -326,7 +326,7 @@ def calc_chamfer_on_different_iou(data_path):
                     low_iou_images.add((image.split("/")[-1])[:-13])
 
         
-        print(low_iou_images.pop(0))
+        print(low_iou_images.pop())
         print(all_images_dict.keys()[0])
         for image in all_images_dict.keys():
             if image.split("_")[2] in detectable_classes:
