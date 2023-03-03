@@ -3,6 +3,8 @@ from operator import itemgetter
 import math
 import torch
 import wandb
+import os
+import glob
 
 def calc_num_wrong_bbox(results):
     num_wrong = 0
@@ -302,6 +304,27 @@ def calc_errors_on_closest_bbox_human_by_class_absolute(results, results_all, hu
         #print(f"Person not detected {counter} times")
         print("-------------------------------------\n")
  
+def calc_chamfer_on_different_iou(data_path):
+        all_images_dict = json.load(open(os.path.join(data_path,"per_image_result.json")))
+        low_iou_dict = {'chamfer': 0.0, 'num_imgs': 0}
+        high_iou_dict = {'chamfer': 0.0, 'num_imgs': 0}
+
+        folders_path = os.path.join(data_path, "behave_iou")
+
+        all_folders = [x for x in glob("%s/*.txt" % folders_path) if "_original" in x]
+
+        for folder in all_folders:
+            print(folder)
+            f = open(folder, 'r')
+            while(True):
+                image = f.readline()
+                #print(image)
+        return
+        print("-------------------------------------")
+        print("IOU < 0.3 results: ", low_iou_dict['chamfer'] / low_iou_dict['num_imgs'])
+        print("IOU > 0.3 results: ", high_iou_dict['chamfer'] / high_iou_dict['num_imgs'])
+        print(f"Low IOU images: {low_iou_dict['num_imgs']}, High IOU image: {high_iou_dict['num_imgs']}, Total images: {low_iou_dict['num_imgs'] + high_iou_dict['num_imgs']}")
+        print("-------------------------------------")
 
 if __name__ == "__main__":
     #results = json.load(open("predictions/results_2.json"))["best_score vs gt"]
@@ -317,6 +340,8 @@ if __name__ == "__main__":
     calc_errors_using_closest_bbox(results, results_all)
 
     calc_errors_on_closest_bbox_human(results, results_all, human_pare_all)
+
+    calc_chamfer_on_different_iou("/data/aruzzi/Behave/")
 
     #calc_errors_on_closest_bbox_human_by_class_relative(results, results_all, human_pare_all)
 
