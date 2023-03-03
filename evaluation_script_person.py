@@ -305,7 +305,7 @@ def calc_errors_on_closest_bbox_human_by_class_absolute(results, results_all, hu
         print("-------------------------------------\n")
  
 def calc_chamfer_on_different_iou(data_path):
-        all_images_dict = json.load(open(os.path.join(data_path,"per_image_result.json")))
+        all_images_dict = json.load(open(os.path.join(data_path,"per_img_result.json")))
         low_iou_images = set()
         low_iou_dict = {'chamfer_mean': 0.0, 'chamfer_std': 0.0, 'num_imgs': 0}
         high_iou_dict = {'chamfer_mean': 0.0, 'chamfer_std': 0.0, 'num_imgs': 0}
@@ -316,6 +316,7 @@ def calc_chamfer_on_different_iou(data_path):
 
         for folder in all_folders:
             print(folder)
+            return
             f = open(folder, 'r')
             while(True):
                 image = f.readline()
