@@ -329,8 +329,6 @@ def calc_chamfer_on_different_iou(data_path):
         print(low_iou_images.pop())
         for image in all_images_dict.keys():
             image = image.replace('-', '')
-            print(image)
-            return
             if image.split("_")[2] in detectable_classes:
                 #print(image.split("_")[2])
                 if image in low_iou_images:
@@ -342,7 +340,7 @@ def calc_chamfer_on_different_iou(data_path):
                     high_iou_dict['chamfer_std'] += all_images_dict[image][1]
                     high_iou_dict['num_imgs'] +=1             
         
-        return
+
         print("-------------------------------------")
         print("IOU < 0.3 mean: ", low_iou_dict['chamfer_mean'] / low_iou_dict['num_imgs'])
         print("IOU < 0.3 std: ", low_iou_dict['chamfer_std'] / low_iou_dict['num_imgs'])
