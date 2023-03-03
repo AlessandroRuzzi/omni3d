@@ -4,7 +4,7 @@ import math
 import torch
 import wandb
 import os
-import glob
+from glob import glob
 
 def calc_num_wrong_bbox(results):
     num_wrong = 0
@@ -310,14 +310,14 @@ def calc_chamfer_on_different_iou(data_path):
         low_iou_dict = {'chamfer_mean': 0.0, 'chamfer_std': 0.0, 'num_imgs': 0}
         high_iou_dict = {'chamfer_mean': 0.0, 'chamfer_std': 0.0, 'num_imgs': 0}
 
-        folders_path = os.path.join(data_path, "behave_iou")
+        files_path = os.path.join(data_path, "behave_iou")
 
-        all_folders = [x for x in glob("%s/*.txt" % folders_path) if "_original" in x]
+        original_files = [x for x in glob("%s/*.txt" % files_path) if "_original" in x]
 
-        for folder in all_folders:
-            print(folder)
+        for file in original_files:
+            print(file)
             return
-            f = open(folder, 'r')
+            f = open(file, 'r')
             while(True):
                 image = f.readline()
                 if not image:
