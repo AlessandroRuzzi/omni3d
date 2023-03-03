@@ -307,6 +307,7 @@ def calc_errors_on_closest_bbox_human_by_class_absolute(results, results_all, hu
 def calc_chamfer_on_different_iou(data_path):
         all_images_dict = json.load(open(os.path.join(data_path,"per_img_result.json")))
         low_iou_images = set()
+        detectable_classes  =set()
         low_iou_dict = {'chamfer_mean': 0.0, 'chamfer_std': 0.0, 'num_imgs': 0}
         high_iou_dict = {'chamfer_mean': 0.0, 'chamfer_std': 0.0, 'num_imgs': 0}
 
@@ -316,6 +317,8 @@ def calc_chamfer_on_different_iou(data_path):
 
         for file in original_files:
             print(file)
+            print((file.split("/")[-1]).split("_")[0])
+            detectable_classes.add((file.split("/")[-1]).split("_")[0])
             return
             f = open(file, 'r')
             while(True):
@@ -323,7 +326,8 @@ def calc_chamfer_on_different_iou(data_path):
                 if not image:
                     break
                 print((image.split("/")[-1])[:-12])
-                low_iou_images.add((image.split("/")[-1])[:-12])
+                if "k1" in image:
+                    low_iou_images.add((image.split("/")[-1])[:-12])
         
         for image in all_images_dict.keys():
             if image in low_iou_images:
