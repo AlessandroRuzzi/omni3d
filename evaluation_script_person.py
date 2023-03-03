@@ -317,9 +317,7 @@ def calc_chamfer_on_different_iou(data_path):
 
         for file in original_files:
             print(file)
-            print((file.split("/")[-1]).split("_")[0])
             detectable_classes.add((file.split("/")[-1]).split("_")[0])
-            return
             f = open(file, 'r')
             while(True):
                 image = f.readline()
@@ -328,6 +326,8 @@ def calc_chamfer_on_different_iou(data_path):
                 print((image.split("/")[-1])[:-12])
                 if "k1" in image:
                     low_iou_images.add((image.split("/")[-1])[:-12])
+
+        return
         
         for image in all_images_dict.keys():
             if image in low_iou_images:
