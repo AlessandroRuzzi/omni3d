@@ -323,7 +323,7 @@ def calc_chamfer_on_different_iou(data_path):
                 image = f.readline()
                 if not image:
                     break
-                print((image.split("/")[-1])[:-12])
+                #print((image.split("/")[-1])[:-12])
                 if "k1" in image:
                     low_iou_images.add((image.split("/")[-1])[:-12])
 
