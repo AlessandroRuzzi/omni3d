@@ -13,23 +13,23 @@ import shutil
 import pickle
 import csv
 from glob import glob
+import wandb 
 
-def get_img_lbl(is_hist=False, hist=None):
-    for imgfile in os.listdir("./CHORE_chair_all/images/"):
-        try:
-            print(imgfile)
-            img = cv2.imread("./CHORE_chair_all/images/" + imgfile) 
-            res = inference_detector(model, img)
+wandb.init("Intercap CHORE")
 
-            body_mask = res[1][0][0]
-            obj_mask = res[1][56][0]
-            cv2.imwrite("./CHORE_chair_all/body_masks/" + imgfile, body_mask * 225)
-            cv2.imwrite("./CHORE_chair_all/obj_masks/" + imgfile, obj_mask * 225)
-            #return res
-        except:
-            continue
 
-    return 0 #error_list
+def log_mask(img_to_log, mask, description, class_labels):
+    image_gt = wandb.Image(img_to_log, caption="Image")
+    mask_img = wandb.Image(
+                    image_gt,
+                    masks={
+                        "predictions": {
+                            "mask_data": mask,
+                            "class_labels": class_labels,
+                        }
+                    },
+                )
+    wandb.log({description: mask_img})
 
 
 if __name__ == "__main__":
@@ -94,6 +94,9 @@ if __name__ == "__main__":
                 shutil.copyfile(image, final_folder_path + "/k1.color.jpg")
                 cv2.imwrite(final_folder_path + "/k1.person_mask.jpg", body_mask * 225)
                 cv2.imwrite(final_folder_path + "/k1.obj_mask.jpg", obj_mask * 225)
+
+                log_mask(img, body_mask, "body mask", {0: "background", 255: "body"})
+                log_mask(img, obj_mask, "object mask", {0: "background", 255: "object"})
 
                 break
             break
