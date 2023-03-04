@@ -58,7 +58,7 @@ if __name__ == "__main__":
     model = init_detector(config_file, checkpoint_file, device='cuda:0')
 
     data_path = "/data/xiwang/InterCap/RGBD_Images"
-    save_path = "data/aruzzi/Intercap/"
+    save_path = "/data/aruzzi/Intercap/"
     humans = [f for f in os.listdir(data_path) if not(isfile(os.path.join(data_path, f)))]
     humans.sort()
     for human in humans:
@@ -74,12 +74,9 @@ if __name__ == "__main__":
             for image in images_name:
                 #create folder
                 final_folder_path = os.path.join(save_path, human+object+image.split("/")[-1][:-4] + "/")
-                print(final_folder_path)
                 if os.path.exists(final_folder_path):
                     shutil.rmtree(final_folder_path, ignore_errors=True)
                 os.makedirs(final_folder_path)
-                if os.path.exists(final_folder_path):
-                    print("here")
 
                 #calculate masks
                 try:
