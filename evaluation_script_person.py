@@ -398,13 +398,11 @@ def calc_iou_on_3d_bbox(results, results_all, human_pare_all):
     print(batch_size)
     iou_sum = 0.0
     for j in range(batch_size):
-        iou_sum += iou_3d[i,i]
+        iou_sum += iou_3d[j,j]
 
     print((iou_sum/batch_size) * 100.0)
 
 if __name__ == "__main__":
-    #results = json.load(open("predictions/results_2.json"))["best_score vs gt"]
-    #results_all = json.load(open("predictions/results_2.json"))["all_predicted"]
 
     #results = json.load(open("predictions/results_interaction.json"))["best_score vs gt"]
     #results_all = json.load(open("predictions/results_interaction.json"))["all_predicted"]
