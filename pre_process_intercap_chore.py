@@ -40,7 +40,7 @@ if __name__ == "__main__":
     model_eval = "_".join((model_eval, filter_method))
 
     if model_eval.startswith("MRCNN"):
-        config_file = mmdet_root + "configs/mask_rcnn_x101_64x4d_fpn_mstrain-poly_3x_coco.py"
+        config_file = mmdet_root + "configs/mask_rcnn/mask_rcnn_x101_64x4d_fpn_mstrain-poly_3x_coco.py"
         checkpoint_file = "checkpoint/mask_rcnn_x101_64x4d_fpn_mstrain-poly_3x_coco_20210526_120447-c376f129.pth"
 
     elif model_eval.startswith("PointRend"):
