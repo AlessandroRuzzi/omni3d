@@ -91,6 +91,8 @@ if __name__ == "__main__":
                     obj_mask = res[1][relation_dict[object]][0]
                 except:
                     shutil.rmtree(final_folder_path, ignore_errors=True)
+                    print(object)
+                    print(relation_dict[object])
                     continue
 
                 #save files
