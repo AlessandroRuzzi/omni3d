@@ -59,7 +59,7 @@ if __name__ == "__main__":
 
     data_path = "/data/xiwang/Intercap/RGBD_Images"
     save_path = "data/aruzzi/Intercap/"
-    humans = [x for x in glob("%s/*" % data_path)]
+    humans = [f for f in os.listdir(data_path) if not(isfile(os.path.join(data_path, f)))]
     print(humans)
     for human in humans:
         human_path = os.path.join(data_path, human)
