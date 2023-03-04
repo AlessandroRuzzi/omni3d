@@ -61,15 +61,16 @@ if __name__ == "__main__":
     save_path = "data/aruzzi/Intercap/"
     humans = [f for f in os.listdir(data_path) if not(isfile(os.path.join(data_path, f)))]
     humans.sort()
-    print(humans)
     for human in humans:
         human_path = os.path.join(data_path, human)
         objects = [f for f in os.listdir(human_path) if not(isfile(os.path.join(human_path, f)))]
         objects.sort()
-        print(objects)
         for object in objects:
             object_path = os.path.join(human_path, object)
-            #print(object_path)
+            images_path = os.path.join(object_path, "Seg_0/Frames_Cam1/color/")
+            images_name = [x for x in glob("%s/*.jpg" % images_path)]
+            images_name.sort()
+            print(images_name)
 
     """
 
