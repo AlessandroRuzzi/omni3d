@@ -60,11 +60,12 @@ if __name__ == "__main__":
     data_path = "/data/xiwang/InterCap/RGBD_Images"
     save_path = "data/aruzzi/Intercap/"
     humans = [f for f in os.listdir(data_path) if not(isfile(os.path.join(data_path, f)))]
+    humans.sort()
     print(humans)
     for human in humans:
         human_path = os.path.join(data_path, human)
-
         objects = [f for f in os.listdir(human_path) if not(isfile(os.path.join(human_path, f)))]
+        objects.sort()
         print(objects)
         for object in objects:
             object_path = os.path.join(human_path, object)
