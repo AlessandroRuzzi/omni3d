@@ -70,13 +70,13 @@ if __name__ == "__main__":
             images_path = os.path.join(object_path, "Seg_0/Frames_Cam1/color/")
             images_name = [x for x in glob("%s/*.jpg" % images_path)]
             images_name.sort()
-            print(images_name)
+            #print(images_name)
             for image in images_name:
                 #create folder
                 final_folder_path = os.path.join(save_path, human+object+image.split("/")[-1][:-4])
                 if os.path.exists(final_folder_path):
                     shutil.rmtree(final_folder_path, ignore_errors=True)
-                os.mkdir(final_folder_path)
+                os.makedirs(final_folder_path)
 
                 #calculate masks
                 try:
