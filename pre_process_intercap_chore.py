@@ -73,7 +73,7 @@ if __name__ == "__main__":
             #print(images_name)
             for image in images_name:
                 #create folder
-                final_folder_path = os.path.join(save_path, human+object+image.split("/")[-1][:-4])
+                final_folder_path = os.path.join(save_path, human+object+image.split("/")[-1][:-4] + "/")
                 print(final_folder_path)
                 if os.path.exists(final_folder_path):
                     shutil.rmtree(final_folder_path, ignore_errors=True)
