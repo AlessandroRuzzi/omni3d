@@ -63,12 +63,12 @@ if __name__ == "__main__":
     print(humans)
     for human in humans:
         human_path = os.path.join(data_path, human)
-        print(human_path)
-        objects = [x.split("/")[-1] for x in glob("%s/*" % human_path)]
+
+        objects = [f for f in os.listdir(human_path) if not(isfile(os.path.join(human_path, f)))]
         print(objects)
         for object in objects:
             object_path = os.path.join(human_path, object)
-            print(object_path)
+            #print(object_path)
 
     """
 
