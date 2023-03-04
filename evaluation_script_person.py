@@ -355,7 +355,7 @@ def calc_iou_on_3d_bbox(results, results_all, human_pare_all):
                 if torch.cuda.is_available()
                 else torch.device("cpu")
         )
-    for i,day in enumerate(results.keys()):
+    for idx,day in enumerate(results):
         pred_dict = results[day]
         pred_all = results_all[day]
         
@@ -390,7 +390,7 @@ def calc_iou_on_3d_bbox(results, results_all, human_pare_all):
                     [pred_box[0] + pred_length/2.0, pred_box[1] - pred_length/2.0, pred_box[2] - pred_length/2.0], [pred_box[0] - pred_length/2.0, pred_box[1] - pred_length/2.0, pred_box[2] - pred_length/2.0],
                     [pred_box[0] - pred_length/2.0, pred_box[1] + pred_length/2.0, pred_box[2] + pred_length/2.0], [pred_box[0] + pred_length/2.0, pred_box[1] + pred_length/2.0, pred_box[2] + pred_length/2.0],
                     [pred_box[0] + pred_length/2.0, pred_box[1] - pred_length/2.0, pred_box[2] + pred_length/2.0], [pred_box[0] - pred_length/2.0, pred_box[1] - pred_length/2.0, pred_box[2] + pred_length/2.0]])
-        if i ==2:
+        if idx ==2:
             break
         #d = pred_box.append(pred_length)
         #g = gt_box.append(gt_length)
