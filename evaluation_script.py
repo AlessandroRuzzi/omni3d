@@ -2,6 +2,7 @@ import json
 from operator import itemgetter
 import math
 import torch
+from pytorch3d.ops import box3d_overlap
 
 def calc_num_wrong_bbox(results):
     num_wrong = 0
@@ -137,6 +138,62 @@ def calc_errors_on_closest_bbox_human(results, results_all, human_pare_all):
     print("Z Error: ", error_dict['z'] / error_dict['num_imgs'])
     print("Lenght Error: ", error_dict['l'] / error_dict['num_imgs'])
     print("-------------------------------------\n")
+
+def calc_iou_on_3d_bbox(results, results_all, human_pare_all):
+    boxes_gt, boxes_pred = [], []
+    device = (
+                torch.device("cuda:0") 
+                if torch.cuda.is_available()
+                else torch.device("cpu")
+        )
+    for idx,day in enumerate(results):
+        pred_dict = results[day]
+        pred_all = results_all[day]
+        
+        gt_box = pred_dict["gt_bbox_center"]
+        gt_length = pred_dict["gt_bbox_size"][0]
+       
+        boxes_gt.append([[gt_box[0] - gt_length/2.0, gt_box[1] - gt_length/2.0, gt_box[2] - gt_length/2.0], [gt_box[0] + gt_length/2.0, gt_box[1] - gt_length/2.0, gt_box[2] - gt_length/2.0],
+                         [gt_box[0] + gt_length/2.0, gt_box[1] + gt_length/2.0, gt_box[2] - gt_length/2.0], [gt_box[0] - gt_length/2.0, gt_box[1] + gt_length/2.0, gt_box[2] - gt_length/2.0],
+                         [gt_box[0] - gt_length/2.0, gt_box[1] - gt_length/2.0, gt_box[2] + gt_length/2.0], [gt_box[0] + gt_length/2.0, gt_box[1] - gt_length/2.0, gt_box[2] + gt_length/2.0],
+                         [gt_box[0] + gt_length/2.0, gt_box[1] + gt_length/2.0, gt_box[2] + gt_length/2.0], [gt_box[0] - gt_length/2.0, gt_box[1] + gt_length/2.0, gt_box[2] + gt_length/2.0]])
+        
+        verts = human_pare_all[day]
+        if verts != None:
+            verts = torch.FloatTensor(verts)
+            human_center = [torch.min(verts[:,0]) + (torch.max(verts[:,0]) - torch.min(verts[:,0])) / 2.0, 
+                            torch.min(verts[:,1]) + (torch.max(verts[:,1]) - torch.min(verts[:,1])) / 2.0,
+                            torch.min(verts[:,2]) + (torch.max(verts[:,2]) - torch.min(verts[:,2])) / 2.0]
+    
+
+            object_dist_list = []
+            for i, bbox in enumerate(pred_all["bbox_center"]):
+                object_dist_list.append(math.dist(human_center, bbox) + (1-pred_all["bbox_score"][i]))
+
+            pos, element = min(enumerate(object_dist_list), key=itemgetter(1))
+            pred_box = pred_all["bbox_center"][pos]
+            pred_length = pred_all["bbox_size"][pos][0]
+        else:
+            pred_box = pred_dict["pred_bbox_center"]
+            pred_length = pred_dict["pred_bbox_size"][0]
+        
+        boxes_pred.append([[pred_box[0] - pred_length/2.0, pred_box[1] - pred_length/2.0, pred_box[2] - pred_length/2.0], [pred_box[0] + pred_length/2.0, pred_box[1] - pred_length/2.0, pred_box[2] - pred_length/2.0],
+                           [pred_box[0] + pred_length/2.0, pred_box[1] + pred_length/2.0, pred_box[2] - pred_length/2.0], [pred_box[0] - pred_length/2.0, pred_box[1] + pred_length/2.0, pred_box[2] - pred_length/2.0],
+                           [pred_box[0] - pred_length/2.0, pred_box[1] - pred_length/2.0, pred_box[2] + pred_length/2.0], [pred_box[0] + pred_length/2.0, pred_box[1] - pred_length/2.0, pred_box[2] + pred_length/2.0],
+                           [pred_box[0] + pred_length/2.0, pred_box[1] + pred_length/2.0, pred_box[2] + pred_length/2.0], [pred_box[0] - pred_length/2.0, pred_box[1] + pred_length/2.0, pred_box[2] + pred_length/2.0]])
+
+
+    
+    boxes_gt = torch.tensor(boxes_gt, device= device, dtype=torch.float32)
+    boxes_pred = torch.tensor(boxes_pred, device= device, dtype=torch.float32)
+    intersection_vol, iou_3d = box3d_overlap(boxes_gt, boxes_pred)
+
+    batch_size = boxes_gt.shape[0]
+    iou_sum = 0.0
+    for j in range(batch_size):
+        iou_sum += iou_3d[j,j]
+
+    print((iou_sum/batch_size) * 100.0)
  
 
 if __name__ == "__main__":
@@ -150,6 +207,8 @@ if __name__ == "__main__":
     calc_errors_using_closest_bbox(results, results_all)
 
     calc_errors_on_closest_bbox_human(results, results_all, human_pare_all)
+
+    calc_iou_on_3d_bbox(results, results_all, human_pare_all)
 
     calc_num_wrong_bbox(results)
 
