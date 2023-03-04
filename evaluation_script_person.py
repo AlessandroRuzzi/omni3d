@@ -389,12 +389,14 @@ def calc_iou_on_3d_bbox(results, results_all, human_pare_all):
                     [pred_box[0] - pred_length/2.0, pred_box[1] + pred_length/2.0, pred_box[2] + pred_length/2.0], [pred_box[0] + pred_length/2.0, pred_box[1] + pred_length/2.0, pred_box[2] + pred_length/2.0],
                     [pred_box[0] + pred_length/2.0, pred_box[1] - pred_length/2.0, pred_box[2] + pred_length/2.0], [pred_box[0] - pred_length/2.0, pred_box[1] - pred_length/2.0, pred_box[2] + pred_length/2.0]])
 
-    batch_size = boxes_gt.shape[0]
-    iou_sum = 0.0
+    
+    
     boxes_gt = torch.tensor(boxes_gt, device= device, dtype=torch.float32)
     boxes_pred = torch.tensor(boxes_pred, device= device, dtype=torch.float32)
     intersection_vol, iou_3d = box3d_overlap(boxes_gt, boxes_pred)
 
+    batch_size = boxes_gt.shape[0]
+    iou_sum = 0.0
     for j in range(batch_size):
         iou_sum += iou_3d[i,i]
 
