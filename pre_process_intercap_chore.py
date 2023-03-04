@@ -57,14 +57,14 @@ if __name__ == "__main__":
 
     model = init_detector(config_file, checkpoint_file, device='cuda:0')
 
-    data_path = "/data/xiwang/Intercap/"
+    data_path = "/data/xiwang/Intercap/RGBD_Images/"
     save_path = "data/aruzzi/Intercap/"
-    humans = [x.split("/")[0] for x in glob("%s/*" % data_path)]
+    humans = [x for x in glob("%s/*" % data_path)]
     print(humans)
     for human in humans:
         human_path = os.path.join(data_path, human)
         print(human_path)
-        objects = [x.split("/")[0] for x in glob("%s/*" % human_path)]
+        objects = [x.split("/")[-1] for x in glob("%s/*" % human_path)]
         print(objects)
         for object in objects:
             object_path = os.path.join(human_path, object)
