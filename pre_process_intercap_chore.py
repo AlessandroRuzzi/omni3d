@@ -40,7 +40,7 @@ if __name__ == "__main__":
     model_eval = "_".join((model_eval, filter_method))
 
     if model_eval.startswith("MRCNN"):
-        config_file = "mask_rcnn_x101_64x4d_fpn_mstrain-poly_3x_coco.py"
+        config_file = mmdet_root + "mask_rcnn_x101_64x4d_fpn_mstrain-poly_3x_coco.py"
         checkpoint_file = "checkpoint/mask_rcnn_x101_64x4d_fpn_mstrain-poly_3x_coco_20210526_120447-c376f129.pth"
 
     elif model_eval.startswith("PointRend"):
@@ -64,6 +64,11 @@ if __name__ == "__main__":
     for human in humans:
         human_path = os.path.join(data_path, human)
         print(human_path)
+        objects = [x.split("/")[0] for x in glob("%s/*.txt" % human_path)]
+        print(objects)
+        for object in objects:
+            object_path = os.path.join(human_path, object)
+            print(object_path)
 
     """
 
