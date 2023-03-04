@@ -17,7 +17,7 @@ import wandb
 
 wandb.init("Intercap CHORE")
 
-relation_dict = {"01": 28, "02": 36, "03": 32, "04": 25, "05": 38, "06": 26, "07": 56, "08": 39, "09": 41, "10": 57}
+relation_dict = {"01": 28, "02": 36, "03": 32, "04": 25, "05": 38, "06": 26, "07": 56, "08": 39, "09": 41, "10": 56}
 
 
 def log_mask(img_to_log, mask, description, class_labels):
