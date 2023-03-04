@@ -71,6 +71,36 @@ if __name__ == "__main__":
             images_name = [x for x in glob("%s/*.jpg" % images_path)]
             images_name.sort()
             print(images_name)
+            for image in images_name:
+                #create folder
+                final_folder_path = os.path.join(save_path, human+object+image.split("/")[-1][:-4])
+                if os.path.exists(final_folder_path):
+                    shutil.rmtree(final_folder_path, ignore_errors=True)
+                os.mkdir(final_folder_path)
+
+                #calculate masks
+                try:
+                    img = cv2.imread(image) 
+                    res = inference_detector(model, img)
+
+                    body_mask = res[1][0][0]
+                    obj_mask = res[1][56][0]
+                    #return res
+                except:
+                    shutil.rmtree(final_folder_path, ignore_errors=True)
+                    continue
+
+                #save files
+                shutil.copyfile(image, final_folder_path + "/k1.color.jpg")
+                cv2.imwrite(final_folder_path + "/k1.person_mask.jpg", body_mask * 225)
+                cv2.imwrite(final_folder_path + "/k1.obj_mask.jpg", obj_mask * 225)
+
+                break
+            break
+        break
+    
+
+
 
     """
 
