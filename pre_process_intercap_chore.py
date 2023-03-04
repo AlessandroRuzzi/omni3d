@@ -17,6 +17,8 @@ import wandb
 
 wandb.init("Intercap CHORE")
 
+relation_dict = {"01": 29, "02": 0, "03": 0, "04": 0, "05": 0, "06": 0, "07": 0, "08": 0, "09": 0, "10": 0}
+
 
 def log_mask(img_to_log, mask, description, class_labels):
     image_gt = wandb.Image(img_to_log, caption="Image")
@@ -84,7 +86,7 @@ if __name__ == "__main__":
                     res = inference_detector(model, img)
 
                     body_mask = res[1][0][0]
-                    obj_mask = res[1][56][0]
+                    obj_mask = res[1][relation_dict[object]][0]
                     #return res
                 except:
                     shutil.rmtree(final_folder_path, ignore_errors=True)
@@ -98,7 +100,7 @@ if __name__ == "__main__":
                 log_mask(img, body_mask, "body mask", {0: "background", 255: "body"})
                 log_mask(img, obj_mask, "object mask", {0: "background", 255: "object"})
 
-                #break
+                break
             break
         break
     
