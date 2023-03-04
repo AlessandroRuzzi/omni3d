@@ -17,7 +17,7 @@ import wandb
 
 wandb.init("Intercap CHORE")
 
-relation_dict = {"01": 28, "02": 36, "03": 56, "04": 25, "05": 38, "06": 26, "07": 32, "08": 39, "09": 41, "10": 57}
+relation_dict = {"01": 28, "02": 36, "03": 32, "04": 25, "05": 38, "06": 26, "07": 56, "08": 39, "09": 41, "10": 57}
 
 
 def log_mask(img_to_log, mask, description, class_labels):
@@ -72,28 +72,29 @@ if __name__ == "__main__":
             images_path = os.path.join(object_path, "Seg_0/Frames_Cam1/color/")
             images_name = [x for x in glob("%s/*.jpg" % images_path)]
             images_name.sort()
-            #print(images_name)
             for image in images_name:
+
                 #create folder
-                print(object)
+
                 final_folder_path = os.path.join(save_path, human+object+image.split("/")[-1][:-4] + "/")
                 if os.path.exists(final_folder_path):
                     shutil.rmtree(final_folder_path, ignore_errors=True)
                 os.makedirs(final_folder_path)
 
                 #calculate masks
+
                 try:
                     img = cv2.imread(image) 
                     res = inference_detector(model, img)
 
                     body_mask = res[1][0][0]
                     obj_mask = res[1][relation_dict[object]][0]
-                    #return res
                 except:
                     shutil.rmtree(final_folder_path, ignore_errors=True)
                     continue
 
                 #save files
+
                 shutil.copyfile(image, final_folder_path + "/k1.color.jpg")
                 cv2.imwrite(final_folder_path + "/k1.person_mask.jpg", body_mask * 225)
                 cv2.imwrite(final_folder_path + "/k1.obj_mask.jpg", obj_mask * 225)
