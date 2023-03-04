@@ -5,6 +5,7 @@ import torch
 import wandb
 import os
 from glob import glob
+from pytorch3d.ops import box3d_overlap
 
 def calc_num_wrong_bbox(results):
     num_wrong = 0
@@ -347,6 +348,59 @@ def calc_chamfer_on_different_iou(data_path):
         print(f"Low IOU images: {low_iou_dict['num_imgs']}, High IOU image: {high_iou_dict['num_imgs']}, Total images: {low_iou_dict['num_imgs'] + high_iou_dict['num_imgs']}")
         print("-------------------------------------")
 
+def calc_iou_on_3d_bbox(results, results_all, human_pare_all):
+    boxes_gt, boxes_pred = [], []
+    device = (
+                torch.device("cuda:0") 
+                if torch.cuda.is_available()
+                else torch.device("cpu")
+        )
+    for day in results:
+        pred_dict = results[day]
+        pred_all = results_all[day]
+        
+        gt_box = pred_dict["gt_bbox_center"]
+        gt_length = pred_dict["gt_bbox_size"][0]
+
+        boxes_gt.append([[gt_box[0] - gt_length/2.0, gt_box[1] + gt_length/2.0, gt_box[2] - gt_length/2.0], [gt_box[0] + gt_length/2.0, gt_box[1] + gt_length/2.0, gt_box[2] - gt_length/2.0,
+                         [gt_box[0] + gt_length/2.0, gt_box[1] - gt_length/2.0, gt_box[2] - gt_length/2.0]], [gt_box[0] - gt_length/2.0, gt_box[1] - gt_length/2.0, gt_box[2] - gt_length/2.0],
+                         [gt_box[0] - gt_length/2.0, gt_box[1] + gt_length/2.0, gt_box[2] + gt_length/2.0], [gt_box[0] + gt_length/2.0, gt_box[1] + gt_length/2.0, gt_box[2] + gt_length/2.0],
+                         [gt_box[0] + gt_length/2.0, gt_box[1] - gt_length/2.0, gt_box[2] + gt_length/2.0], [gt_box[0] - gt_length/2.0, gt_box[1] - gt_length/2.0, gt_box[2] + gt_length/2.0]])
+       
+        try:
+            pred_human= human_pare_all[day]
+            human_center = pred_human["pred_bbox_center"]
+
+            object_dist_list = []
+            for i, bbox in enumerate(pred_all["bbox_center"]):
+                #print("human distance: ",math.dist(human_center, bbox), " Confidence: ", (1-pred_all["bbox_score"][i]))
+                object_dist_list.append(math.dist(human_center, bbox) + (1-pred_all["bbox_score"][i]))
+
+            pos, element = min(enumerate(object_dist_list), key=itemgetter(1))
+            pred_box = pred_all["bbox_center"][pos]
+            pred_length = pred_all["bbox_size"][pos][0]
+        except:
+            #counter+=1
+            pred_box = pred_dict["pred_bbox_center"]
+            pred_length = pred_dict["pred_bbox_size"][0]
+
+        boxes_pred.append([[pred_box[0] - pred_length/2.0, pred_box[1] + pred_length/2.0, pred_box[2] - pred_length/2.0], [pred_box[0] + pred_length/2.0, pred_box[1] + pred_length/2.0, pred_box[2] - pred_length/2.0,
+                    [pred_box[0] + pred_length/2.0, pred_box[1] - pred_length/2.0, pred_box[2] - pred_length/2.0]], [pred_box[0] - pred_length/2.0, pred_box[1] - pred_length/2.0, pred_box[2] - pred_length/2.0],
+                    [pred_box[0] - pred_length/2.0, pred_box[1] + pred_length/2.0, pred_box[2] + pred_length/2.0], [pred_box[0] + pred_length/2.0, pred_box[1] + pred_length/2.0, pred_box[2] + pred_length/2.0],
+                    [pred_box[0] + pred_length/2.0, pred_box[1] - pred_length/2.0, pred_box[2] + pred_length/2.0], [pred_box[0] - pred_length/2.0, pred_box[1] - pred_length/2.0, pred_box[2] + pred_length/2.0]])
+
+        break
+        #d = pred_box.append(pred_length)
+        #g = gt_box.append(gt_length)
+        #dd = torch.tensor(d, device=device, dtype=torch.float32)
+        #gg = torch.tensor(g, device=device, dtype=torch.float32)
+        #ious = _C.iou_box3d(dd, gg)[1].cpu().numpy()
+    boxes_gt = torch.tensor(boxes_gt, device= device, dtype=torch.float32)
+    boxes_pred = torch.tensor(boxes_pred, device= device, dtype=torch.float32)
+    print(boxes_gt.shape, boxes_pred.shape)
+    intersection_vol, iou_3d = box3d_overlap(boxes_gt, boxes_pred)
+    print(iou_3d)
+
 if __name__ == "__main__":
     #results = json.load(open("predictions/results_2.json"))["best_score vs gt"]
     #results_all = json.load(open("predictions/results_2.json"))["all_predicted"]
@@ -364,6 +418,8 @@ if __name__ == "__main__":
 
     calc_chamfer_on_different_iou("/data/aruzzi/Behave/")
 
+    calc_iou_on_3d_bbox(results, results_all, human_pare_all)
+    
     #calc_errors_on_closest_bbox_human_by_class_relative(results, results_all, human_pare_all)
 
     #calc_errors_on_closest_bbox_human_by_class_absolute(results, results_all, human_pare_all)
