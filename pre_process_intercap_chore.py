@@ -74,12 +74,14 @@ if __name__ == "__main__":
             for image in images_name:
                 #create folder
                 final_folder_path = os.path.join(save_path, human+object+image.split("/")[-1][:-4])
+                print(final_folder_path)
                 if os.path.exists(final_folder_path):
                     shutil.rmtree(final_folder_path, ignore_errors=True)
                 os.makedirs(final_folder_path)
 
                 #calculate masks
                 try:
+                    print("here")
                     img = cv2.imread(image) 
                     res = inference_detector(model, img)
 
