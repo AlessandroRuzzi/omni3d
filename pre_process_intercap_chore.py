@@ -57,7 +57,7 @@ if __name__ == "__main__":
 
     model = init_detector(config_file, checkpoint_file, device='cuda:0')
 
-    data_path = "/data/xiwang/Intercap/RGBD_Images/"
+    data_path = "/data/xiwang/Intercap/RGBD_Images"
     save_path = "data/aruzzi/Intercap/"
     humans = [x for x in glob("%s/*" % data_path)]
     print(humans)
