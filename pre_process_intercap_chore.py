@@ -78,10 +78,11 @@ if __name__ == "__main__":
                 if os.path.exists(final_folder_path):
                     shutil.rmtree(final_folder_path, ignore_errors=True)
                 os.makedirs(final_folder_path)
+                if os.path.exists(final_folder_path):
+                    print("here")
 
                 #calculate masks
                 try:
-                    print("here")
                     img = cv2.imread(image) 
                     res = inference_detector(model, img)
 
