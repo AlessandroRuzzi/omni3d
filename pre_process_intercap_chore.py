@@ -57,7 +57,7 @@ if __name__ == "__main__":
 
     model = init_detector(config_file, checkpoint_file, device='cuda:0')
 
-    data_path = "/data/xiwang/Intercap/RGBD_Images"
+    data_path = "/data/xiwang/InterCap/RGBD_Images"
     save_path = "data/aruzzi/Intercap/"
     humans = [f for f in os.listdir(data_path) if not(isfile(os.path.join(data_path, f)))]
     print(humans)
