@@ -5,6 +5,7 @@ import trimesh
 from os.path import join, isfile
 
 from mmdet.apis import init_detector, inference_detector
+import mmcv
 from mmdet.core.evaluation.class_names import coco_classes
 import cv2
 import json
