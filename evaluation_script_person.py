@@ -362,8 +362,6 @@ def calc_iou_on_3d_bbox(results, results_all, human_pare_all):
         gt_box = pred_dict["gt_bbox_center"]
         gt_length = pred_dict["gt_bbox_size"][0]
 
-        print("here")
-
         boxes_gt.append([[gt_box[0] - gt_length/2.0, gt_box[1] + gt_length/2.0, gt_box[2] - gt_length/2.0], [gt_box[0] + gt_length/2.0, gt_box[1] + gt_length/2.0, gt_box[2] - gt_length/2.0],
                          [gt_box[0] + gt_length/2.0, gt_box[1] - gt_length/2.0, gt_box[2] - gt_length/2.0], [gt_box[0] - gt_length/2.0, gt_box[1] - gt_length/2.0, gt_box[2] - gt_length/2.0],
                          [gt_box[0] - gt_length/2.0, gt_box[1] + gt_length/2.0, gt_box[2] + gt_length/2.0], [gt_box[0] + gt_length/2.0, gt_box[1] + gt_length/2.0, gt_box[2] + gt_length/2.0],
@@ -390,18 +388,17 @@ def calc_iou_on_3d_bbox(results, results_all, human_pare_all):
                     [pred_box[0] + pred_length/2.0, pred_box[1] - pred_length/2.0, pred_box[2] - pred_length/2.0], [pred_box[0] - pred_length/2.0, pred_box[1] - pred_length/2.0, pred_box[2] - pred_length/2.0],
                     [pred_box[0] - pred_length/2.0, pred_box[1] + pred_length/2.0, pred_box[2] + pred_length/2.0], [pred_box[0] + pred_length/2.0, pred_box[1] + pred_length/2.0, pred_box[2] + pred_length/2.0],
                     [pred_box[0] + pred_length/2.0, pred_box[1] - pred_length/2.0, pred_box[2] + pred_length/2.0], [pred_box[0] - pred_length/2.0, pred_box[1] - pred_length/2.0, pred_box[2] + pred_length/2.0]])
-        if idx ==2:
-            break
-        #d = pred_box.append(pred_length)
-        #g = gt_box.append(gt_length)
-        #dd = torch.tensor(d, device=device, dtype=torch.float32)
-        #gg = torch.tensor(g, device=device, dtype=torch.float32)
-        #ious = _C.iou_box3d(dd, gg)[1].cpu().numpy()
+
+    batch_size = boxes_gt.shape[0]
+    iou_sum = 0.0
     boxes_gt = torch.tensor(boxes_gt, device= device, dtype=torch.float32)
     boxes_pred = torch.tensor(boxes_pred, device= device, dtype=torch.float32)
-    print(boxes_gt.shape, boxes_pred.shape)
     intersection_vol, iou_3d = box3d_overlap(boxes_gt, boxes_pred)
-    print(iou_3d)
+
+    for j in range(batch_size):
+        iou_sum += iou_3d[i,i]
+
+    print((iou_sum/batch_size) * 100.0)
 
 if __name__ == "__main__":
     #results = json.load(open("predictions/results_2.json"))["best_score vs gt"]
