@@ -101,7 +101,7 @@ if __name__ == "__main__":
                 log_mask(img, obj_mask, "object mask", {0: "background", 255: "object"})
 
                 break
-            break
+            #break
         break
     
 
