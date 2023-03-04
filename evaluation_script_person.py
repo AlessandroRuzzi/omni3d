@@ -398,7 +398,7 @@ def calc_iou_on_3d_bbox(results, results_all, human_pare_all):
                            [pred_box[0] - pred_length/2.0, pred_box[1] - pred_length/2.0, pred_box[2] + pred_length/2.0], [pred_box[0] + pred_length/2.0, pred_box[1] - pred_length/2.0, pred_box[2] + pred_length/2.0],
                            [pred_box[0] + pred_length/2.0, pred_box[1] + pred_length/2.0, pred_box[2] + pred_length/2.0], [pred_box[0] - pred_length/2.0, pred_box[1] + pred_length/2.0, pred_box[2] + pred_length/2.0]])
 
-        if i ==0:
+        if idx ==0:
             print(boxes_gt)
             print(boxes_pred)
             break
