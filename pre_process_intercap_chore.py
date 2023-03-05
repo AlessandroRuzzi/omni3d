@@ -61,6 +61,7 @@ if __name__ == "__main__":
 
     data_path = "/data/xiwang/InterCap/RGBD_Images"
     save_path = "/data/aruzzi/Intercap/"
+    pkl_path = "/mnt/scratch/kexshi/PARE_Res/"
     humans = [f for f in os.listdir(data_path) if not(isfile(os.path.join(data_path, f)))]
     humans.sort()
     for human in humans:
@@ -97,9 +98,10 @@ if __name__ == "__main__":
 
                 #convert pkl into ply and json
 
-                pkl_path = "/mnt/scratch/kexshi/PARE_Res/"
-                pkl_path = os.path.join(pkl_path, human,object, "Seg_0/Frames_Cam1/" + image.split("/")[-1][-9:-4] + ".pkl")
-                pare_pred = pickle.load(open(pkl_path))
+                
+                pkl_path_image = os.path.join(pkl_path, human,object, "Seg_0/Frames_Cam1/" + image.split("/")[-1][-9:-4] + ".pkl")
+                print(pkl_path_image)
+                pare_pred = pickle.load(open(pkl_path_image))
 
                 print(pare_pred)
                 print(type(pare_pred))
