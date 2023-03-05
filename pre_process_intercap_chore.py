@@ -42,6 +42,19 @@ def log_mask(img_to_log, mask, description, class_labels):
 
 
 if __name__ == "__main__":
+
+    BODY_PARTS = { "Nose": 0, "Neck": 1, "RShoulder": 2, "RElbow": 3, "RWrist": 4,
+               "LShoulder": 5, "LElbow": 6, "LWrist": 7, "RHip": 8, "RKnee": 9,
+               "RAnkle": 10, "LHip": 11, "LKnee": 12, "LAnkle": 13, "REye": 14,
+               "LEye": 15, "REar": 16, "LEar": 17, "Background": 18 }
+
+    POSE_PAIRS = [ ["Neck", "RShoulder"], ["Neck", "LShoulder"], ["RShoulder", "RElbow"],
+               ["RElbow", "RWrist"], ["LShoulder", "LElbow"], ["LElbow", "LWrist"],
+               ["Neck", "RHip"], ["RHip", "RKnee"], ["RKnee", "RAnkle"], ["Neck", "LHip"],
+               ["LHip", "LKnee"], ["LKnee", "LAnkle"], ["Neck", "Nose"], ["Nose", "REye"],
+               ["REye", "REar"], ["Nose", "LEye"], ["LEye", "LEar"] ]
+    
+    threshold = 0.2
     
     mmdet_root = "../mmdetection/"
     model_eval = "MRCNN"
@@ -99,8 +112,6 @@ if __name__ == "__main__":
                     obj_mask = res[1][relation_dict[object]][0]
                 except:
                     shutil.rmtree(final_folder_path, ignore_errors=True)
-                    print(object)
-                    print(relation_dict[object])
                     continue
 
                 #convert pkl into ply and json
@@ -116,9 +127,34 @@ if __name__ == "__main__":
                 smpl_pred = Mesh(v=pare_pred["smpl_vertices"][0], f=get_smpl_faces())            
                 pred_pose = batch_rot2aa(torch.from_numpy(pare_pred["pred_pose"][0])).reshape(-1).numpy().tolist()           
                 pred_shape = pare_pred["pred_shape"].reshape(-1).tolist()
-                new_json = {"pose": pred_pose,"betas": pred_shape}            
+                new_json = {"pose": pred_pose,"betas": pred_shape}     
 
-                
+                #openpose estimation
+                net = cv2.dnn.readNetFromTensorflow("graph_opt.pb")
+                photo_height=img.shape[0]
+                photo_width=img.shape[1]
+                net.setInput(cv2.dnn.blobFromImage(img, 1.0, (photo_width, photo_height), (127.5, 127.5, 127.5), swapRB=True, crop=False))
+
+                out = net.forward()
+                out = out[:, :19, :, :] 
+
+                assert(len(BODY_PARTS) == out.shape[1])
+
+                points = []
+                for i in range(len(BODY_PARTS)):
+                        # Slice heatmap of corresponging body's part.
+                    heatMap = out[0, i, :, :]
+
+                        # Originally, we try to find all the local maximums. To simplify a sample
+                        # we just find a global one. However only a single pose at the same time
+                        # could be detected this way.
+                    _, conf, _, point = cv2.minMaxLoc(heatMap)
+                    x = (photo_width * point[0]) / out.shape[3]
+                    y = (photo_height * point[1]) / out.shape[2]
+                    # Add a point if it's confidence is higher than threshold.
+                    points.append((int(x), int(y)) if conf > threshold else None)       
+
+                print(points)
                 #save files
 
                 shutil.copyfile(image, final_folder_path + "/k1.color.jpg")
@@ -134,96 +170,5 @@ if __name__ == "__main__":
                 break
             break
         break
-    
 
-
-
-    """
-
-    res = get_img_lbl()
-
-    for imgfile in os.listdir("./CHORE_chair_all/images/"):
-        try:
-            print(imgfile)
-            #break
-            os.makedirs("./CHORE_chair_all/CHORE_format/" + imgfile[:4], exist_ok=True)
-
-            pre, ext = os.path.splitext(imgfile)
-
-            with open("./CHORE_chair_all/openpose/" + pre + "_keypoints.json", "r") as f:
-                a = json.load(f)
-            # break
-
-            new_json = {
-                "body_joints": a["people"][0]["pose_keypoints_2d"],
-                "face_joints": a["people"][0]["face_keypoints_2d"],
-                "left_hand_joints": a["people"][0]["hand_left_keypoints_2d"],
-                "right_hand_joints": a["people"][0]["hand_right_keypoints_2d"],
-            }
-
-            with open("./CHORE_chair_all/CHORE_format/" + imgfile[:4] + "/k1.color.json", "w") as f:
-                json.dump(new_json, f, indent=4)
-
-            print("./CHORE_chair_all/mocap_param/" + imgfile[:4] + ".json")
-            shutil.copyfile("./CHORE_chair_all/images/" + imgfile, "./CHORE_chair_all/CHORE_format/" + imgfile[:4] + "/k1.color.jpg")
-            shutil.copyfile("./CHORE_chair_all/mocap/" + imgfile, "./CHORE_chair_all/CHORE_format/" + imgfile[:4] + "/k1.mocap.ply")
-            shutil.copyfile("./CHORE_chair_all/mocap_param/" + imgfile[:4] + ".json", "./CHORE_chair_all/CHORE_format/" + imgfile[:4] + "/k1.mocap.json")
-            shutil.copyfile("./CHORE_chair_all/body_masks/" + imgfile, "./CHORE_chair_all/CHORE_format/" + imgfile[:4] + "/k1.person_mask.jpg")
-            shutil.copyfile("./CHORE_chair_all/obj_masks/" + imgfile, "./CHORE_chair_all/CHORE_format/" + imgfile[:4] + "/k1.obj_mask.jpg")
-            
-            # break
-        except:
-            shutil.rmtree("./CHORE_chair_all/CHORE_format/" + imgfile[:4]) 
-
-    {
-        "body_joints": a["people"][0]["pose_keypoints_2d"],
-        "face_joints": a["people"][0]["face_keypoints_2d"],
-        "left_hand_joints": a["people"][0]["hand_left_keypoints_2d"],
-        "right_hand_joints": a["people"][0]["hand_right_keypoints_2d"],
-    }
-
-    with open("/data/huangd/log/pred_contact.pkl", "rb") as f:
-        a = pickle.load(f)
-
-    human2chore = {
-        "head": [0],
-        "neck": [0],
-        "shoulders": [11],
-        "arms": [5, 10],
-        "arm": [5, 10],
-        "fore arms": [4, 9],
-        "upper arms": [5, 10],
-        "hands": [2, 7],
-        "front": [11],
-        "back": [11],
-        "lower body": [11, 3, 8],
-        "butt": [11],
-        "legs": [3, 8],
-        "thighs": [3, 8],
-        "calfs": [3, 8],
-        "feet": [1, 6],
-    }
-    lbl_dir = "/data/huangd/chair_all_lbl"
-    img2lbl = {}
-    for lbl_file in os.listdir(lbl_dir):
-        st = int(lbl_file.split("-")[1])
-        print(lbl_file)
-        with open("/data/huangd/chair_all_lbl/" + lbl_file, newline='') as f:
-            reader = csv.reader(f)
-            for idx, row in enumerate(reader):
-                imglbls = []
-                if row[1] != '':
-                    imglbls += human2chore[row[1]]
-                if row[4] != '':
-                    imglbls += human2chore[row[4]]
-                if row[7] != '':
-                    imglbls += human2chore[row[7]]
-                if row[10] != '':
-                    imglbls += human2chore[row[10]]
-
-                if len(imglbls):
-                    img2lbl[st + idx] = imglbls
-                    
-    with open("/data/huangd/log/humanlbl_contact.pkl", "wb") as f:
-        pickle.dump(img2lbl, f)
-    """
+    print("Intercap dataset processed!")
