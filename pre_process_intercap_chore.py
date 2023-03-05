@@ -16,6 +16,7 @@ import csv
 from glob import glob
 import wandb 
 sys.path.insert(0, '/local/home/aruzzi/')
+sys.path.insert(0, '/local/home/aruzzi/openpose')
 sys.path.insert(0, '/local/home/aruzzi/PyMAF/')
 from PARE.pare.utils.geometry import batch_rot2aa
 from psbody.mesh import Mesh
@@ -129,35 +130,14 @@ if __name__ == "__main__":
                 pred_shape = pare_pred["pred_shape"].reshape(-1).tolist()
                 new_json = {"pose": pred_pose,"betas": pred_shape}     
 
+                
                 #openpose estimation
-                net = cv2.dnn.readNetFromTensorflow("graph_opt.pb")
-                photo_height=img.shape[0]
-                photo_width=img.shape[1]
-                net.setInput(cv2.dnn.blobFromImage(img, 1.0, (photo_width, photo_height), (127.5, 127.5, 127.5), swapRB=True, crop=False))
-
-                out = net.forward()
-                out = out[:, :19, :, :] 
-
-                assert(len(BODY_PARTS) == out.shape[1])
-
-                points = []
-                for i in range(len(BODY_PARTS)):
-                        # Slice heatmap of corresponging body's part.
-                    heatMap = out[0, i, :, :]
-
-                        # Originally, we try to find all the local maximums. To simplify a sample
-                        # we just find a global one. However only a single pose at the same time
-                        # could be detected this way.
-                    _, conf, _, point = cv2.minMaxLoc(heatMap)
-                    x = (photo_width * point[0]) / out.shape[3]
-                    y = (photo_height * point[1]) / out.shape[2]
-                    # Add a point if it's confidence is higher than threshold.
-                    points.append((int(x), int(y)) if conf > threshold else None)       
-
-                print(points)
-                #save files
-
                 shutil.copyfile(image, final_folder_path + "/k1.color.jpg")
+                os.system(
+                f'./build/examples/openpose/openpose.bin --image_dir {final_folder_path} --face --hand --write_json {final_folder_path}'
+                 )
+                
+                #save files
                 cv2.imwrite(final_folder_path + "/k1.person_mask.jpg", body_mask * 225)
                 cv2.imwrite(final_folder_path + "/k1.obj_mask.jpg", obj_mask * 225)
                 smpl_pred.write_ply(final_folder_path + "k1.mocap.ply")
