@@ -11,6 +11,7 @@ import cv2
 import json
 import shutil
 import pickle
+import joblib
 import csv
 from glob import glob
 import wandb 
@@ -101,12 +102,24 @@ if __name__ == "__main__":
                 
                 pkl_path_image = os.path.join(pkl_path, human,object, "Seg_0/Frames_Cam1/" + image.split("/")[-1][-9:-4] + ".pkl")
                 
-                pare_pred = pickle.load(open(pkl_path_image, 'rb'))
+                pare_pred = joblib.load(pkl_path_image)
 
                 print(pare_pred)
                 print(type(pare_pred))
 
-
+                """
+                if output is None or output["smpl_vertices"] is None:                
+                    print("Missing detection")                
+                    continue
+                # return output            
+                smpl_pred = Mesh(v=output["smpl_vertices"][0], f=get_smpl_faces())            
+                smpl_pred.write_ply("../CHORE/CHORE_chair_all/mocap/" + imgfile)
+                pred_pose = batch_rot2aa(torch.from_numpy(output["pred_pose"][0])).reshape(-1).numpy().tolist()           
+                pred_shape = output["pred_shape"].reshape(-1).tolist()
+                new_json = {"pose": pred_pose,"betas": pred_shape}            
+                with open("../CHORE/CHORE_chair_all/mocap_param/" + imgfile[:4] + ".json", "w") as f:  
+                     json.dump(new_json, f, indent=4)
+                """
                 #save files
 
                 shutil.copyfile(image, final_folder_path + "/k1.color.jpg")
