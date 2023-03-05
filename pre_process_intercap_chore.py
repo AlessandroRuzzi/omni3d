@@ -133,9 +133,9 @@ if __name__ == "__main__":
                 
                 #openpose estimation
                 shutil.copyfile(image, final_folder_path + "/k1.color.jpg")
-                os.system(
-                f'./build/examples/openpose/openpose.bin --image_dir {final_folder_path} --face --hand --write_json {final_folder_path}'
-                 )
+                #os.system(
+                #f'./build/examples/openpose/openpose.bin --image_dir {final_folder_path} --face --hand --write_json {final_folder_path}'
+                # )
                 
                 #save files
                 cv2.imwrite(final_folder_path + "/k1.person_mask.jpg", body_mask * 225)
@@ -147,8 +147,8 @@ if __name__ == "__main__":
                 #log_mask(img, body_mask, "body mask", {0: "background", 255: "body"})
                 #log_mask(img, obj_mask, "object mask", {0: "background", 255: "object"})
 
-                break
-            break
-        break
+                #break
+            #break
+        #break
 
     print("Intercap dataset processed!")
