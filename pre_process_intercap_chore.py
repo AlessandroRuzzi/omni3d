@@ -98,7 +98,7 @@ if __name__ == "__main__":
                 #convert pkl into ply and json
 
                 pkl_path = "/mnt/scratch/kexshi/PARE_Res/"
-                pkl_path = os.path.join(pkl_path, human,object, "Seg_0/Frames_Cam1/" + {image.split("/")[-1][-9:-4]} + ".pkl")
+                pkl_path = os.path.join(pkl_path, human,object, "Seg_0/Frames_Cam1/" + image.split("/")[-1][-9:-4] + ".pkl")
                 pare_pred = pickle.load(open(pkl_path))
 
                 print(pare_pred)
