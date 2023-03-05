@@ -104,8 +104,7 @@ if __name__ == "__main__":
                 
                 pare_pred = joblib.load(pkl_path_image)
 
-                print(pare_pred)
-                print(type(pare_pred))
+                print(pare_pred.keys())
 
                 """
                 if output is None or output["smpl_vertices"] is None:                
