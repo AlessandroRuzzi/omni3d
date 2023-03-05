@@ -111,15 +111,16 @@ if __name__ == "__main__":
 
                     body_mask = res[1][0][0]
                     obj_mask = res[1][relation_dict[object]][0]
+
+                    #convert pkl into ply and json
+
+                    pkl_path_image = os.path.join(pkl_path, human,object, "Seg_0/Frames_Cam1/" + image.split("/")[-1][-9:-4] + ".pkl")
+                    pare_pred = joblib.load(pkl_path_image)
+                    
                 except:
                     shutil.rmtree(final_folder_path, ignore_errors=True)
                     continue
 
-                #convert pkl into ply and json
-
-                pkl_path_image = os.path.join(pkl_path, human,object, "Seg_0/Frames_Cam1/" + image.split("/")[-1][-9:-4] + ".pkl")
-                
-                pare_pred = joblib.load(pkl_path_image)
 
                
                 if pare_pred is None or pare_pred["smpl_vertices"] is None:                
