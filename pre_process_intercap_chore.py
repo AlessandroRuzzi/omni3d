@@ -95,17 +95,27 @@ if __name__ == "__main__":
                     print(relation_dict[object])
                     continue
 
+                #convert pkl into ply and json
+
+                pkl_path = "/mnt/scratch/kexshi/PARE_Res/"
+                pkl_path = os.path.join(pkl_path, human,object, "Seg_0/Frames_Cam1/" + {image.split("/")[-1][-9:-4]} + ".pkl")
+                pare_pred = pickle.load(open(pkl_path))
+
+                print(pare_pred)
+                print(type(pare_pred))
+
+
                 #save files
 
                 shutil.copyfile(image, final_folder_path + "/k1.color.jpg")
                 cv2.imwrite(final_folder_path + "/k1.person_mask.jpg", body_mask * 225)
                 cv2.imwrite(final_folder_path + "/k1.obj_mask.jpg", obj_mask * 225)
 
-                log_mask(img, body_mask, "body mask", {0: "background", 255: "body"})
-                log_mask(img, obj_mask, "object mask", {0: "background", 255: "object"})
+                #log_mask(img, body_mask, "body mask", {0: "background", 255: "body"})
+                #log_mask(img, obj_mask, "object mask", {0: "background", 255: "object"})
 
                 break
-            #break
+            break
         break
     
 
