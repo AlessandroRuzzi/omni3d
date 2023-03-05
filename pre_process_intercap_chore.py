@@ -16,6 +16,7 @@ import csv
 from glob import glob
 import wandb 
 sys.path.insert(0, '/local/home/aruzzi/')
+sys.path.insert(0, '/local/home/aruzzi/PyMAF/')
 from PARE.pare.utils.geometry import batch_rot2aa
 from psbody.mesh import Mesh
 from PyMAF.models.smpl import get_smpl_faces
