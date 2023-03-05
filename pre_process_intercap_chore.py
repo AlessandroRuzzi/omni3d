@@ -100,8 +100,8 @@ if __name__ == "__main__":
 
                 
                 pkl_path_image = os.path.join(pkl_path, human,object, "Seg_0/Frames_Cam1/" + image.split("/")[-1][-9:-4] + ".pkl")
-                print(pkl_path_image)
-                pare_pred = pickle.load(open(pkl_path_image))
+                
+                pare_pred = pickle.load(open(pkl_path_image, 'rb'))
 
                 print(pare_pred)
                 print(type(pare_pred))
