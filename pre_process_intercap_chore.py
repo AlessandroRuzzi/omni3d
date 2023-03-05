@@ -15,6 +15,8 @@ import joblib
 import csv
 from glob import glob
 import wandb 
+sys.path.insert(0, '/local/home/aruzzi/')
+from PARE.pare.utils.geometry import batch_rot2aa
 
 wandb.init("Intercap CHORE")
 
@@ -109,8 +111,7 @@ if __name__ == "__main__":
                 """
                 if output is None or output["smpl_vertices"] is None:                
                     print("Missing detection")                
-                    continue
-                # return output            
+                    continue          
                 smpl_pred = Mesh(v=output["smpl_vertices"][0], f=get_smpl_faces())            
                 smpl_pred.write_ply("../CHORE/CHORE_chair_all/mocap/" + imgfile)
                 pred_pose = batch_rot2aa(torch.from_numpy(output["pred_pose"][0])).reshape(-1).numpy().tolist()           
