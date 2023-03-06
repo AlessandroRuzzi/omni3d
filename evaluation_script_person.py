@@ -330,7 +330,6 @@ def calc_chamfer_on_different_iou(data_path):
         
         for image in all_images_dict.keys():
             if image.split("_")[2] in detectable_classes:
-                #print(image.split("_")[2])
                 if image.replace('-', '') in low_iou_images:
                     low_iou_dict['chamfer_object'].append(all_images_dict[image][0])
                     low_iou_dict['chamfer_human'].append(all_images_dict[image][1])
