@@ -310,8 +310,8 @@ def calc_chamfer_on_different_iou(data_path):
         all_images_dict = json.load(open(os.path.join(data_path,"per_img_result_2.json")))
         low_iou_images = set()
         detectable_classes  =set()
-        low_iou_dict = {'chamfer_mean': 0.0, 'chamfer_human': [], 'chamfer_object' : [], 'num_imgs': 0}
-        high_iou_dict = {'chamfer_mean': 0.0, 'chamfer_human': [], 'chamfer_object' : [], 'num_imgs': 0}
+        low_iou_dict = {'chamfer_human': [], 'chamfer_object' : [], 'num_imgs': 0}
+        high_iou_dict = {'chamfer_human': [], 'chamfer_object' : [], 'num_imgs': 0}
 
         files_path = os.path.join(data_path, "behave_iou")
 
@@ -332,26 +332,22 @@ def calc_chamfer_on_different_iou(data_path):
             if image.split("_")[2] in detectable_classes:
                 #print(image.split("_")[2])
                 if image.replace('-', '') in low_iou_images:
-                    low_iou_dict['chamfer_mean'] += all_images_dict[image][0]
                     low_iou_dict['chamfer_object'].append(all_images_dict[image][0])
                     low_iou_dict['chamfer_human'].append(all_images_dict[image][1])
                     low_iou_dict['num_imgs'] +=1
                 else:
-                    high_iou_dict['chamfer_mean'] += all_images_dict[image][0]
                     high_iou_dict['chamfer_object'].append(all_images_dict[image][0])
                     high_iou_dict['chamfer_human'].append(all_images_dict[image][1])
                     high_iou_dict['num_imgs'] +=1             
         
 
         print("-------------------------------------")
-        print("IOU < 0.3 mean: ", low_iou_dict['chamfer_mean'] / low_iou_dict['num_imgs'])
-        print("Human IOU < 0.3 mean: ", np.mean(low_iou_dict['chamfer_human']))
-        print("Human IOU < 0.3 std: ", np.std(low_iou_dict['chamfer_human']))
+        #print("Human IOU < 0.3 mean: ", np.mean(low_iou_dict['chamfer_human']))
+        #print("Human IOU < 0.3 std: ", np.std(low_iou_dict['chamfer_human']))
         print("Object IOU < 0.3 mean: ", np.mean(low_iou_dict['chamfer_object']))
         print("Object IOU < 0.3 std: ", np.std(low_iou_dict['chamfer_object']))
-        print("IOU > 0.3 mean: ", high_iou_dict['chamfer_mean'] / high_iou_dict['num_imgs'])
-        print("Human IOU > 0.3 mean: ",np.mean(high_iou_dict['chamfer_human']))
-        print("Human IOU > 0.3 std: ",np.std(high_iou_dict['chamfer_human']))
+        #print("Human IOU > 0.3 mean: ",np.mean(high_iou_dict['chamfer_human']))
+        #print("Human IOU > 0.3 std: ",np.std(high_iou_dict['chamfer_human']))
         print("Object IOU > 0.3 mean: ",np.mean(high_iou_dict['chamfer_object']))
         print("Object IOU > 0.3 std: ",np.std(high_iou_dict['chamfer_object']))
         print(f"Low IOU images: {low_iou_dict['num_imgs']}, High IOU image: {high_iou_dict['num_imgs']}, Total images: {low_iou_dict['num_imgs'] + high_iou_dict['num_imgs']}")
