@@ -49,7 +49,7 @@ def log_bboxes(img, object_box, object_dim, object_orientation, object_cat, obje
         meshes = []
         meshes_text = []
         bbox3D = object_box + object_dim
-        meshes_text.append('{} {:.2f}'.format(object_cat, str(object_score)))
+        meshes_text.append('{} {:.2f}'.format(object_cat, object_score))
         color = [c/255.0 for c in util.get_color(id_cat)]
         box_mesh = util.mesh_cuboid(bbox3D, object_orientation.tolist(), color=color)
         meshes.append(box_mesh)
@@ -196,7 +196,7 @@ def calc_errors_on_closest_bbox_human(results, results_all, human_pare_all):
             pred_length = pred_all["bbox_size"][pos]
             pred_pose = pred_all["bbox_orientation"][pos]
             pred_cat = pred_all["bbox_class"][pos]
-            pred_score = pred_all["bbox_score"]
+            pred_score = pred_all["bbox_score"][pos]
         except:
             #counter+=1
             pred_box = pred_dict["pred_bbox_center"]
