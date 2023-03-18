@@ -32,7 +32,17 @@ def log_bboxes(img, object_box, object_dim, object_orientation, object_cat, huma
                 id_cat = j
                 break
 
-        K = np.eye(3)
+        image_shape = img.shape[:2]  # h, w
+
+        h, w = image_shape
+        f_ndc = 4
+        f = f_ndc * h / 2
+
+        K = np.array([
+            [f, 0.0, w/2], 
+            [0.0, f, h/2], 
+            [0.0, 0.0, 1.0]
+        ])
         K_inv = np.linalg.inv(K)
         color = util.get_color(id_cat)
         x3d, y3d, z3d, w3d, h3d, l3d, ry3d = object_box[0], object_box[1], object_box[2], object_dim, object_dim, object_dim, object_orientation
