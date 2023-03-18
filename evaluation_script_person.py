@@ -43,7 +43,6 @@ def log_bboxes(img, object_box, object_dim, object_orientation, object_cat, obje
             [0.0, f, h/2], 
             [0.0, 0.0, 1.0]
         ])
-        K_inv = np.linalg.inv(K)
         color = util.get_color(id_cat)
 
         meshes = []
@@ -213,7 +212,8 @@ def calc_errors_on_closest_bbox_human(results, results_all, human_pare_all):
         error_dict['l'] += (abs((abs(pred_length[0] - gt_length))/gt_length)) * 100.0
         error_dict['num_imgs'] += 1
 
-        log_bboxes(img, pred_box, pred_length, pred_pose, pred_cat, pred_score, human_center, pred_human["pred_bbox_size"], pred_human["pred_bbox_orientation"])
+        #log_bboxes(img, pred_box, pred_length, pred_pose, pred_cat, pred_score, human_center, pred_human["pred_bbox_size"], pred_human["pred_bbox_orientation"])
+        log_bboxes(img, gt_box, pred_dict["gt_bbox_size"], pred_pose, pred_cat, pred_score, human_center, pred_human["pred_bbox_size"], pred_human["pred_bbox_orientation"])
     
     print("-------------------------------------")
     print("X Error: ", error_dict['x'] / error_dict['num_imgs'])
