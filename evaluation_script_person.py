@@ -47,10 +47,11 @@ def log_bboxes(img, object_box, object_dim, object_orientation, object_cat, obje
 
         meshes = []
         meshes_text = []
-        bbox3D = object_box + object_dim/2
+        bbox3D = object_box + object_dim
 
         meshes_text.append('{} {:.2f}'.format(object_cat, object_score))
         color = [c/255.0 for c in util.get_color(id_cat)]
+        object_orientation = np.eye(3).tolist()
         box_mesh = util.mesh_cuboid(bbox3D, object_orientation, color=color)
         meshes.append(box_mesh)
 
