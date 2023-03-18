@@ -34,7 +34,6 @@ def log_bboxes(img,img_name, object_box, object_dim, object_orientation, object_
                 break
         
         kid = int((img_name.split("/")[-1]).split(".")[0][1])
-        print(kid)
         K = intrinsics[kid][0]
         color = util.get_color(id_cat)
 
