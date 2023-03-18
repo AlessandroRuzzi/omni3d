@@ -7,6 +7,28 @@ import os
 from glob import glob
 from pytorch3d.ops import box3d_overlap
 import numpy as np
+import cv2
+from cubercnn.vis import draw_3d_box, draw_text
+import wandb
+from cubercnn import util
+
+wandb.init(project = "Omni3D")
+
+
+def log_bboxes(img, object_box, object_dim, object_orientation, object_cat, human_box, human_dim, human_orientation):
+
+        K = np.eye(3)
+        K_inv = np.linalg.inv(K)
+
+        color = util.get_color(object_cat)
+        x3d, y3d, z3d, w3d, h3d, l3d, ry3d = object_box[0], object_box[1], object_box[2], object_dim, object_dim, object_dim, object_orientation
+        draw_3d_box(img, K, [x3d, y3d, z3d, w3d, h3d, l3d], ry3d, color=color, thickness=int(np.round(3*img.shape[0]/500)), draw_back=True, draw_top=True)
+        #draw_text(im, '{}, z={:.1f}, s={:.2f}'.format(cat, z3d, score), [x1, y1, w, h], scale=0.50*im.shape[0]/500, bg_color=color)
+
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        images = wandb.Image(img, caption="Image with predicted 3D bounding boxes")
+        wandb.log({"BBOX Detected" : images})
+
 
 def calc_num_wrong_bbox(results):
     num_wrong = 0
@@ -108,7 +130,8 @@ def calc_errors_on_closest_bbox_human(results, results_all, human_pare_all):
     error_dict = {'x' : 0, 'y' : 0, 'z': 0, 'l': 0 , 'num_imgs' : 0}
     counter = 0
     for day in results:
-        print(day)
+        img_path = os.path.join("/data/xiwang/behave/sequences", day)
+        img = cv2.imread(img_path)
         pred_dict = results[day]
         pred_all = results_all[day]
         
@@ -127,16 +150,22 @@ def calc_errors_on_closest_bbox_human(results, results_all, human_pare_all):
             pos, element = min(enumerate(object_dist_list), key=itemgetter(1))
             pred_box = pred_all["bbox_center"][pos]
             pred_length = pred_all["bbox_size"][pos][0]
+            pred_pose = pred_all["pred_bbox_orientation"][pos]
+            pred_cat = pred_all["pred_bbox_class"][pos]
         except:
             #counter+=1
             pred_box = pred_dict["pred_bbox_center"]
             pred_length = pred_dict["pred_bbox_size"][0]
+            pred_pose = pred_all["pred_bbox_orientation"]
+            pred_cat = pred_all["pred_bbox_class"]
 
         error_dict['x'] += (abs((abs(pred_box[0]-gt_box[0]))/gt_length)) * 100.0
         error_dict['y'] += (abs((abs(pred_box[1]-gt_box[1]))/gt_length)) * 100.0
         error_dict['z'] += (abs((abs(pred_box[2]-gt_box[2]))/gt_length)) * 100.0
         error_dict['l'] += (abs((abs(pred_length - gt_length))/gt_length)) * 100.0
         error_dict['num_imgs'] += 1
+
+        log_bboxes(img, pred_box, pred_length, pred_pose, pred_cat, human_center, pred_human["pred_bbox_size"], pred_human["pred_bbox_orientation"])
     
     print("-------------------------------------")
     print("X Error: ", error_dict['x'] / error_dict['num_imgs'])
