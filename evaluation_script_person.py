@@ -35,7 +35,7 @@ def log_bboxes(img, object_box, object_dim, object_orientation, object_cat, obje
         image_shape = img.shape[:2]  # h, w
 
         h, w = image_shape
-        f_ndc = 1
+        f_ndc = 2
         f = f_ndc * h / 2
 
         K = np.array([
