@@ -47,9 +47,7 @@ def log_bboxes(img, object_box, object_dim, object_orientation, object_cat, obje
 
         meshes = []
         meshes_text = []
-        object_box[0] = object_box[0] * -1
-        object_box[1] = object_box[1] * -1
-        bbox3D = object_box + object_dim
+        bbox3D = object_box + object_dim/2
 
         meshes_text.append('{} {:.2f}'.format(object_cat, object_score))
         color = [c/255.0 for c in util.get_color(id_cat)]
