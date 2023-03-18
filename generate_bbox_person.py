@@ -106,9 +106,9 @@ def do_test(args, cfg, model):
 
         verts = torch.FloatTensor(verts)
         print(verts.shape)
-        human_center = [(torch.min(verts[0,:,0]) + (torch.max(verts[0,:,0]) - torch.min(verts[0,:,0])) / 2.0).detach().cpu().float(), 
-        (torch.min(verts[0,:,1]) + (torch.max(verts[0,:,1]) - torch.min(verts[0,:,1])) / 2.0).detach().cpu().float(),
-        (torch.min(verts[0,:,2]) + (torch.max(verts[0,:,2]) - torch.min(verts[0,:,2])) / 2.0).detach().cpu().float()]
+        human_center = [(torch.min(verts[:,0]) + (torch.max(verts[:,0]) - torch.min(verts[:,0])) / 2.0).detach().cpu().float(), 
+        (torch.min(verts[:,1]) + (torch.max(verts[:,1]) - torch.min(verts[:,1])) / 2.0).detach().cpu().float(),
+        (torch.min(verts[:,2]) + (torch.max(verts[:,2]) - torch.min(verts[:,2])) / 2.0).detach().cpu().float()]
         
         human_center = [float(i) for i in human_center]
 
@@ -119,7 +119,7 @@ def do_test(args, cfg, model):
             "gt_bbox_center": bbox[:3],
             "gt_bbox_size": bbox[3:] * 3,
             "human_center": bbox_project,
-            "human_dim": [float((torch.max(verts[0,:,0]) - torch.min(verts[0,:,0])).detach().cpu().numpy()), float((torch.max(verts[0,:,1]) - torch.min(verts[0,:,1])).detach().cpu().numpy()), float((torch.max(verts[0,:,2]) - torch.min(verts[0,:,2])).detach().cpu().numpy())]
+            "human_dim": [float((torch.max(verts[:,0]) - torch.min(verts[:,0])).detach().cpu().numpy()), float((torch.max(verts[:,1]) - torch.min(verts[:,1])).detach().cpu().numpy()), float((torch.max(verts[:,2]) - torch.min(verts[:,2])).detach().cpu().numpy())]
         }
 
         dets_no_person = {}
