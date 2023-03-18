@@ -178,7 +178,7 @@ def do_test(args, cfg, model):
             human_predicted[im_name]['pred_bbox_class'] = cats[dets_person["pred_classes"][max_idx]]
             human_predicted[im_name]['pred_bbox_orientation'] = dets_person["pred_pose"][max_idx]
 
-        break
+        #break
 
     with open('predictions/results_interaction.json', 'w') as f:
         json.dump({"best_score vs gt": res, "all_predicted": all_predicted, "person": human_predicted}, f)
