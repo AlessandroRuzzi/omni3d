@@ -108,6 +108,7 @@ def calc_errors_on_closest_bbox_human(results, results_all, human_pare_all):
     error_dict = {'x' : 0, 'y' : 0, 'z': 0, 'l': 0 , 'num_imgs' : 0}
     counter = 0
     for day in results:
+        print(day)
         pred_dict = results[day]
         pred_all = results_all[day]
         
