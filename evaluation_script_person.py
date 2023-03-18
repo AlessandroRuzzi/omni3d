@@ -66,11 +66,11 @@ def log_bboxes(img,img_name, object_box, object_dim, object_orientation, object_
 
         #img = cv2.cvtColor(im_drawn_rgb, cv2.COLOR_BGR2RGB)
         images = wandb.Image(im_drawn_rgb, caption="Frontal image with predicted 3D bounding boxes")
-        wandb.log({"Frontal image" : images})
+        wandb.log({"Pred BBox" : images})
 
         #img = cv2.cvtColor(im_topdown, cv2.COLOR_BGR2RGB)
         images = wandb.Image(im_topdown, caption="Topdown image with predicted 3D bounding boxes")
-        wandb.log({"Topdown image" : images})
+        wandb.log({"Pred BBox" : images})
 
 
 def calc_num_wrong_bbox(results):
