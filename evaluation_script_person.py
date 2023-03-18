@@ -19,7 +19,7 @@ def log_bboxes(img, object_box, object_dim, object_orientation, object_cat, huma
 
         K = np.eye(3)
         K_inv = np.linalg.inv(K)
-
+        print(object_cat)
         color = util.get_color(object_cat)
         x3d, y3d, z3d, w3d, h3d, l3d, ry3d = object_box[0], object_box[1], object_box[2], object_dim, object_dim, object_dim, object_orientation
         draw_3d_box(img, K, [x3d, y3d, z3d, w3d, h3d, l3d], ry3d, color=color, thickness=int(np.round(3*img.shape[0]/500)), draw_back=True, draw_top=True)
