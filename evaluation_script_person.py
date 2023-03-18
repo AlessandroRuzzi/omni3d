@@ -24,7 +24,7 @@ category = [ {'id' : 0, 'name' : 'backpack', 'supercategory' : ""}, {'id' : 1, '
              {'id' : 21, 'name' :'interaction', 'supercategory' : ""}]
 
 
-def log_bboxes(img, object_box, object_dim, object_orientation, object_cat, object_score, human_box, human_dim, human_orientation):
+def log_bboxes(img, object_box, object_dim, object_orientation, object_cat, object_score, human_box, human_dim, human_orientation, human_score):
         
         id_cat = None
         for j,elem in enumerate(category):
@@ -51,8 +51,14 @@ def log_bboxes(img, object_box, object_dim, object_orientation, object_cat, obje
 
         meshes_text.append('{} {:.2f}'.format(object_cat, object_score))
         color = [c/255.0 for c in util.get_color(id_cat)]
-        object_orientation = np.eye(3).tolist()
         box_mesh = util.mesh_cuboid(bbox3D, object_orientation, color=color)
+        meshes.append(box_mesh)
+
+        bbox3D = human_box + human_dim
+
+        meshes_text.append('{} {:.2f}'.format("human", human_score))
+        color = [c/255.0 for c in util.get_color(20)]
+        box_mesh = util.mesh_cuboid(bbox3D, human_orientation, color=color)
         meshes.append(box_mesh)
 
         im_drawn_rgb, im_topdown, _ = draw_scene_view(img, K, meshes, text=meshes_text, scale=img.shape[0], blend_weight=0.5, blend_weight_overlay=0.85)
@@ -212,8 +218,8 @@ def calc_errors_on_closest_bbox_human(results, results_all, human_pare_all):
         error_dict['l'] += (abs((abs(pred_length[0] - gt_length))/gt_length)) * 100.0
         error_dict['num_imgs'] += 1
 
-        #log_bboxes(img, pred_box, pred_length, pred_pose, pred_cat, pred_score, human_center, pred_human["pred_bbox_size"], pred_human["pred_bbox_orientation"])
-        log_bboxes(img, gt_box, pred_dict["gt_bbox_size"], pred_pose, pred_cat, pred_score, human_center, pred_human["pred_bbox_size"], pred_human["pred_bbox_orientation"])
+        log_bboxes(img, pred_box, pred_length, pred_pose, pred_cat, pred_score, human_center, pred_human["pred_bbox_size"], pred_human["pred_bbox_orientation"], pred_human["pred_bbox_score"])
+        #log_bboxes(img, gt_box, pred_dict["gt_bbox_size"], pred_pose, pred_cat, pred_score, human_center, pred_human["pred_bbox_size"], pred_human["pred_bbox_orientation"])
     
     print("-------------------------------------")
     print("X Error: ", error_dict['x'] / error_dict['num_imgs'])
