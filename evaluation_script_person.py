@@ -55,20 +55,9 @@ def log_bboxes(img,img_name, object_box, object_dim, object_orientation, object_
 
         im_drawn_rgb, im_topdown, _ = draw_scene_view(img, K, meshes, text=meshes_text, scale=img.shape[0], blend_weight=0.5, blend_weight_overlay=0.85)
 
-        #x3d, y3d, z3d, w3d, h3d, l3d, ry3d = object_box[0], object_box[1], object_box[2], object_dim, object_dim, object_dim, object_orientation
-        #x3d, y3d, z3d = (K_inv @ (z3d*cen_2d))
-        #draw_3d_box(img, K, [x3d, y3d, z3d, w3d, h3d, l3d], ry3d, color=color, thickness=int(np.round(3*img.shape[0]/500)), draw_back=True, draw_top=True)
-        #draw_text(im, '{}, z={:.1f}, s={:.2f}'.format(cat, z3d, score), [x1, y1, w, h], scale=0.50*im.shape[0]/500, bg_color=color)
-
-        #img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-        #images = wandb.Image(img, caption="Image with predicted 3D bounding boxes")
-        #wandb.log({"BBOX Detected" : images})
-
-        #img = cv2.cvtColor(im_drawn_rgb, cv2.COLOR_BGR2RGB)
         images = wandb.Image(im_drawn_rgb, caption="Frontal image with predicted 3D bounding boxes")
         wandb.log({"Pred BBox" : images})
 
-        #img = cv2.cvtColor(im_topdown, cv2.COLOR_BGR2RGB)
         images = wandb.Image(im_topdown, caption="Topdown image with predicted 3D bounding boxes")
         wandb.log({"Pred BBox" : images})
 
@@ -210,7 +199,7 @@ def calc_errors_on_closest_bbox_human(results, results_all, human_pare_all):
         error_dict['l'] += (abs((abs(pred_length[0] - gt_length))/gt_length)) * 100.0
         error_dict['num_imgs'] += 1
 
-        log_bboxes(img, day, pred_box, pred_length, pred_pose, pred_cat, pred_score, human_center, pred_human["pred_bbox_size"], pred_human["pred_bbox_orientation"], pred_human["pred_bbox_score"])
+        #log_bboxes(img, day, pred_box, pred_length, pred_pose, pred_cat, pred_score, human_center, pred_human["pred_bbox_size"], pred_human["pred_bbox_orientation"], pred_human["pred_bbox_score"])
         #log_bboxes(img, gt_box, pred_dict["gt_bbox_size"], pred_pose, pred_cat, pred_score, human_center, pred_human["pred_bbox_size"], pred_human["pred_bbox_orientation"])
     
     print("-------------------------------------")
@@ -428,7 +417,7 @@ def calc_chamfer_on_different_iou(data_path):
         print(f"Low IOU images: {low_iou_dict['num_imgs']}, High IOU image: {high_iou_dict['num_imgs']}, Total images: {low_iou_dict['num_imgs'] + high_iou_dict['num_imgs']}")
         print("-------------------------------------")
 
-def calc_iou_on_3d_bbox(results, results_all, human_pare_all):
+def calc_iou_on_3d_bbox(results, results_all, human_pare_all, object=True):
     boxes_gt, boxes_pred = [], []
     device = (
                 torch.device("cuda:0") 

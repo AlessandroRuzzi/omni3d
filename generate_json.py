@@ -15,6 +15,7 @@ import os
 
 bbox = []
 img_paths = []
+human_verts = []
 
 for index, i in enumerate(dataset):
     # copy the image (i['img_path']) to a new folder (/home/cluster/workshop/omni3d/datasets/miniBEHAVE)
@@ -25,6 +26,8 @@ for index, i in enumerate(dataset):
     
     bbox.append(i['bbox'].tolist())
     img_paths.append(i['img_path'])
+    human_verts.append(i['body_mesh_verts'])
+    break
     
 
 # dump 'bbox' to a json file
@@ -32,4 +35,4 @@ for index, i in enumerate(dataset):
 import json
 
 with open('/data/aruzzi/Behave/info.json', 'w') as f:
-    json.dump({"bbox": bbox, "img_paths": img_paths}, f)
+    json.dump({"bbox": bbox, "img_paths": img_paths, "human_verts": human_verts}, f)
