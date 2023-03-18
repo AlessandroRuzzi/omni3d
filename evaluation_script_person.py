@@ -8,7 +8,7 @@ from glob import glob
 from pytorch3d.ops import box3d_overlap
 import numpy as np
 import cv2
-from cubercnn.vis import draw_3d_box, draw_text
+from cubercnn.vis import draw_3d_box, draw_text, draw_scene_view
 import wandb
 from cubercnn import util
 
@@ -24,7 +24,7 @@ category = [ {'id' : 0, 'name' : 'backpack', 'supercategory' : ""}, {'id' : 1, '
              {'id' : 21, 'name' :'interaction', 'supercategory' : ""}]
 
 
-def log_bboxes(img, object_box, object_dim, object_orientation, object_cat, human_box, human_dim, human_orientation):
+def log_bboxes(img, object_box, object_dim, object_orientation, object_cat, object_score, human_box, human_dim, human_orientation):
         
         id_cat = None
         for j,elem in enumerate(category):
@@ -45,13 +45,33 @@ def log_bboxes(img, object_box, object_dim, object_orientation, object_cat, huma
         ])
         K_inv = np.linalg.inv(K)
         color = util.get_color(id_cat)
-        x3d, y3d, z3d, w3d, h3d, l3d, ry3d = object_box[0], object_box[1], object_box[2], object_dim, object_dim, object_dim, object_orientation
-        draw_3d_box(img, K, [x3d, y3d, z3d, w3d, h3d, l3d], ry3d, color=color, thickness=int(np.round(3*img.shape[0]/500)), draw_back=True, draw_top=True)
+
+        meshes = []
+        meshes_text = []
+        bbox3D = object_box.tolist() + object_dim.tolist()
+        meshes_text.append('{} {:.2f}'.format(object_cat, object_score))
+        color = [c/255.0 for c in util.get_color(id_cat)]
+        box_mesh = util.mesh_cuboid(bbox3D, object_orientation.tolist(), color=color)
+        meshes.append(box_mesh)
+
+        im_drawn_rgb, im_topdown, _ = draw_scene_view(img, K, meshes, text=meshes_text, scale=img.shape[0], blend_weight=0.5, blend_weight_overlay=0.85)
+
+        #x3d, y3d, z3d, w3d, h3d, l3d, ry3d = object_box[0], object_box[1], object_box[2], object_dim, object_dim, object_dim, object_orientation
+        #x3d, y3d, z3d = (K_inv @ (z3d*cen_2d))
+        #draw_3d_box(img, K, [x3d, y3d, z3d, w3d, h3d, l3d], ry3d, color=color, thickness=int(np.round(3*img.shape[0]/500)), draw_back=True, draw_top=True)
         #draw_text(im, '{}, z={:.1f}, s={:.2f}'.format(cat, z3d, score), [x1, y1, w, h], scale=0.50*im.shape[0]/500, bg_color=color)
 
-        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-        images = wandb.Image(img, caption="Image with predicted 3D bounding boxes")
-        wandb.log({"BBOX Detected" : images})
+        #img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        #images = wandb.Image(img, caption="Image with predicted 3D bounding boxes")
+        #wandb.log({"BBOX Detected" : images})
+
+        img = cv2.cvtColor(im_drawn_rgb, cv2.COLOR_BGR2RGB)
+        images = wandb.Image(img, caption="Frontal image with predicted 3D bounding boxes")
+        wandb.log({"Frontal image" : images})
+
+        img = cv2.cvtColor(im_topdown, cv2.COLOR_BGR2RGB)
+        images = wandb.Image(img, caption="Topdown image with predicted 3D bounding boxes")
+        wandb.log({"Topdown image" : images})
 
 
 def calc_num_wrong_bbox(results):
@@ -173,23 +193,25 @@ def calc_errors_on_closest_bbox_human(results, results_all, human_pare_all):
 
             pos, element = min(enumerate(object_dist_list), key=itemgetter(1))
             pred_box = pred_all["bbox_center"][pos]
-            pred_length = pred_all["bbox_size"][pos][0]
+            pred_length = pred_all["bbox_size"][pos]
             pred_pose = pred_all["bbox_orientation"][pos]
             pred_cat = pred_all["bbox_class"][pos]
+            pred_score = pred_all["bbox_score"]
         except:
             #counter+=1
             pred_box = pred_dict["pred_bbox_center"]
-            pred_length = pred_dict["pred_bbox_size"][0]
+            pred_length = pred_dict["pred_bbox_size"]
             pred_pose = pred_dict["pred_bbox_orientation"]
             pred_cat = pred_dict["pred_bbox_class"]
+            pred_score = pred_dict["pred_bbox_score"]
 
         error_dict['x'] += (abs((abs(pred_box[0]-gt_box[0]))/gt_length)) * 100.0
         error_dict['y'] += (abs((abs(pred_box[1]-gt_box[1]))/gt_length)) * 100.0
         error_dict['z'] += (abs((abs(pred_box[2]-gt_box[2]))/gt_length)) * 100.0
-        error_dict['l'] += (abs((abs(pred_length - gt_length))/gt_length)) * 100.0
+        error_dict['l'] += (abs((abs(pred_length[0] - gt_length))/gt_length)) * 100.0
         error_dict['num_imgs'] += 1
 
-        log_bboxes(img, pred_box, pred_length, pred_pose, pred_cat, human_center, pred_human["pred_bbox_size"], pred_human["pred_bbox_orientation"])
+        log_bboxes(img, pred_box, pred_length, pred_pose, pred_cat, pred_score, human_center, pred_human["pred_bbox_size"], pred_human["pred_bbox_orientation"])
     
     print("-------------------------------------")
     print("X Error: ", error_dict['x'] / error_dict['num_imgs'])
