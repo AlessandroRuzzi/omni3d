@@ -65,12 +65,12 @@ def log_bboxes(img, object_box, object_dim, object_orientation, object_cat, obje
         #images = wandb.Image(img, caption="Image with predicted 3D bounding boxes")
         #wandb.log({"BBOX Detected" : images})
 
-        img = cv2.cvtColor(im_drawn_rgb, cv2.COLOR_BGR2RGB)
-        images = wandb.Image(img, caption="Frontal image with predicted 3D bounding boxes")
+        #img = cv2.cvtColor(im_drawn_rgb, cv2.COLOR_BGR2RGB)
+        images = wandb.Image(im_drawn_rgb, caption="Frontal image with predicted 3D bounding boxes")
         wandb.log({"Frontal image" : images})
 
-        img = cv2.cvtColor(im_topdown, cv2.COLOR_BGR2RGB)
-        images = wandb.Image(img, caption="Topdown image with predicted 3D bounding boxes")
+        #img = cv2.cvtColor(im_topdown, cv2.COLOR_BGR2RGB)
+        images = wandb.Image(im_topdown, caption="Topdown image with predicted 3D bounding boxes")
         wandb.log({"Topdown image" : images})
 
 
