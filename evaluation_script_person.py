@@ -51,7 +51,7 @@ def log_bboxes(img, object_box, object_dim, object_orientation, object_cat, obje
         bbox3D = object_box + object_dim
         meshes_text.append('{} {:.2f}'.format(object_cat, object_score))
         color = [c/255.0 for c in util.get_color(id_cat)]
-        box_mesh = util.mesh_cuboid(bbox3D, object_orientation.tolist(), color=color)
+        box_mesh = util.mesh_cuboid(bbox3D, object_orientation, color=color)
         meshes.append(box_mesh)
 
         im_drawn_rgb, im_topdown, _ = draw_scene_view(img, K, meshes, text=meshes_text, scale=img.shape[0], blend_weight=0.5, blend_weight_overlay=0.85)
