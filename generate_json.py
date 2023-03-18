@@ -26,7 +26,7 @@ for index, i in enumerate(dataset):
     
     bbox.append(i['bbox'].tolist())
     img_paths.append(i['img_path'])
-    human_verts.append(i['body_mesh_verts'])
+    human_verts.append(i['body_mesh_verts'].detach().cpu().numpy().tolist())
     break
     
 
