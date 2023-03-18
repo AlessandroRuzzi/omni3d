@@ -11,6 +11,7 @@ import cv2
 from cubercnn.vis import draw_3d_box, draw_text, draw_scene_view
 import wandb
 from cubercnn import util
+from dataset import behave_camera_utils as bcu
 
 wandb.init(project = "Omni3D")
 
@@ -24,25 +25,16 @@ category = [ {'id' : 0, 'name' : 'backpack', 'supercategory' : ""}, {'id' : 1, '
              {'id' : 21, 'name' :'interaction', 'supercategory' : ""}]
 
 
-def log_bboxes(img, object_box, object_dim, object_orientation, object_cat, object_score, human_box, human_dim, human_orientation, human_score):
-        
+def log_bboxes(img,img_name, object_box, object_dim, object_orientation, object_cat, object_score, human_box, human_dim, human_orientation, human_score):
+        intrinsics = [bcu.load_intrinsics(os.path.join("/data/xiwang/behave/calibs", "intrinsics"), i) for i in range(4)]
         id_cat = None
         for j,elem in enumerate(category):
             if elem['name'] == object_cat:
                 id_cat = j
                 break
-
-        image_shape = img.shape[:2]  # h, w
-
-        h, w = image_shape
-        f_ndc = 1.5
-        f = f_ndc * h / 2
-
-        K = np.array([
-            [f, 0.0, w/2], 
-            [0.0, f, h/2], 
-            [0.0, 0.0, 1.0]
-        ])
+        print(img_name)
+        kid = 0
+        K = intrinsics[kid][0]
         color = util.get_color(id_cat)
 
         meshes = []
@@ -218,7 +210,7 @@ def calc_errors_on_closest_bbox_human(results, results_all, human_pare_all):
         error_dict['l'] += (abs((abs(pred_length[0] - gt_length))/gt_length)) * 100.0
         error_dict['num_imgs'] += 1
 
-        log_bboxes(img, pred_box, pred_length, pred_pose, pred_cat, pred_score, human_center, pred_human["pred_bbox_size"], pred_human["pred_bbox_orientation"], pred_human["pred_bbox_score"])
+        log_bboxes(img, day, pred_box, pred_length, pred_pose, pred_cat, pred_score, human_center, pred_human["pred_bbox_size"], pred_human["pred_bbox_orientation"], pred_human["pred_bbox_score"])
         #log_bboxes(img, gt_box, pred_dict["gt_bbox_size"], pred_pose, pred_cat, pred_score, human_center, pred_human["pred_bbox_size"], pred_human["pred_bbox_orientation"])
     
     print("-------------------------------------")
