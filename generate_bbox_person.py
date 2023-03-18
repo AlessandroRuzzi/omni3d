@@ -104,7 +104,7 @@ def do_test(args, cfg, model):
 
         dets = model(batched)[0]['instances']
 
-
+        verts = torch.FloatTensor(verts)
         human_center = [(torch.min(verts[0,:,0]) + (torch.max(verts[0,:,0]) - torch.min(verts[0,:,0])) / 2.0).detach().cpu().float(), 
         (torch.min(verts[0,:,1]) + (torch.max(verts[0,:,1]) - torch.min(verts[0,:,1])) / 2.0).detach().cpu().float(),
         (torch.min(verts[0,:,2]) + (torch.max(verts[0,:,2]) - torch.min(verts[0,:,2])) / 2.0).detach().cpu().float()]
@@ -178,7 +178,7 @@ def do_test(args, cfg, model):
             human_predicted[im_name]['pred_bbox_class'] = cats[dets_person["pred_classes"][max_idx]]
             human_predicted[im_name]['pred_bbox_orientation'] = dets_person["pred_pose"][max_idx]
 
-        #break
+        break
 
     with open('predictions/results_interaction.json', 'w') as f:
         json.dump({"best_score vs gt": res, "all_predicted": all_predicted, "person": human_predicted}, f)
