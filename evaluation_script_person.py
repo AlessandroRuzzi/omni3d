@@ -150,14 +150,14 @@ def calc_errors_on_closest_bbox_human(results, results_all, human_pare_all):
             pos, element = min(enumerate(object_dist_list), key=itemgetter(1))
             pred_box = pred_all["bbox_center"][pos]
             pred_length = pred_all["bbox_size"][pos][0]
-            pred_pose = pred_all["pred_bbox_orientation"][pos]
-            pred_cat = pred_all["pred_bbox_class"][pos]
+            pred_pose = pred_all["bbox_orientation"][pos]
+            pred_cat = pred_all["bbox_class"][pos]
         except:
             #counter+=1
             pred_box = pred_dict["pred_bbox_center"]
             pred_length = pred_dict["pred_bbox_size"][0]
-            pred_pose = pred_all["pred_bbox_orientation"]
-            pred_cat = pred_all["pred_bbox_class"]
+            pred_pose = pred_dict["pred_bbox_orientation"]
+            pred_cat = pred_dict["pred_bbox_class"]
 
         error_dict['x'] += (abs((abs(pred_box[0]-gt_box[0]))/gt_length)) * 100.0
         error_dict['y'] += (abs((abs(pred_box[1]-gt_box[1]))/gt_length)) * 100.0
