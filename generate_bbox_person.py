@@ -105,6 +105,7 @@ def do_test(args, cfg, model):
         dets = model(batched)[0]['instances']
 
         verts = torch.FloatTensor(verts)
+        print(verts.shape)
         human_center = [(torch.min(verts[0,:,0]) + (torch.max(verts[0,:,0]) - torch.min(verts[0,:,0])) / 2.0).detach().cpu().float(), 
         (torch.min(verts[0,:,1]) + (torch.max(verts[0,:,1]) - torch.min(verts[0,:,1])) / 2.0).detach().cpu().float(),
         (torch.min(verts[0,:,2]) + (torch.max(verts[0,:,2]) - torch.min(verts[0,:,2])) / 2.0).detach().cpu().float()]
@@ -134,7 +135,7 @@ def do_test(args, cfg, model):
         dets_person["pred_classes"] = []
         dets_no_person["pred_pose"] = []
         dets_person["pred_pose"] = []
-        print(dets)
+       
         for i in range(len(dets.scores)):
             if cats[dets.pred_classes[i].item()] == "person":
                     dets_person["pred_center_cam"].append(dets.pred_center_cam[i].tolist())
