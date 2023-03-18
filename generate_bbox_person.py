@@ -38,6 +38,7 @@ def do_test(args, cfg, model):
 
     list_of_ims = info['img_paths'] # util.list_files(os.path.join(args.input_folder, ''), '*.jpg')
     list_of_bbx = info['bbox']
+    list_of_verts = info['human_verts']
     
     model.eval()
 
@@ -63,7 +64,7 @@ def do_test(args, cfg, model):
     all_predicted = {}
     human_predicted = {}
     
-    for bbox, path in zip(list_of_bbx, tqdm(list_of_ims)):
+    for bbox, path, verts in zip(list_of_bbx, tqdm(list_of_ims), list_of_verts):
 
         im_name = path[len('/data/xiwang/behave/sequences/'):]
 
@@ -103,13 +104,21 @@ def do_test(args, cfg, model):
 
         dets = model(batched)[0]['instances']
 
-        meshes = []
-        meshes_text = []
+
+        human_center = [(torch.min(verts[0,:,0]) + (torch.max(verts[0,:,0]) - torch.min(verts[0,:,0])) / 2.0).detach().cpu().float(), 
+        (torch.min(verts[0,:,1]) + (torch.max(verts[0,:,1]) - torch.min(verts[0,:,1])) / 2.0).detach().cpu().float(),
+        (torch.min(verts[0,:,2]) + (torch.max(verts[0,:,2]) - torch.min(verts[0,:,2])) / 2.0).detach().cpu().float()]
+        
+        human_center = [float(i) for i in human_center]
+
+        bbox_project = human_center
         
         # find the sample with maximum dets.score
         res[im_name] = {
             "gt_bbox_center": bbox[:3],
             "gt_bbox_size": bbox[3:] * 3,
+            "human_center": bbox_project,
+            "human_dim": [float((torch.max(verts[0,:,0]) - torch.min(verts[0,:,0])).detach().cpu().numpy()), float((torch.max(verts[0,:,1]) - torch.min(verts[0,:,1])).detach().cpu().numpy()), float((torch.max(verts[0,:,2]) - torch.min(verts[0,:,2])).detach().cpu().numpy())]
         }
 
         dets_no_person = {}
@@ -168,6 +177,8 @@ def do_test(args, cfg, model):
             human_predicted[im_name]['pred_bbox_score'] = dets_person["scores"][max_idx]
             human_predicted[im_name]['pred_bbox_class'] = cats[dets_person["pred_classes"][max_idx]]
             human_predicted[im_name]['pred_bbox_orientation'] = dets_person["pred_pose"][max_idx]
+
+        break
 
     with open('predictions/results_interaction.json', 'w') as f:
         json.dump({"best_score vs gt": res, "all_predicted": all_predicted, "person": human_predicted}, f)
