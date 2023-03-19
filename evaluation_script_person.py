@@ -491,13 +491,13 @@ def calc_iou_on_3d_bbox(results, results_all, human_pare_all, object=True):
 
 if __name__ == "__main__":
 
-    results = json.load(open("predictions/results_interaction.json"))["best_score vs gt"]
-    results_all = json.load(open("predictions/results_interaction.json"))["all_predicted"]
-    human_pare_all = json.load(open("predictions/results_interaction.json"))["person"]
+    #results = json.load(open("predictions/results_interaction.json"))["best_score vs gt"]
+    #results_all = json.load(open("predictions/results_interaction.json"))["all_predicted"]
+    #human_pare_all = json.load(open("predictions/results_interaction.json"))["person"]
 
-    #results = json.load(open("predictions/results_person_large.json"))["best_score vs gt"]
-    #results_all = json.load(open("predictions/results_person_large.json"))["all_predicted"]
-    #human_pare_all = json.load(open("predictions/results_person_large.json"))["person"]
+    results = json.load(open("predictions/results_person_final.json"))["best_score vs gt"]
+    results_all = json.load(open("predictions/results_person_final.json"))["all_predicted"]
+    human_pare_all = json.load(open("predictions/results_person_final.json"))["person"]
 
     wandb.init("bbox evaluation")
 
