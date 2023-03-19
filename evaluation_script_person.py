@@ -61,6 +61,43 @@ def log_bboxes(img,img_name, object_box, object_dim, object_orientation, object_
         images = wandb.Image(im_topdown, caption="Topdown image with predicted 3D bounding boxes")
         wandb.log({"Pred BBox" : images})
 
+def log_bboxes_with_gt(img,img_name, object_box, object_dim, object_orientation, object_cat, object_score, gt_box, gt_dim):
+        intrinsics = [bcu.load_intrinsics(os.path.join("/data/xiwang/behave/calibs", "intrinsics"), i) for i in range(4)]
+        id_cat = None
+        for j,elem in enumerate(category):
+            if elem['name'] == object_cat:
+                id_cat = j
+                break
+        
+        kid = int((img_name.split("/")[-1]).split(".")[0][1])
+        K = intrinsics[kid][0]
+        color = util.get_color(id_cat)
+
+        meshes = []
+        meshes_text = []
+        bbox3D = object_box + object_dim
+
+        meshes_text.append('{} {:.2f}'.format(object_cat, object_score))
+        color = [c/255.0 for c in util.get_color(id_cat)]
+        box_mesh = util.mesh_cuboid(bbox3D, object_orientation, color=color)
+        meshes.append(box_mesh)
+
+        bbox3D = gt_box + gt_dim
+
+        meshes_text.append('{} {:.2f}'.format("GT box", 1.0))
+        color = [c/255.0 for c in util.get_color(20)]
+        gt_orientation = np.eye(3)
+        box_mesh = util.mesh_cuboid(bbox3D, gt_orientation, color=color)
+        meshes.append(box_mesh)
+
+        im_drawn_rgb, im_topdown, _ = draw_scene_view(img, K, meshes, text=meshes_text, scale=img.shape[0], blend_weight=0.5, blend_weight_overlay=0.85)
+
+        images = wandb.Image(im_drawn_rgb, caption="Frontal image with predicted 3D bounding boxes")
+        wandb.log({"Pred BBox" : images})
+
+        images = wandb.Image(im_topdown, caption="Topdown image with predicted 3D bounding boxes")
+        wandb.log({"Pred BBox" : images})
+
 
 def calc_num_wrong_bbox(results):
     num_wrong = 0
@@ -162,8 +199,6 @@ def calc_errors_on_closest_bbox_human(results, results_all, human_pare_all):
     error_dict = {'x' : 0, 'y' : 0, 'z': 0, 'l': 0 , 'num_imgs' : 0}
     counter = 0
     for day in results:
-        #img_path = os.path.join("/data/xiwang/behave/sequences", day)
-        #img = cv2.imread(img_path)
         pred_dict = results[day]
         pred_all = results_all[day]
         
@@ -199,8 +234,11 @@ def calc_errors_on_closest_bbox_human(results, results_all, human_pare_all):
         error_dict['l'] += (abs((abs(pred_length[0] - gt_length))/gt_length)) * 100.0
         error_dict['num_imgs'] += 1
 
+        img_path = os.path.join("/data/xiwang/behave/sequences", day)
+        img = cv2.imread(img_path)
         #log_bboxes(img, day, pred_box, pred_length, pred_pose, pred_cat, pred_score, human_center, pred_human["pred_bbox_size"], pred_human["pred_bbox_orientation"], pred_human["pred_bbox_score"])
-        #log_bboxes(img, gt_box, pred_dict["gt_bbox_size"], pred_pose, pred_cat, pred_score, human_center, pred_human["pred_bbox_size"], pred_human["pred_bbox_orientation"])
+        log_bboxes_with_gt(img, day, pred_box, pred_length, pred_pose, pred_cat, pred_score, gt_box, pred_dict["gt_bbox_size"])
+    
     
     print("-------------------------------------")
     print("X Error: ", error_dict['x'] / error_dict['num_imgs'])
@@ -491,13 +529,13 @@ def calc_iou_on_3d_bbox(results, results_all, human_pare_all, object=True):
 
 if __name__ == "__main__":
 
-    #results = json.load(open("predictions/results_interaction.json"))["best_score vs gt"]
-    #results_all = json.load(open("predictions/results_interaction.json"))["all_predicted"]
-    #human_pare_all = json.load(open("predictions/results_interaction.json"))["person"]
+    results = json.load(open("predictions/results_interaction.json"))["best_score vs gt"]
+    results_all = json.load(open("predictions/results_interaction.json"))["all_predicted"]
+    human_pare_all = json.load(open("predictions/results_interaction.json"))["person"]
 
-    results = json.load(open("predictions/results_person_final.json"))["best_score vs gt"]
-    results_all = json.load(open("predictions/results_person_final.json"))["all_predicted"]
-    human_pare_all = json.load(open("predictions/results_person_final.json"))["person"]
+    #results = json.load(open("predictions/results_person_final.json"))["best_score vs gt"]
+    #results_all = json.load(open("predictions/results_person_final.json"))["all_predicted"]
+    #human_pare_all = json.load(open("predictions/results_person_final.json"))["person"]
 
     wandb.init("bbox evaluation")
 
