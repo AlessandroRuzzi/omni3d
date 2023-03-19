@@ -121,7 +121,7 @@ def log_bboxes(img,img_name, object_box, object_dim, object_orientation, object_
         wandb.log({"Pred BBox" : images})
 
         print(im_topdown.shape)
-        final_log_image = Image.fromarray(np.concatenate([im_drawn_rgb, im_topdown], axis=1)[0])
+        final_log_image = Image.fromarray(np.concatenate([im_drawn_rgb, im_topdown], axis=1))
         if final_log_image.mode != 'RGB':
             final_log_image = final_log_image.convert('RGB')
 
