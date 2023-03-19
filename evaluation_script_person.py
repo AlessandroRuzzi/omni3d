@@ -120,8 +120,10 @@ def log_bboxes(img,img_name, object_box, object_dim, object_orientation, object_
         images = wandb.Image(im_topdown, caption="Topdown image with predicted 3D bounding boxes")
         wandb.log({"Pred BBox" : images})
 
-
-        return Image.fromarray(np.concatenate([im_drawn_rgb, im_topdown], axis=1)[0])
+        final_log_image = Image.fromarray(np.concatenate([im_drawn_rgb, im_topdown], axis=1)[0])
+        if final_log_image.mode != 'RGB':
+            final_log_image = final_log_image.convert('RGB')
+        return final_log_image
 
 def log_bboxes_with_gt(img,img_name, object_box, object_dim, object_orientation, object_cat, object_score, gt_box, gt_dim):
         intrinsics = [bcu.load_intrinsics(os.path.join("/data/xiwang/behave/calibs", "intrinsics"), i) for i in range(4)]
@@ -160,7 +162,10 @@ def log_bboxes_with_gt(img,img_name, object_box, object_dim, object_orientation,
         images = wandb.Image(im_topdown, caption="Topdown image with predicted 3D bounding boxes")
         wandb.log({"Pred BBox" : images})
 
-        Image.fromarray(np.concatenate([im_drawn_rgb, im_topdown], axis=1)[0])
+        final_log_image = Image.fromarray(np.concatenate([im_drawn_rgb, im_topdown], axis=1)[0])
+        if final_log_image.mode != 'RGB':
+            final_log_image = final_log_image.convert('RGB')
+        return final_log_image
 
 
 def calc_num_wrong_bbox(results):
