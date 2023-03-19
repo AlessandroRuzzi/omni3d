@@ -234,11 +234,11 @@ def calc_errors_on_closest_bbox_human(results, results_all, human_pare_all):
         error_dict['l'] += (abs((abs(pred_length[0] - gt_length))/gt_length)) * 100.0
         error_dict['num_imgs'] += 1
 
-        img_path = os.path.join("/data/xiwang/behave/sequences", day)
-        img = cv2.imread(img_path)
-        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        #img_path = os.path.join("/data/xiwang/behave/sequences", day)
+        #img = cv2.imread(img_path)
+        #img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         #log_bboxes(img, day, pred_box, pred_length, pred_pose, pred_cat, pred_score, human_center, pred_human["pred_bbox_size"], pred_human["pred_bbox_orientation"], pred_human["pred_bbox_score"])
-        log_bboxes_with_gt(img, day, pred_box, pred_length, pred_pose, pred_cat, pred_score, gt_box, pred_dict["gt_bbox_size"])
+        #log_bboxes_with_gt(img, day, pred_box, pred_length, pred_pose, pred_cat, pred_score, gt_box, pred_dict["gt_bbox_size"])
     
     
     print("-------------------------------------")
@@ -530,13 +530,13 @@ def calc_iou_on_3d_bbox(results, results_all, human_pare_all, object=True):
 
 if __name__ == "__main__":
 
-    results = json.load(open("predictions/results_interaction.json"))["best_score vs gt"]
-    results_all = json.load(open("predictions/results_interaction.json"))["all_predicted"]
-    human_pare_all = json.load(open("predictions/results_interaction.json"))["person"]
+    #results = json.load(open("predictions/results_interaction.json"))["best_score vs gt"]
+    #results_all = json.load(open("predictions/results_interaction.json"))["all_predicted"]
+    #human_pare_all = json.load(open("predictions/results_interaction.json"))["person"]
 
-    #results = json.load(open("predictions/results_person_final.json"))["best_score vs gt"]
-    #results_all = json.load(open("predictions/results_person_final.json"))["all_predicted"]
-    #human_pare_all = json.load(open("predictions/results_person_final.json"))["person"]
+    results = json.load(open("predictions/results_person_final.json"))["best_score vs gt"]
+    results_all = json.load(open("predictions/results_person_final.json"))["all_predicted"]
+    human_pare_all = json.load(open("predictions/results_person_final.json"))["person"]
 
     wandb.init("bbox evaluation")
 
