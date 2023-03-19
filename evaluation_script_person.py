@@ -121,8 +121,9 @@ def log_bboxes(img,img_name, object_box, object_dim, object_orientation, object_
         wandb.log({"Pred BBox" : images})
 
         print(im_drawn_rgb.shape)
+        print(im_drawn_rgb)
         print(im_topdown.shape)
-        tmp_img = (np.concatenate([im_drawn_rgb, im_topdown], axis=1) * 255).astype(np.uint8)
+        tmp_img = (np.concatenate([im_drawn_rgb, im_topdown], axis=1)).astype(np.uint8)
         final_log_image = Image.fromarray(tmp_img)
         images = wandb.Image(final_log_image, caption="Topdown image with predicted 3D bounding boxes")
         wandb.log({"Full Image" : images})
