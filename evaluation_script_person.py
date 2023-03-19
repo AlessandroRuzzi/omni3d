@@ -12,6 +12,7 @@ from cubercnn.vis import draw_3d_box, draw_text, draw_scene_view
 import wandb
 from cubercnn import util
 from dataset import behave_camera_utils as bcu
+from PIL import Image
 
 wandb.init(project = "Omni3D")
 
@@ -23,6 +24,64 @@ category = [ {'id' : 0, 'name' : 'backpack', 'supercategory' : ""}, {'id' : 1, '
              {'id' : 15, 'name' :'tablesquare', 'supercategory' : ""}, {'id' : 16, 'name' :'toolbox', 'supercategory' : ""}, {'id' : 17, 'name' :'trashbin', 'supercategory' : ""}, 
              {'id' : 18, 'name' :'yogaball', 'supercategory' : ""}, {'id' : 19, 'name' :'yogamat', 'supercategory' : ""}, {'id' : 20, 'name' :'person', 'supercategory' : ""},
              {'id' : 21, 'name' :'interaction', 'supercategory' : ""}]
+
+
+def save_pdf_visualisation(results, results_all, human_pare_all):
+    error_dict = {'x' : 0, 'y' : 0, 'z': 0, 'l': 0 , 'num_imgs' : 0}
+    pdf_images_human = []
+    pdf_images_gt = []
+    for index,day in enumerate(results):
+        pred_dict = results[day]
+        pred_all = results_all[day]
+        
+        gt_box = pred_dict["gt_bbox_center"]
+        gt_length = pred_dict["gt_bbox_size"][0]
+       
+        try:
+            pred_human= human_pare_all[day]
+            human_center = pred_human["pred_bbox_center"]
+
+            object_dist_list = []
+            for i, bbox in enumerate(pred_all["bbox_center"]):
+                #print("human distance: ",math.dist(human_center, bbox), " Confidence: ", (1-pred_all["bbox_score"][i]))
+                object_dist_list.append(math.dist(human_center, bbox) + (1-pred_all["bbox_score"][i]))
+
+            pos, element = min(enumerate(object_dist_list), key=itemgetter(1))
+            pred_box = pred_all["bbox_center"][pos]
+            pred_length = pred_all["bbox_size"][pos]
+            pred_pose = pred_all["bbox_orientation"][pos]
+            pred_cat = pred_all["bbox_class"][pos]
+            pred_score = pred_all["bbox_score"][pos]
+        except:
+            #counter+=1
+            pred_box = pred_dict["pred_bbox_center"]
+            pred_length = pred_dict["pred_bbox_size"]
+            pred_pose = pred_dict["pred_bbox_orientation"]
+            pred_cat = pred_dict["pred_bbox_class"]
+            pred_score = pred_dict["pred_bbox_score"]
+
+        error_dict['x'] += (abs((abs(pred_box[0]-gt_box[0]))/gt_length)) * 100.0
+        error_dict['y'] += (abs((abs(pred_box[1]-gt_box[1]))/gt_length)) * 100.0
+        error_dict['z'] += (abs((abs(pred_box[2]-gt_box[2]))/gt_length)) * 100.0
+        error_dict['l'] += (abs((abs(pred_length[0] - gt_length))/gt_length)) * 100.0
+        error_dict['num_imgs'] += 1
+
+        img_path = os.path.join("/data/xiwang/behave/sequences", day)
+        img = cv2.imread(img_path)
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        pdf_images_human.append(log_bboxes(img, day, pred_box, pred_length, pred_pose, pred_cat, pred_score, human_center, pred_human["pred_bbox_size"], pred_human["pred_bbox_orientation"], pred_human["pred_bbox_score"]))
+        pdf_images_gt.append(log_bboxes_with_gt(img, day, pred_box, pred_length, pred_pose, pred_cat, pred_score, gt_box, pred_dict["gt_bbox_size"]))
+
+        if index == 2:
+            break
+    
+    
+    pdf_images_human[0].save(
+        "predictions/human.pdf", "PDF" ,resolution=100.0, save_all=True, append_images=pdf_images_human[1:]
+    )
+    pdf_images_gt[0].save(
+        "predictions/gt.pdf" ,resolution=100.0, save_all=True, append_images=pdf_images_gt[1:]
+    )
 
 
 def log_bboxes(img,img_name, object_box, object_dim, object_orientation, object_cat, object_score, human_box, human_dim, human_orientation, human_score):
@@ -61,6 +120,9 @@ def log_bboxes(img,img_name, object_box, object_dim, object_orientation, object_
         images = wandb.Image(im_topdown, caption="Topdown image with predicted 3D bounding boxes")
         wandb.log({"Pred BBox" : images})
 
+
+        return Image.fromarray(np.concatenate([im_drawn_rgb, im_topdown], axis=1)[0])
+
 def log_bboxes_with_gt(img,img_name, object_box, object_dim, object_orientation, object_cat, object_score, gt_box, gt_dim):
         intrinsics = [bcu.load_intrinsics(os.path.join("/data/xiwang/behave/calibs", "intrinsics"), i) for i in range(4)]
         id_cat = None
@@ -97,6 +159,8 @@ def log_bboxes_with_gt(img,img_name, object_box, object_dim, object_orientation,
 
         images = wandb.Image(im_topdown, caption="Topdown image with predicted 3D bounding boxes")
         wandb.log({"Pred BBox" : images})
+
+        Image.fromarray(np.concatenate([im_drawn_rgb, im_topdown], axis=1)[0])
 
 
 def calc_num_wrong_bbox(results):
@@ -195,10 +259,11 @@ def calc_errors_on_high_prob_bbox(results):
     print("Lenght Error: ", error_dict['l'] / error_dict['num_imgs'])
     print("-------------------------------------\n")
 
+
 def calc_errors_on_closest_bbox_human(results, results_all, human_pare_all):
     error_dict = {'x' : 0, 'y' : 0, 'z': 0, 'l': 0 , 'num_imgs' : 0}
     counter = 0
-    for day in results:
+    for index,day in enumerate(results):
         pred_dict = results[day]
         pred_all = results_all[day]
         
@@ -234,13 +299,6 @@ def calc_errors_on_closest_bbox_human(results, results_all, human_pare_all):
         error_dict['l'] += (abs((abs(pred_length[0] - gt_length))/gt_length)) * 100.0
         error_dict['num_imgs'] += 1
 
-        #img_path = os.path.join("/data/xiwang/behave/sequences", day)
-        #img = cv2.imread(img_path)
-        #img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-        #log_bboxes(img, day, pred_box, pred_length, pred_pose, pred_cat, pred_score, human_center, pred_human["pred_bbox_size"], pred_human["pred_bbox_orientation"], pred_human["pred_bbox_score"])
-        #log_bboxes_with_gt(img, day, pred_box, pred_length, pred_pose, pred_cat, pred_score, gt_box, pred_dict["gt_bbox_size"])
-    
-    
     print("-------------------------------------")
     print("X Error: ", error_dict['x'] / error_dict['num_imgs'])
     print("Y Error: ", error_dict['y'] / error_dict['num_imgs'])
@@ -545,6 +603,8 @@ if __name__ == "__main__":
     calc_errors_using_closest_bbox(results, results_all)
 
     calc_errors_on_closest_bbox_human(results, results_all, human_pare_all)
+
+    save_pdf_visualisation(results, results_all, human_pare_all)
 
     calc_chamfer_on_different_iou("/data/aruzzi/Behave/")
 
