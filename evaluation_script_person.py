@@ -72,7 +72,7 @@ def save_pdf_visualisation(results, results_all, human_pare_all):
         pdf_images_human.append(log_bboxes(img, day, pred_box, pred_length, pred_pose, pred_cat, pred_score, human_center, pred_human["pred_bbox_size"], pred_human["pred_bbox_orientation"], pred_human["pred_bbox_score"]))
         pdf_images_gt.append(log_bboxes_with_gt(img, day, pred_box, pred_length, pred_pose, pred_cat, pred_score, gt_box, pred_dict["gt_bbox_size"]))
 
-        if index == 2:
+        if index == 200:
             break
     
     
@@ -120,9 +120,7 @@ def log_bboxes(img,img_name, object_box, object_dim, object_orientation, object_
         images = wandb.Image(im_topdown, caption="Topdown image with predicted 3D bounding boxes")
         wandb.log({"Pred BBox" : images})
 
-        print(im_drawn_rgb.shape)
-        print(im_drawn_rgb)
-        print(im_topdown.shape)
+  
         tmp_img = (np.concatenate([im_drawn_rgb, im_topdown], axis=1)).astype(np.uint8)
         final_log_image = Image.fromarray(tmp_img)
         images = wandb.Image(final_log_image, caption="Topdown image with predicted 3D bounding boxes")
@@ -167,9 +165,11 @@ def log_bboxes_with_gt(img,img_name, object_box, object_dim, object_orientation,
         images = wandb.Image(im_topdown, caption="Topdown image with predicted 3D bounding boxes")
         wandb.log({"Pred BBox" : images})
 
-        final_log_image = Image.fromarray(np.concatenate([im_drawn_rgb, im_topdown], axis=1)[0])
-        if final_log_image.mode != 'RGB':
-            final_log_image = final_log_image.convert('RGB')
+        tmp_img = (np.concatenate([im_drawn_rgb, im_topdown], axis=1)).astype(np.uint8)
+        final_log_image = Image.fromarray(tmp_img)
+        images = wandb.Image(final_log_image, caption="Topdown image with predicted 3D bounding boxes")
+        wandb.log({"Full Image" : images})
+
         return final_log_image
 
 
