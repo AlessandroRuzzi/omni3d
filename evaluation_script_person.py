@@ -236,6 +236,7 @@ def calc_errors_on_closest_bbox_human(results, results_all, human_pare_all):
 
         img_path = os.path.join("/data/xiwang/behave/sequences", day)
         img = cv2.imread(img_path)
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         #log_bboxes(img, day, pred_box, pred_length, pred_pose, pred_cat, pred_score, human_center, pred_human["pred_bbox_size"], pred_human["pred_bbox_orientation"], pred_human["pred_bbox_score"])
         log_bboxes_with_gt(img, day, pred_box, pred_length, pred_pose, pred_cat, pred_score, gt_box, pred_dict["gt_bbox_size"])
     
