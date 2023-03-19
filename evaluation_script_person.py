@@ -123,6 +123,10 @@ def log_bboxes(img,img_name, object_box, object_dim, object_orientation, object_
         final_log_image = Image.fromarray(np.concatenate([im_drawn_rgb, im_topdown], axis=1)[0])
         if final_log_image.mode != 'RGB':
             final_log_image = final_log_image.convert('RGB')
+
+        images = wandb.Image(final_log_image, caption="Topdown image with predicted 3D bounding boxes")
+        wandb.log({"Full Image" : images})
+
         return final_log_image
 
 def log_bboxes_with_gt(img,img_name, object_box, object_dim, object_orientation, object_cat, object_score, gt_box, gt_dim):
