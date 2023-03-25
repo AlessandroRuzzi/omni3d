@@ -614,7 +614,7 @@ if __name__ == "__main__":
 
     calc_errors_on_closest_bbox_human(results, results_all, human_pare_all)
 
-    save_pdf_visualisation(results, results_all, human_pare_all)
+    #save_pdf_visualisation(results, results_all, human_pare_all)
 
     calc_chamfer_on_different_iou("/data/aruzzi/Behave/")
 

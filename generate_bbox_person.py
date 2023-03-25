@@ -180,7 +180,7 @@ def do_test(args, cfg, model):
 
         #break
 
-    with open('predictions/results_person_final_test.json', 'w') as f:
+    with open('predictions/results_interaction_test.json', 'w') as f:
         json.dump({"best_score vs gt": res, "all_predicted": all_predicted, "person": human_predicted}, f)
 
 def setup(args):
