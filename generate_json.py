@@ -9,7 +9,7 @@ class Options():
 opt = Options()
 
 dataset = BehaveImgDataset()
-dataset.initialize(opt, 'train')
+dataset.initialize(opt, 'val')
 
 import os
 
@@ -34,5 +34,5 @@ for index, i in enumerate(dataset):
 
 import json
 
-with open('/data/aruzzi/Behave/info_train.json', 'w') as f:
+with open('/data/aruzzi/Behave/info_val.json', 'w') as f:
     json.dump({"bbox": bbox, "img_paths": img_paths, "human_verts": human_verts}, f)
