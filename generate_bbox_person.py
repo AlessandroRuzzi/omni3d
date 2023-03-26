@@ -33,7 +33,7 @@ def do_test(args, cfg, model):
 
     import json
     
-    with open('/data/aruzzi/Behave/info_train.json', 'r') as f:
+    with open('/data/aruzzi/Behave/info_val.json', 'r') as f:
         info = json.load(f)
 
     list_of_ims = info['img_paths'] # util.list_files(os.path.join(args.input_folder, ''), '*.jpg')
@@ -180,7 +180,7 @@ def do_test(args, cfg, model):
 
         #break
 
-    with open('predictions/results_interaction_train.json', 'w') as f:
+    with open('predictions/results_interaction_val.json', 'w') as f:
         json.dump({"best_score vs gt": res, "all_predicted": all_predicted, "person": human_predicted}, f)
 
 def setup(args):
