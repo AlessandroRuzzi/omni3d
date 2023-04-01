@@ -596,6 +596,66 @@ def calc_iou_on_3d_bbox(results, results_all, human_pare_all, object=True):
 
     print((iou_sum/batch_size) * 100.0)
 
+def calc_iou_on_3d_bbox_by_class(results, results_all, human_pare_all, object=True):
+    class_dict = {}
+    device = (
+                torch.device("cuda:0") 
+                if torch.cuda.is_available()
+                else torch.device("cpu")
+        )
+    for idx,day in enumerate(results):
+        pred_dict = results[day]
+        pred_all = results_all[day]
+        cat_curr = (day.split("/")[0]).split("_")[2]
+
+        if cat_curr not in class_dict.keys():
+            class_dict[cat_curr]['boexs_pred'] = []
+            class_dict[cat_curr]['boexs_gt'] = []        
+
+        gt_box = pred_dict["gt_bbox_center"]
+        gt_length = pred_dict["gt_bbox_size"][0]
+        class_dict[cat_curr]['boxes_gt'].append([[gt_box[0] - gt_length/2.0, gt_box[1] - gt_length/2.0, gt_box[2] - gt_length/2.0], [gt_box[0] + gt_length/2.0, gt_box[1] - gt_length/2.0, gt_box[2] - gt_length/2.0],
+                [gt_box[0] + gt_length/2.0, gt_box[1] + gt_length/2.0, gt_box[2] - gt_length/2.0], [gt_box[0] - gt_length/2.0, gt_box[1] + gt_length/2.0, gt_box[2] - gt_length/2.0],
+                [gt_box[0] - gt_length/2.0, gt_box[1] - gt_length/2.0, gt_box[2] + gt_length/2.0], [gt_box[0] + gt_length/2.0, gt_box[1] - gt_length/2.0, gt_box[2] + gt_length/2.0],
+                [gt_box[0] + gt_length/2.0, gt_box[1] + gt_length/2.0, gt_box[2] + gt_length/2.0], [gt_box[0] - gt_length/2.0, gt_box[1] + gt_length/2.0, gt_box[2] + gt_length/2.0]])
+        try:
+            pred_human= human_pare_all[day]
+            human_center = pred_human["pred_bbox_center"]
+
+            object_dist_list = []
+            for i, bbox in enumerate(pred_all["bbox_center"]):
+                #print("human distance: ",math.dist(human_center, bbox), " Confidence: ", (1-pred_all["bbox_score"][i]))
+                object_dist_list.append(math.dist(human_center, bbox) + (1-pred_all["bbox_score"][i]))
+
+            pos, element = min(enumerate(object_dist_list), key=itemgetter(1))
+            pred_box = pred_all["bbox_center"][pos]
+            pred_length = pred_all["bbox_size"][pos][0]
+        except:
+            #counter+=1
+            pred_box = pred_dict["pred_bbox_center"]
+            pred_length = pred_dict["pred_bbox_size"][0]
+        
+
+        class_dict[cat_curr]['boxes_pred'].append([[pred_box[0] - pred_length/2.0, pred_box[1] - pred_length/2.0, pred_box[2] - pred_length/2.0], [pred_box[0] + pred_length/2.0, pred_box[1] - pred_length/2.0, pred_box[2] - pred_length/2.0],
+                        [pred_box[0] + pred_length/2.0, pred_box[1] + pred_length/2.0, pred_box[2] - pred_length/2.0], [pred_box[0] - pred_length/2.0, pred_box[1] + pred_length/2.0, pred_box[2] - pred_length/2.0],
+                        [pred_box[0] - pred_length/2.0, pred_box[1] - pred_length/2.0, pred_box[2] + pred_length/2.0], [pred_box[0] + pred_length/2.0, pred_box[1] - pred_length/2.0, pred_box[2] + pred_length/2.0],
+                        [pred_box[0] + pred_length/2.0, pred_box[1] + pred_length/2.0, pred_box[2] + pred_length/2.0], [pred_box[0] - pred_length/2.0, pred_box[1] + pred_length/2.0, pred_box[2] + pred_length/2.0]])
+
+
+    for cate in class_dict.keys():
+        boxes_gt = torch.tensor(class_dict[cat_curr]['boxes_gt'], device= device, dtype=torch.float32)
+        boxes_pred = torch.tensor(class_dict[cat_curr]['boxes_pred'], device= device, dtype=torch.float32)
+        intersection_vol, iou_3d = box3d_overlap(boxes_gt, boxes_pred)
+
+        batch_size = boxes_gt.shape[0]
+        iou_sum = 0.0
+        for j in range(batch_size):
+            iou_sum += iou_3d[j,j]
+
+        print('--------------------------------')
+        print(cate, ' ---> IOU: ',(iou_sum/batch_size) * 100.0, " Batch Size: ", batch_size)
+        print('--------------------------------')
+
 if __name__ == "__main__":
 
     results = json.load(open("predictions/results_interaction.json"))["best_score vs gt"]
