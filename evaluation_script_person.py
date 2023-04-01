@@ -645,8 +645,8 @@ def calc_iou_on_3d_bbox_by_class(results, results_all, human_pare_all):
     sum_total = 0.0
     batch_total = 0
     for cate in class_dict.keys():
-        boxes_gt = torch.tensor(class_dict[cat_curr]['boxes_gt'], device= device, dtype=torch.float32)
-        boxes_pred = torch.tensor(class_dict[cat_curr]['boxes_pred'], device= device, dtype=torch.float32)
+        boxes_gt = torch.tensor(class_dict[cate]['boxes_gt'], device= device, dtype=torch.float32)
+        boxes_pred = torch.tensor(class_dict[cate]['boxes_pred'], device= device, dtype=torch.float32)
         intersection_vol, iou_3d = box3d_overlap(boxes_gt, boxes_pred)
 
         batch_size = boxes_gt.shape[0]
