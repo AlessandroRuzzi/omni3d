@@ -610,8 +610,8 @@ def calc_iou_on_3d_bbox_by_class(results, results_all, human_pare_all):
 
         if cat_curr not in class_dict.keys():
             class_dict[cat_curr] = {}
-            class_dict[cat_curr]['boexs_pred'] = []
-            class_dict[cat_curr]['boexs_gt'] = []        
+            class_dict[cat_curr]['boxes_pred'] = []
+            class_dict[cat_curr]['boxes_gt'] = []        
 
         gt_box = pred_dict["gt_bbox_center"]
         gt_length = pred_dict["gt_bbox_size"][0]
