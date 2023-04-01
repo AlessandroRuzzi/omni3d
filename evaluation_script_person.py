@@ -662,7 +662,7 @@ def calc_iou_on_3d_bbox_by_class(results, results_all, human_pare_all):
         batch_total += batch_size
 
     print('--------------------------------')
-    print('Final IOU: ', sum_total, 'Final Batch Size: ', batch_total)
+    print('Final IOU: ', sum_total/batch_total, 'Final Batch Size: ', batch_total)
     print('--------------------------------')
 
 if __name__ == "__main__":
