@@ -609,6 +609,7 @@ def calc_iou_on_3d_bbox_by_class(results, results_all, human_pare_all):
         cat_curr = (day.split("/")[0]).split("_")[2]
 
         if cat_curr not in class_dict.keys():
+            class_dict[cat_curr] = {}
             class_dict[cat_curr]['boexs_pred'] = []
             class_dict[cat_curr]['boexs_gt'] = []        
 
@@ -641,7 +642,8 @@ def calc_iou_on_3d_bbox_by_class(results, results_all, human_pare_all):
                         [pred_box[0] - pred_length/2.0, pred_box[1] - pred_length/2.0, pred_box[2] + pred_length/2.0], [pred_box[0] + pred_length/2.0, pred_box[1] - pred_length/2.0, pred_box[2] + pred_length/2.0],
                         [pred_box[0] + pred_length/2.0, pred_box[1] + pred_length/2.0, pred_box[2] + pred_length/2.0], [pred_box[0] - pred_length/2.0, pred_box[1] + pred_length/2.0, pred_box[2] + pred_length/2.0]])
 
-
+    sum_total = 0.0
+    batch_total = 0
     for cate in class_dict.keys():
         boxes_gt = torch.tensor(class_dict[cat_curr]['boxes_gt'], device= device, dtype=torch.float32)
         boxes_pred = torch.tensor(class_dict[cat_curr]['boxes_pred'], device= device, dtype=torch.float32)
@@ -655,6 +657,13 @@ def calc_iou_on_3d_bbox_by_class(results, results_all, human_pare_all):
         print('--------------------------------')
         print(cate, ' ---> IOU: ',(iou_sum/batch_size) * 100.0, " Batch Size: ", batch_size)
         print('--------------------------------')
+
+        sum_total += iou_sum
+        batch_total += batch_size
+
+    print('--------------------------------')
+    print('Final IOU: ', sum_total, 'Final Batch Size: ', batch_total)
+    print('--------------------------------')
 
 if __name__ == "__main__":
 
@@ -683,6 +692,8 @@ if __name__ == "__main__":
     #calc_iou_on_3d_bbox(results, results_all, human_pare_all, object=False)
 
     calc_iou_on_3d_bbox_by_class(results, results_all, human_pare_all)
+
+    calc_iou_on_3d_bbox(results, results_all, human_pare_all)
     
     #calc_errors_on_closest_bbox_human_by_class_relative(results, results_all, human_pare_all)
 
