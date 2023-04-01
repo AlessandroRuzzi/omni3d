@@ -596,7 +596,7 @@ def calc_iou_on_3d_bbox(results, results_all, human_pare_all, object=True):
 
     print((iou_sum/batch_size) * 100.0)
 
-def calc_iou_on_3d_bbox_by_class(results, results_all, human_pare_all, object=True):
+def calc_iou_on_3d_bbox_by_class(results, results_all, human_pare_all):
     class_dict = {}
     device = (
                 torch.device("cuda:0") 
@@ -678,9 +678,11 @@ if __name__ == "__main__":
 
     calc_chamfer_on_different_iou("/data/aruzzi/Behave/")
 
-    calc_iou_on_3d_bbox(results, results_all, human_pare_all)
+    #calc_iou_on_3d_bbox(results, results_all, human_pare_all)
 
-    calc_iou_on_3d_bbox(results, results_all, human_pare_all, object=False)
+    #calc_iou_on_3d_bbox(results, results_all, human_pare_all, object=False)
+
+    calc_iou_on_3d_bbox_by_class(results, results_all, human_pare_all)
     
     #calc_errors_on_closest_bbox_human_by_class_relative(results, results_all, human_pare_all)
 
