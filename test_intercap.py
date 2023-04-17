@@ -84,6 +84,8 @@ def test_intercap(args, cfg, model):
 
     images_path_list = [x for x in glob("%s/*.jpg" % path)]
 
+    model.eval()
+
     category_path = os.path.join(util.file_parts(args.config_file)[0], 'category_meta.json')
         
     # store locally if needed
