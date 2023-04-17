@@ -99,10 +99,20 @@ def test_intercap(args, cfg, model):
         human_predicted = {}
         im_name = image_path
         img = cv2.imread(image_path)
-        torch_image = torch.FloatTensor(img)
-        torch_image = torch.reshape(torch_image , (1,torch_image.shape[0], torch_image.shape[1], torch_image.shape[2]))
+        #torch_image = torch.FloatTensor(img)
+        #torch_image = torch.reshape(torch_image , (1,torch_image.shape[0], torch_image.shape[1], torch_image.shape[2]))
+        K = np.array([
+            [976.2120971679688, 0.0, 1017.9580078125], 
+            [0.0, 976.0467529296875, 787.3128662109375], 
+            [0.0, 0.0, 1.0]
+        ])
 
-        dets = model(torch_image)[0]['instances']
+        batched = [{
+            'image': torch.as_tensor(np.ascontiguousarray(img.transpose(2, 0, 1))).cuda(), 
+            'height': img.shape[0], 'width': img.shape[1], 'K': K
+        }]
+
+        dets = model(batched)[0]['instances']
 
         res[im_name] = {}
         all_predicted[im_name] = {}
