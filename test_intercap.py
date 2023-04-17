@@ -181,8 +181,8 @@ def test_intercap(args, cfg, model):
         pred_dict = res[im_name]
         pred_all = all_predicted[im_name]
         
-        gt_box = pred_dict["gt_bbox_center"]
-        gt_length = pred_dict["gt_bbox_size"][0]
+        #gt_box = pred_dict["gt_bbox_center"]
+        #gt_length = pred_dict["gt_bbox_size"][0]
        
         try:
             pred_human= human_predicted[im_name]
