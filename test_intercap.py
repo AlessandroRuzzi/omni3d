@@ -100,7 +100,7 @@ def test_intercap(args, cfg, model):
         im_name = image_path
         img = cv2.imread(image_path)
         torch_image = torch.FloatTensor(img)
-        torch_image = torch.reshape(torch_image , (1,torch_image.shape[0], torch_image.shape[1]))
+        torch_image = torch.reshape(torch_image , (1,torch_image.shape[0], torch_image.shape[1], torch_image.shape[2]))
 
         dets = model(torch_image)[0]['instances']
 
