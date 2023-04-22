@@ -96,7 +96,7 @@ def log_bboxes(img,day, object_box, object_dim, object_orientation, object_cat, 
 
 def test_intercap(args, cfg, model):
     intrinsics = [load_intrinsics("dataset/calibration_intercap", i+1) for i in range(6)]
-    path = '/data/xiwang/InterCap/RGBD_Images/01/01/Seg_0/Frames_Cam1/color' #TODO change the path here later
+    path = '/data/xiwang/InterCap/RGBD_Images' #TODO change the path here later
 
     model.eval()
 
