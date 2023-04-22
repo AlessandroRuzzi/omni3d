@@ -60,6 +60,11 @@ def log_bboxes(img,day, object_box, object_dim, object_orientation, object_cat, 
         
         kid = day
         K = intrinsics[kid]
+        K = np.array([
+            [976.2120971679688, 0.0, 1017.9580078125], 
+            [0.0, 976.0467529296875, 787.3128662109375], 
+            [0.0, 0.0, 1.0]
+        ])
         color = util.get_color(id_cat)
 
         meshes = []
