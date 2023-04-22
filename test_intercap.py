@@ -23,6 +23,7 @@ from dataset import behave_camera_utils as bcu
 from PIL import Image
 from operator import itemgetter
 import numpy as np
+import json
 
 wandb.init(project = "Omni3D")
 
@@ -35,8 +36,22 @@ category = [ {'id' : 0, 'name' : 'backpack', 'supercategory' : ""}, {'id' : 1, '
              {'id' : 18, 'name' :'yogaball', 'supercategory' : ""}, {'id' : 19, 'name' :'yogamat', 'supercategory' : ""}, {'id' : 20, 'name' :'person', 'supercategory' : ""},
              {'id' : 21, 'name' :'interaction', 'supercategory' : ""}]
 
+def load_intrinsics(intrinsic_folder, kid):
+    with open(os.path.join(intrinsic_folder, f"Color_{kid}.json"), "r") as json_file:
+            color_calib = json.load(json_file)
+            
+            focal_dist = color_calib['f']
+            center = color_calib['c']
+            
+            calibration_matrix = np.eye(3)
+            calibration_matrix[0, 0], calibration_matrix[1, 1] = focal_dist
+            calibration_matrix[:2, 2] = center
+            
+
+            return calibration_matrix
+
 def log_bboxes(img,day, object_box, object_dim, object_orientation, object_cat, object_score, human_box, human_dim, human_orientation, human_score):
-        intrinsics = [bcu.load_intrinsics(os.path.join("/data/xiwang/behave/calibs", "intrinsics"), i) for i in range(4)]
+        intrinsics = [load_intrinsics("dataset/calibration_intercap", i+1) for i in range(6)]
         id_cat = None
         for j,elem in enumerate(category):
             if elem['name'] == object_cat:
@@ -44,7 +59,7 @@ def log_bboxes(img,day, object_box, object_dim, object_orientation, object_cat, 
                 break
         
         kid = day
-        K = intrinsics[kid][1]
+        K = intrinsics[kid]
         color = util.get_color(id_cat)
 
         meshes = []
