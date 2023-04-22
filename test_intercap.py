@@ -110,15 +110,19 @@ def test_intercap(args, cfg, model):
     cats = metadata['thing_classes']
 
     subject_folders = os.listdir(path)
+    subject_folders.sort()
     for subject in subject_folders:
         subject_path = os.path.join(path, subject)
         object_folders = os.listdir(subject_path)
+        object_folders.sort()
         for object in object_folders:
              object_path = os.path.join(subject_path, object, "Seg_0")
              cam_folders = os.listdir(object_path)
+             cam_folders.sort()
              for cam in cam_folders:
                     cam_path = os.path.join(object_path, cam, "color")
                     images_path_list = [x for x in glob("%s/*.jpg" % cam_path)] 
+                    images_path_list.sort()
                     for image_path in images_path_list:
                         print(image_path)
                         res = {}
