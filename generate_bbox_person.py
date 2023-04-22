@@ -26,6 +26,7 @@ from cubercnn.modeling.meta_arch import RCNN3D, build_model
 from cubercnn.modeling.backbone import build_dla_from_vision_fpn_backbone
 from cubercnn import util, vis
 import json
+from dataset import behave_camera_utils as bcu
 
 from tqdm import tqdm
 
@@ -33,7 +34,7 @@ def do_test(args, cfg, model):
 
     import json
     
-    with open('/data/aruzzi/Behave/info_train.json', 'r') as f:
+    with open('/data/aruzzi/Behave/info.json', 'r') as f:
         info = json.load(f)
 
     list_of_ims = info['img_paths'] # util.list_files(os.path.join(args.input_folder, ''), '*.jpg')
@@ -63,6 +64,8 @@ def do_test(args, cfg, model):
     res = {}
     all_predicted = {}
     human_predicted = {}
+
+    intrinsics = [bcu.load_intrinsics(os.path.join("/data/xiwang/behave/calibs", "intrinsics"), i) for i in range(4)]
     
     for bbox, path, verts in zip(list_of_bbx, tqdm(list_of_ims), list_of_verts):
 
@@ -87,11 +90,14 @@ def do_test(args, cfg, model):
         #     [0.0, f, h/2], 
         #     [0.0, 0.0, 1.0]
         # ])
-        K = np.array([
-            [976.2120971679688, 0.0, 1017.9580078125], 
-            [0.0, 976.0467529296875, 787.3128662109375], 
-            [0.0, 0.0, 1.0]
-        ])
+        #K = np.array([
+        #    [976.2120971679688, 0.0, 1017.9580078125], 
+        #    [0.0, 976.0467529296875, 787.3128662109375], 
+        #    [0.0, 0.0, 1.0]
+        #])
+        kid = int((im_name.split("/")[-1]).split(".")[0][1])
+        print(kid)
+        K = intrinsics[kid][0]
 
         aug_input = T.AugInput(im)
         _ = augmentations(aug_input)
@@ -180,7 +186,7 @@ def do_test(args, cfg, model):
 
         #break
 
-    with open('predictions/results_interaction_train_2.json', 'w') as f:
+    with open('predictions/results_interaction_test_2.json', 'w') as f:
         json.dump({"best_score vs gt": res, "all_predicted": all_predicted, "person": human_predicted}, f)
 
 def setup(args):
