@@ -96,7 +96,7 @@ def do_test(args, cfg, model):
         #    [0.0, 0.0, 1.0]
         #])
         kid = int((im_name.split("/")[-1]).split(".")[0][1])
-        print(kid)
+        
         K = intrinsics[kid][0]
 
         aug_input = T.AugInput(im)
