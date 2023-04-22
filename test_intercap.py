@@ -97,7 +97,7 @@ def log_bboxes(img,day, object_box, object_dim, object_orientation, object_cat, 
 def test_intercap(args, cfg, model):
     intrinsics = [load_intrinsics("dataset/calibration_intercap", i+1) for i in range(6)]
     path = '/data/xiwang/InterCap/RGBD_Images' #TODO change the path here later
-
+    pdf_images = []
     model.eval()
 
     category_path = os.path.join(util.file_parts(args.config_file)[0], 'category_meta.json')
@@ -132,7 +132,6 @@ def test_intercap(args, cfg, model):
                         img = cv2.imread(image_path)
 
                         K = intrinsics[int(cam[-1]) - 1]
-                        print(int(cam[-1]) - 1)
                         batched = [{
                             'image': torch.as_tensor(np.ascontiguousarray(img.transpose(2, 0, 1))).cuda(), 
                             'height': img.shape[0], 'width': img.shape[1], 'K': K
@@ -233,8 +232,12 @@ def test_intercap(args, cfg, model):
 
 
                         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-                        img_wandb = log_bboxes(img, int(cam[-1]) - 1, pred_box, pred_length, pred_pose, pred_cat, pred_score, human_center, pred_human["pred_bbox_size"], pred_human["pred_bbox_orientation"], pred_human["pred_bbox_score"])
+                        pdf_images.append(log_bboxes(img, int(cam[-1]) - 1, pred_box, pred_length, pred_pose, pred_cat, pred_score, human_center, pred_human["pred_bbox_size"], pred_human["pred_bbox_orientation"], pred_human["pred_bbox_score"]))
                         break
+    pdf_images[0].save(
+        "predictions/intercap.pdf" ,resolution=100.0, save_all=True, append_images=pdf_images[1:]
+    )
+    print("Processig Done")
 
 
 def setup(args):
