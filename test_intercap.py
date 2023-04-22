@@ -44,7 +44,7 @@ def log_bboxes(img,day, object_box, object_dim, object_orientation, object_cat, 
                 break
         
         kid = day
-        K = intrinsics[kid][0]
+        K = intrinsics[kid][1]
         color = util.get_color(id_cat)
 
         meshes = []
