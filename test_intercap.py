@@ -119,7 +119,6 @@ def test_intercap(args, cfg, model):
              object_path = os.path.join(subject_path, object, "Seg_0")
              cam_folders = os.listdir(object_path)
              cam_folders.sort()
-             print(cam_folders)
              for cam in cam_folders:
                     cam_path = os.path.join(object_path, cam, "color")
                     images_path_list = [x for x in glob("%s/*.jpg" % cam_path)] 
@@ -133,7 +132,7 @@ def test_intercap(args, cfg, model):
                         img = cv2.imread(image_path)
 
                         K = intrinsics[int(cam[-1]) - 1]
-
+                        print(int(cam[-1]) - 1)
                         batched = [{
                             'image': torch.as_tensor(np.ascontiguousarray(img.transpose(2, 0, 1))).cuda(), 
                             'height': img.shape[0], 'width': img.shape[1], 'K': K
