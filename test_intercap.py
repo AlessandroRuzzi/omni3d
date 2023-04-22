@@ -95,9 +95,8 @@ def log_bboxes(img,day, object_box, object_dim, object_orientation, object_cat, 
         return final_log_image
 
 def test_intercap(args, cfg, model):
-    path = '/data/xiwang/InterCap/RGBD_Images/01/01/Seg_0/Frames_Cam1/color'
-
-    images_path_list = [x for x in glob("%s/*.jpg" % path)]
+    intrinsics = [load_intrinsics("dataset/calibration_intercap", i+1) for i in range(6)]
+    path = '/data/xiwang/InterCap/RGBD_Images/01/01/Seg_0/Frames_Cam1/color' #TODO change the path here later
 
     model.eval()
 
@@ -110,127 +109,128 @@ def test_intercap(args, cfg, model):
     metadata = util.load_json(category_path)
     cats = metadata['thing_classes']
 
-    for image_path in images_path_list:
-        res = {}
-        all_predicted = {}
-        human_predicted = {}
-        im_name = image_path
-        img = cv2.imread(image_path)
-        #torch_image = torch.FloatTensor(img)
-        #torch_image = torch.reshape(torch_image , (1,torch_image.shape[0], torch_image.shape[1], torch_image.shape[2]))
-        K = np.array([
-            [976.2120971679688, 0.0, 1017.9580078125], 
-            [0.0, 976.0467529296875, 787.3128662109375], 
-            [0.0, 0.0, 1.0]
-        ])
+    subject_folders = os.listdir(path)
+    for subject in subject_folders:
+        subject_path = os.path.join(path, subject)
+        object_folders = os.listdir(subject_path)
+        for object in object_folders:
+             object_path = os.path.join(subject_path, object, "Seg_0")
+             cam_folders = os.listdir(object_path)
+             for cam in cam_folders:
+                    cam_path = os.path.join(object_path, cam, "color")
+                    images_path_list = [x for x in glob("%s/*.jpg" % cam_path)] 
+                    for image_path in images_path_list:
+                        print(image_path)
+                        res = {}
+                        all_predicted = {}
+                        human_predicted = {}
+                        im_name = image_path
+                        img = cv2.imread(image_path)
 
-        intrinsics = [load_intrinsics("dataset/calibration_intercap", i+1) for i in range(6)]
+                        K = intrinsics[0]
 
-        K = intrinsics[0]
-        print(K)
+                        batched = [{
+                            'image': torch.as_tensor(np.ascontiguousarray(img.transpose(2, 0, 1))).cuda(), 
+                            'height': img.shape[0], 'width': img.shape[1], 'K': K
+                        }]
 
-        batched = [{
-            'image': torch.as_tensor(np.ascontiguousarray(img.transpose(2, 0, 1))).cuda(), 
-            'height': img.shape[0], 'width': img.shape[1], 'K': K
-        }]
+                        dets = model(batched)[0]['instances']
 
-        dets = model(batched)[0]['instances']
+                        res[im_name] = {}
+                        all_predicted[im_name] = {}
+                        human_predicted[im_name] = {}
+                        
+                        dets_no_person = {}
+                        dets_person = {}
 
-        res[im_name] = {}
-        all_predicted[im_name] = {}
-        human_predicted[im_name] = {}
-        
-        dets_no_person = {}
-        dets_person = {}
+                        dets_no_person["pred_center_cam"] = []
+                        dets_person["pred_center_cam"] = []
+                        dets_no_person["pred_dimensions"] = []
+                        dets_person["pred_dimensions"] = []
+                        dets_no_person["scores"] = []
+                        dets_person["scores"] = []
+                        dets_no_person["pred_classes"] = []
+                        dets_person["pred_classes"] = []
+                        dets_no_person["pred_pose"] = []
+                        dets_person["pred_pose"] = []
+                    
+                        for i in range(len(dets.scores)):
+                            if cats[dets.pred_classes[i].item()] == "person":
+                                    dets_person["pred_center_cam"].append(dets.pred_center_cam[i].tolist())
+                                    dets_person["pred_dimensions"].append(dets.pred_dimensions[i].tolist())
+                                    dets_person["scores"].append(dets.scores[i].tolist())
+                                    dets_person["pred_classes"].append(dets.pred_classes[i].tolist())
+                                    dets_person["pred_pose"].append(dets.pred_pose[i].tolist())
+                            elif cats[dets.pred_classes[i].item()] == "interaction":
+                                continue
+                            else:
+                                    dets_no_person["pred_center_cam"].append(dets.pred_center_cam[i].tolist())
+                                    dets_no_person["pred_dimensions"].append(dets.pred_dimensions[i].tolist())
+                                    dets_no_person["scores"].append(dets.scores[i].tolist())
+                                    dets_no_person["pred_classes"].append(dets.pred_classes[i].tolist())
+                                    dets_no_person["pred_pose"].append(dets.pred_pose[i].tolist())               
 
-        dets_no_person["pred_center_cam"] = []
-        dets_person["pred_center_cam"] = []
-        dets_no_person["pred_dimensions"] = []
-        dets_person["pred_dimensions"] = []
-        dets_no_person["scores"] = []
-        dets_person["scores"] = []
-        dets_no_person["pred_classes"] = []
-        dets_person["pred_classes"] = []
-        dets_no_person["pred_pose"] = []
-        dets_person["pred_pose"] = []
-       
-        for i in range(len(dets.scores)):
-            if cats[dets.pred_classes[i].item()] == "person":
-                    dets_person["pred_center_cam"].append(dets.pred_center_cam[i].tolist())
-                    dets_person["pred_dimensions"].append(dets.pred_dimensions[i].tolist())
-                    dets_person["scores"].append(dets.scores[i].tolist())
-                    dets_person["pred_classes"].append(dets.pred_classes[i].tolist())
-                    dets_person["pred_pose"].append(dets.pred_pose[i].tolist())
-            elif cats[dets.pred_classes[i].item()] == "interaction":
-                 continue
-            else:
-                    dets_no_person["pred_center_cam"].append(dets.pred_center_cam[i].tolist())
-                    dets_no_person["pred_dimensions"].append(dets.pred_dimensions[i].tolist())
-                    dets_no_person["scores"].append(dets.scores[i].tolist())
-                    dets_no_person["pred_classes"].append(dets.pred_classes[i].tolist())
-                    dets_no_person["pred_pose"].append(dets.pred_pose[i].tolist())               
+                        n_det_objects = len(dets_no_person["scores"])
+                        n_det_person = len(dets_person["scores"])
 
-        n_det_objects = len(dets_no_person["scores"])
-        n_det_person = len(dets_person["scores"])
-
-        if n_det_objects > 0:
-            max_idx = torch.argmax(torch.FloatTensor(dets_no_person["scores"])).item()
-            res[im_name]['pred_bbox_center'] = dets_no_person["pred_center_cam"][max_idx]
-            res[im_name]['pred_bbox_size'] = dets_no_person["pred_dimensions"][max_idx]
-            res[im_name]['pred_bbox_score'] = dets_no_person["scores"][max_idx]
-            res[im_name]['pred_bbox_class'] = cats[dets_no_person["pred_classes"][max_idx]]
-            res[im_name]['pred_bbox_orientation'] = dets_no_person["pred_pose"][max_idx]
-            
-            all_predicted[im_name] = {
-                "bbox_center": dets_no_person["pred_center_cam"],
-                "bbox_size": dets_no_person["pred_dimensions"],
-                "bbox_score": dets_no_person["scores"],
-                "bbox_class": [cats[c] for c in dets_no_person["pred_classes"]],
-                "bbox_orientation": dets_no_person["pred_pose"]
-            }
-        if n_det_person > 0:
-            human_predicted[im_name] = {}
-            max_idx = torch.argmax(torch.FloatTensor(dets_person["scores"])).item()
-            human_predicted[im_name]['pred_bbox_center'] = dets_person["pred_center_cam"][max_idx]
-            human_predicted[im_name]['pred_bbox_size'] = dets_person["pred_dimensions"][max_idx]
-            human_predicted[im_name]['pred_bbox_score'] = dets_person["scores"][max_idx]
-            human_predicted[im_name]['pred_bbox_class'] = cats[dets_person["pred_classes"][max_idx]]
-            human_predicted[im_name]['pred_bbox_orientation'] = dets_person["pred_pose"][max_idx]
-
-
-        pred_dict = res[im_name]
-        pred_all = all_predicted[im_name]
-        
-        #gt_box = pred_dict["gt_bbox_center"]
-        #gt_length = pred_dict["gt_bbox_size"][0]
-       
-        try:
-            pred_human= human_predicted[im_name]
-            human_center = pred_human["pred_bbox_center"]
-
-            object_dist_list = []
-            for i, bbox in enumerate(pred_all["bbox_center"]):
-                #print("human distance: ",math.dist(human_center, bbox), " Confidence: ", (1-pred_all["bbox_score"][i]))
-                object_dist_list.append(math.dist(human_center, bbox) + (1-pred_all["bbox_score"][i]))
-
-            pos, element = min(enumerate(object_dist_list), key=itemgetter(1))
-            pred_box = pred_all["bbox_center"][pos]
-            pred_length = pred_all["bbox_size"][pos]
-            pred_pose = pred_all["bbox_orientation"][pos]
-            pred_cat = pred_all["bbox_class"][pos]
-            pred_score = pred_all["bbox_score"][pos]
-        except:
-            #counter+=1
-            pred_box = pred_dict["pred_bbox_center"]
-            pred_length = pred_dict["pred_bbox_size"]
-            pred_pose = pred_dict["pred_bbox_orientation"]
-            pred_cat = pred_dict["pred_bbox_class"]
-            pred_score = pred_dict["pred_bbox_score"]
+                        if n_det_objects > 0:
+                            max_idx = torch.argmax(torch.FloatTensor(dets_no_person["scores"])).item()
+                            res[im_name]['pred_bbox_center'] = dets_no_person["pred_center_cam"][max_idx]
+                            res[im_name]['pred_bbox_size'] = dets_no_person["pred_dimensions"][max_idx]
+                            res[im_name]['pred_bbox_score'] = dets_no_person["scores"][max_idx]
+                            res[im_name]['pred_bbox_class'] = cats[dets_no_person["pred_classes"][max_idx]]
+                            res[im_name]['pred_bbox_orientation'] = dets_no_person["pred_pose"][max_idx]
+                            
+                            all_predicted[im_name] = {
+                                "bbox_center": dets_no_person["pred_center_cam"],
+                                "bbox_size": dets_no_person["pred_dimensions"],
+                                "bbox_score": dets_no_person["scores"],
+                                "bbox_class": [cats[c] for c in dets_no_person["pred_classes"]],
+                                "bbox_orientation": dets_no_person["pred_pose"]
+                            }
+                        if n_det_person > 0:
+                            human_predicted[im_name] = {}
+                            max_idx = torch.argmax(torch.FloatTensor(dets_person["scores"])).item()
+                            human_predicted[im_name]['pred_bbox_center'] = dets_person["pred_center_cam"][max_idx]
+                            human_predicted[im_name]['pred_bbox_size'] = dets_person["pred_dimensions"][max_idx]
+                            human_predicted[im_name]['pred_bbox_score'] = dets_person["scores"][max_idx]
+                            human_predicted[im_name]['pred_bbox_class'] = cats[dets_person["pred_classes"][max_idx]]
+                            human_predicted[im_name]['pred_bbox_orientation'] = dets_person["pred_pose"][max_idx]
 
 
-        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-        img_wandb = log_bboxes(img, 0, pred_box, pred_length, pred_pose, pred_cat, pred_score, human_center, pred_human["pred_bbox_size"], pred_human["pred_bbox_orientation"], pred_human["pred_bbox_score"])
+                        pred_dict = res[im_name]
+                        pred_all = all_predicted[im_name]
+                        
+                        #gt_box = pred_dict["gt_bbox_center"]
+                        #gt_length = pred_dict["gt_bbox_size"][0]
+                    
+                        try:
+                            pred_human= human_predicted[im_name]
+                            human_center = pred_human["pred_bbox_center"]
 
+                            object_dist_list = []
+                            for i, bbox in enumerate(pred_all["bbox_center"]):
+                                #print("human distance: ",math.dist(human_center, bbox), " Confidence: ", (1-pred_all["bbox_score"][i]))
+                                object_dist_list.append(math.dist(human_center, bbox) + (1-pred_all["bbox_score"][i]))
+
+                            pos, element = min(enumerate(object_dist_list), key=itemgetter(1))
+                            pred_box = pred_all["bbox_center"][pos]
+                            pred_length = pred_all["bbox_size"][pos]
+                            pred_pose = pred_all["bbox_orientation"][pos]
+                            pred_cat = pred_all["bbox_class"][pos]
+                            pred_score = pred_all["bbox_score"][pos]
+                        except:
+                            #counter+=1
+                            pred_box = pred_dict["pred_bbox_center"]
+                            pred_length = pred_dict["pred_bbox_size"]
+                            pred_pose = pred_dict["pred_bbox_orientation"]
+                            pred_cat = pred_dict["pred_bbox_class"]
+                            pred_score = pred_dict["pred_bbox_score"]
+
+
+                        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+                        img_wandb = log_bboxes(img, 0, pred_box, pred_length, pred_pose, pred_cat, pred_score, human_center, pred_human["pred_bbox_size"], pred_human["pred_bbox_orientation"], pred_human["pred_bbox_score"])
+                        break
 
 
 def setup(args):
