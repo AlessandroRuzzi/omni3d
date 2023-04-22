@@ -667,9 +667,9 @@ def calc_iou_on_3d_bbox_by_class(results, results_all, human_pare_all):
 
 if __name__ == "__main__":
 
-    results = json.load(open("predictions/results_interaction.json"))["best_score vs gt"]
-    results_all = json.load(open("predictions/results_interaction.json"))["all_predicted"]
-    human_pare_all = json.load(open("predictions/results_interaction.json"))["person"]
+    results = json.load(open("predictions/results_interaction_test.json"))["best_score vs gt"]
+    results_all = json.load(open("predictions/results_interaction_test.json"))["all_predicted"]
+    human_pare_all = json.load(open("predictions/results_interaction_test.json"))["person"]
 
     #esults = json.load(open("predictions/results_person_final.json"))["best_score vs gt"]
     #results_all = json.load(open("predictions/results_person_final.json"))["all_predicted"]
