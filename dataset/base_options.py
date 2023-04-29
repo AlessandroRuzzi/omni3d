@@ -64,6 +64,11 @@ class BaseOptions():
         self.parser.add_argument('--BEHAVE_test_cat', nargs='*', default=None, help='test categories for BEHAVE dataset, by default, all categories are used')
         self.parser.add_argument('--BEHAVE_val_cat', nargs='*', default=None, help='val categories for BEHAVE dataset, by default, all categories are used')
 
+        # INTERCAP stuff
+        self.parser.add_argument('--INTERCAP_train_cat', nargs='*', default=None, help='train categories for INTERCAP dataset, by default, all categories are used')
+        self.parser.add_argument('--INTERCAP_test_cat', nargs='*', default=None, help='test categories for INTERCAP dataset, by default, all categories are used')
+        self.parser.add_argument('--INTERCAP_val_cat', nargs='*', default=None, help='val categories for INTERCAP dataset, by default, all categories are used')
+
         # pix3d stuff
         self.parser.add_argument('--pix3d_mode', type=str, default='noBG')
         self.parser.add_argument('--snet_mode', type=str, default='noBG')

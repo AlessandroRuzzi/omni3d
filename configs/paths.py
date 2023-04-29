@@ -13,6 +13,8 @@ behave_calibs_path = None
 # SMPL paths
 smpl_assets_root = None
 smpl_model_root = None
+intercap_root = None
+intercap_calib = None
 
 code = None
 
@@ -34,4 +36,6 @@ else:
     smpl_assets_root = "lib_smpl/assets"
     smpl_model_root= "/local/home/aruzzi/interaction-learning/AutoSDF-code/saved_ckpt/mano_v1_2/models"
     code = "/local/aruzzi/interaction-learning/AutoSDF-code" # path to your project main folder
+    intercap_root = "/data/aruzzi/InterCap"
+    intercap_calib = "/data/aruzzi/InterCap/Data" 
 
