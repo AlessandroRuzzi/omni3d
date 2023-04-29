@@ -9,8 +9,8 @@ import torch
 import torch.nn as nn
 import torch.utils.data as data
 import torchvision.transforms as transforms
-from .behave_dataset import BehaveDataset, BehaveImgDataset
-from .intercap_dataset import IntercapDataset, IntercapImgDataset
+from dataset.behave_dataset import BehaveDataset, BehaveImgDataset
+from dataset.intercap_dataset import IntercapDataset, IntercapImgDataset
 
 from torchvision import datasets
 

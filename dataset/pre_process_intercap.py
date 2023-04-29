@@ -33,7 +33,7 @@ from pytorch3d.renderer import (
 )
 import sys
 sys.path.append("/local/home/aruzzi/interaction-learning/AutoSDF-code")
-from .intercap_utils import *
+from dataset.intercap_utils import *
 
 
 warnings.filterwarnings("ignore")
