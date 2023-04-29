@@ -250,8 +250,8 @@ if __name__ == "__main__":
             ply_path = join(root, ply_file)
             obj_paths = generate_rotated_meshes(CALIB_PATH, ply_path)
 
-            sdfcommand = './isosurface/computeDistanceField'
-            lib_cmd = './isosurface/LIB_PATH'
+            sdfcommand = '/local/home/aruzzi/interaction-learning/AutoSDF-code/isosurface/computeDistanceField'
+            lib_cmd = '/local/home/aruzzi/interaction-learning/AutoSDF-code/isosurface/LIB_PATH'
 
             sdf_res = 63
             expand_rate = 1.3
