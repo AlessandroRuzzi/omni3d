@@ -143,6 +143,7 @@ def create_sdf_obj(sdfcommand, norm_mesh_dir, sdf_dir, obj,
     suffix = ".ply" if is_ply else ".obj"
 
     model_id = obj.split("sequences")[-1].replace(suffix, '').replace("/","_").replace(' ', '_')
+    model_id[0] = 't'
 
     norm_mesh_sub_dir = os.path.join(norm_mesh_dir, model_id)
     sdf_sub_dir = os.path.join(sdf_dir, model_id)
