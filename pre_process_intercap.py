@@ -134,8 +134,10 @@ def get_normalize_mesh(model_file, norm_mesh_sub_dir):
 def create_one_sdf(sdfcommand, sdf_res, expand_rate, sdf_file, obj_file, indx):
     command_str = f"{sdfcommand} {obj_file} {sdf_res} {sdf_res} {sdf_res} -s -e {expand_rate}"
     command_str = f"{command_str} -o {indx}.dist -m 1 -c > /dev/null"
+    print(command_str)
     os.system(command_str)
     command_str2 = f"mv {indx}.dist {sdf_file}"
+    print(command_str2)
     os.system(command_str2)
 
 def create_sdf_obj(sdfcommand, norm_mesh_dir, sdf_dir, obj,
@@ -143,7 +145,7 @@ def create_sdf_obj(sdfcommand, norm_mesh_dir, sdf_dir, obj,
     suffix = ".ply" if is_ply else ".obj"
 
     model_id = obj.split("sequences")[-1].replace(suffix, '').replace("/","_").replace(' ', '_')
-    model_id = 't' + model_id
+    #model_id = 't' + model_id
 
     norm_mesh_sub_dir = os.path.join(norm_mesh_dir, model_id)
     sdf_sub_dir = os.path.join(sdf_dir, model_id)
