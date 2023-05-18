@@ -63,7 +63,7 @@ def get_sdf(sdf_file, sdf_res):
     return sdf
 
 def create_h5_sdf_pt(h5_file, sdf_file, norm_obj_file, centroid, m, sdf_res):
-    sdf_dict = get_sdf(sdf_file, sdf_res)
+    #sdf_dict = get_sdf(sdf_file, sdf_res)
 
     norm_params = np.concatenate((centroid, np.asarray([m]).astype(np.float32)))
     f1 = h5py.File(h5_file, 'w')
