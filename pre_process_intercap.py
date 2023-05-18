@@ -67,15 +67,15 @@ def create_h5_sdf_pt(h5_file, sdf_file, norm_obj_file, centroid, m, sdf_res):
 
     norm_params = np.concatenate((centroid, np.asarray([m]).astype(np.float32)))
     f1 = h5py.File(h5_file, 'w')
-    f1.create_dataset('pc_sdf_sample', data=sdf_dict["value"].astype(np.float32), compression='gzip', compression_opts=4)
+    #f1.create_dataset('pc_sdf_sample', data=sdf_dict["value"].astype(np.float32), compression='gzip', compression_opts=4)
     f1.create_dataset('norm_params', data=norm_params, compression='gzip', compression_opts=4)
-    f1.create_dataset('sdf_params', data=sdf_dict["param"], compression='gzip', compression_opts=4)
+    #f1.create_dataset('sdf_params', data=sdf_dict["param"], compression='gzip', compression_opts=4)
     f1.close()
 
     command_str = f"rm -rf {norm_obj_file}"
     os.system(command_str)
-    command_str = f"rm -rf {sdf_file}"
-    os.system(command_str)
+    #command_str = f"rm -rf {sdf_file}"
+    #os.system(command_str)
 
 def as_mesh(scene_or_mesh):
     """
@@ -160,7 +160,7 @@ def create_sdf_obj(sdfcommand, norm_mesh_dir, sdf_dir, obj,
     model_file = obj
     norm_obj_file, centroid, m = get_normalize_mesh(model_file, norm_mesh_sub_dir)
 
-    create_one_sdf(sdfcommand, sdf_res, expand_rate, sdf_file, norm_obj_file, indx)
+    #create_one_sdf(sdfcommand, sdf_res, expand_rate, sdf_file, norm_obj_file, indx)
     create_h5_sdf_pt(h5_file, sdf_file, norm_obj_file, centroid, m, sdf_res)
 
 def process_one_obj(sdfcommand,
@@ -178,7 +178,7 @@ def process_one_obj(sdfcommand,
         expand_rate is sdf range of max x,y,z
     '''
     cprint(f"started calling process_one_obj on {obj_file}", "red")
-    os.system(LIB_command)
+    #os.system(LIB_command)
 
     tmp_dir = f'tmp/for_sdf'
     norm_mesh_dir = f'{tmp_dir}/norm_mesh'

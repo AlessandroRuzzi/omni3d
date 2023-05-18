@@ -15,6 +15,7 @@ smpl_assets_root = None
 smpl_model_root = None
 intercap_root = None
 intercap_calib = None
+smplx_model_root = None
 
 code = None
 
@@ -38,4 +39,5 @@ else:
     code = "/local/aruzzi/interaction-learning/AutoSDF-code" # path to your project main folder
     intercap_root = "/data/aruzzi/InterCap"
     intercap_calib = "/data/aruzzi/InterCap/Data" 
+    smplx_model_root = "local/home/aruzzi/smplx"
 
