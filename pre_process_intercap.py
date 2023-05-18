@@ -258,7 +258,7 @@ if __name__ == "__main__":
 
             sdf_res = 63
             expand_rate = 1.3
-
+            print(obj_paths)
             for obj_file in obj_paths:
                 pool.add_task(process_one_obj, sdfcommand, f"source {lib_cmd}",
                     sdf_res, expand_rate, obj_file, task_num, False)
