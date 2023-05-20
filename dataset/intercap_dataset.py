@@ -135,8 +135,8 @@ class IntercapImgDataset(BaseDataset):
         
         h5_file = h5py.File(path, 'r')
         
-        sdf = torch.from_numpy(h5_file['pc_sdf_sample'][:].astype(np.float32))
-        sdf = sdf.permute(2, 1, 0)
+        #sdf = torch.from_numpy(h5_file['pc_sdf_sample'][:].astype(np.float32))
+        #sdf = sdf.permute(2, 1, 0)
         code = torch.from_numpy(np.load(data['pvqout_path'])[
                                 'code'].astype(np.float32))
         codeix = torch.from_numpy(np.load(data['pvqout_path'])[
@@ -167,7 +167,7 @@ class IntercapImgDataset(BaseDataset):
         img = self.to_tensor(img)
             
         ret = {
-            'sdf': sdf, 
+            #'sdf': sdf, 
             'z_q': code, 
             'idx': codeix, 
             'path': path,
