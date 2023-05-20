@@ -222,6 +222,7 @@ class BehaveImgDataset(BaseDataset):
         
         norm_params = h5_file['norm_params'][:].astype(np.float32)
         bbox = h5_file['sdf_params'][:].astype(np.float32)
+        print(bbox)
         norm_params = torch.Tensor(norm_params)
         bbox = torch.Tensor(bbox).view(2, 3)
         
