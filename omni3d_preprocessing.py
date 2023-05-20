@@ -160,7 +160,7 @@ for id_data,dl in enumerate([(train_dl,"Train")]):
 
                     })
 
-        #print(data["cat_str"][0])
+        print(data["cat_str"][0])
         for j,elem in enumerate(category):
             if elem['name'] == data["cat_str"][0]:
                     pos_category = j

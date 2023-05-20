@@ -101,7 +101,7 @@ class IntercapImgDataset(BaseDataset):
                 img_path = os.path.join(str(Path(h5_path).parent.parent), f"Frames_Cam{kid+1}", "color", f"{str(Path(h5_path).stem).split('_')[0]}.jpg")
                 smpl_path = os.path.join(str(Path(h5_path).parent.parent), "res_2.pkl")
                 
-                print(img_path)
+                #print(img_path)
                 self.data.append({
                     "h5_path": h5_path,
                     "cat": "None", # TODO: find cat label for each object
