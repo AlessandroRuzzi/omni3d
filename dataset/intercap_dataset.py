@@ -10,7 +10,7 @@ import torch
 from PIL import Image
 import re
 import torchvision.transforms as transforms
-from utils import intercap_utils as iu
+from dataset import intercap_utils as iu
 from tqdm import tqdm
 import cv2
 from lib_smpl.smpl_utils import get_smplh
