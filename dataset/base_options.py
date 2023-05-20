@@ -45,14 +45,14 @@ class BaseOptions():
         self.parser.add_argument('--tf_cfg', type=str, default='configs/rand_tf_snet_code.yaml', help='tf model config file')
 
         # dataset stuff
-        self.parser.add_argument('--dataset_mode', type=str, default='snet', help='chooses how datasets are loaded. [mnist, snet, abc, snet-abc]')
+        self.parser.add_argument('--dataset_mode', type=str, default='intercap_img', help='chooses how datasets are loaded. [mnist, snet, abc, snet-abc]')
         self.parser.add_argument('--trunc_thres', type=float, default=0.2, help='threshold for truncated sdf. value will be: sdf=torch.clamp(sdf, -trunc_thres, trunc_thres)')
         self.parser.add_argument('--iou_thres', type=float, default=0.0, help='threshold for computing 3d iou.')
         self.parser.add_argument('--ratio', type=float, default=1., help='ratio of the dataset to use')
 
         self.parser.add_argument('--cat', type=str, default='chair', help='category for all datasets except BEHAVE')
-        self.parser.add_argument('--max_dataset_size', default=500, type=int, help='chooses how datasets are loaded. [mnist, sdf, abc, snet-abc]')
-        #self.parser.add_argument('--max_dataset_size', default=2147483648, type=int, help='chooses how datasets are loaded. [mnist, sdf, abc, snet-abc]')
+        #self.parser.add_argument('--max_dataset_size', default=500, type=int, help='chooses how datasets are loaded. [mnist, sdf, abc, snet-abc]')
+        self.parser.add_argument('--max_dataset_size', default=2147483648, type=int, help='chooses how datasets are loaded. [mnist, sdf, abc, snet-abc]')
         self.parser.add_argument('--nThreads', default=2, type=int, help='# threads for loading data')
         self.parser.add_argument('--serial_batches', action='store_true', help='if true, takes images in order to make batches, otherwise takes them randomly')
 
