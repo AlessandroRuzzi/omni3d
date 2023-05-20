@@ -113,7 +113,12 @@ class IntercapImgDataset(BaseDataset):
                     "smpl_path": smpl_path,
                     "frame_number": int(str(Path(h5_path).stem).split('_')[0])
                 })
-                pbar.update(1)     
+                pbar.update(1)    
+
+                if len(self.data) >= opt.max_dataset_size:
+                    break 
+            if len(self.data) >= opt.max_dataset_size:
+                break 
         
         pbar.close()
         
@@ -137,10 +142,10 @@ class IntercapImgDataset(BaseDataset):
         
         #sdf = torch.from_numpy(h5_file['pc_sdf_sample'][:].astype(np.float32))
         #sdf = sdf.permute(2, 1, 0)
-        code = torch.from_numpy(np.load(data['pvqout_path'])[
-                                'code'].astype(np.float32))
-        codeix = torch.from_numpy(np.load(data['pvqout_path'])[
-                                  'codeix'].astype(np.int64))
+        #code = torch.from_numpy(np.load(data['pvqout_path'])[
+        #                        'code'].astype(np.float32))
+        #codeix = torch.from_numpy(np.load(data['pvqout_path'])[
+        #                          'codeix'].astype(np.int64))
         
         norm_params = h5_file['norm_params'][:].astype(np.float32)
         bbox = h5_file['sdf_params'][:].astype(np.float32)
@@ -168,8 +173,8 @@ class IntercapImgDataset(BaseDataset):
             
         ret = {
             #'sdf': sdf, 
-            'z_q': code, 
-            'idx': codeix, 
+            #'z_q': code, 
+            #'idx': codeix, 
             'path': path,
             'img': img, 
             'img_path': img_path, 
