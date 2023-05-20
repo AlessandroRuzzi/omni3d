@@ -9,8 +9,6 @@ import torch
 import torch.nn as nn
 import torch.utils.data as data
 import torchvision.transforms as transforms
-from dataset.behave_dataset import BehaveDataset, BehaveImgDataset
-from dataset.intercap_dataset import IntercapDataset, IntercapImgDataset
 
 from torchvision import datasets
 
@@ -34,6 +32,7 @@ def CreateDataset(opt):
 
     if opt.dataset_mode == 'behave':
         """ behave dataset. """
+        from dataset.behave_dataset import BehaveDataset
         train_dataset = BehaveDataset()
         test_dataset = BehaveDataset()
         val_dataset = BehaveDataset()
@@ -43,6 +42,7 @@ def CreateDataset(opt):
         
     elif opt.dataset_mode == 'behave_img':
         """ behave dataset. """
+        from dataset.behave_dataset import BehaveImgDataset
         train_dataset = BehaveImgDataset()
         test_dataset = BehaveImgDataset()
         val_dataset = BehaveImgDataset()
@@ -52,6 +52,7 @@ def CreateDataset(opt):
         
     elif opt.dataset_mode == 'intercap':
         """ intercap dataset. """
+        from dataset.intercap_dataset import IntercapDataset
         train_dataset = IntercapDataset()
         test_dataset = IntercapDataset()
         val_dataset = IntercapDataset()
@@ -61,6 +62,7 @@ def CreateDataset(opt):
         
     elif opt.dataset_mode == 'intercap_img':
         """ intercap dataset. """
+        from dataset.intercap_dataset import IntercapImgDataset
         train_dataset = IntercapImgDataset()
         test_dataset = IntercapImgDataset()
         val_dataset = IntercapImgDataset()
