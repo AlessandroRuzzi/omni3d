@@ -219,7 +219,7 @@ class IntercapImgDataset(BaseDataset):
             'calibration_matrix': calibration_matrix,
             'dist_coefs': dist_coefs, 
             'bbox': bbox, 
-            'smpl': load_smpl(data["smpl_path"], data["seg"],  data["frame_number"], data["kid"]),
+            'body_mesh_verts': load_smpl(data["smpl_path"], data["seg"],  data["frame_number"], data["kid"]),
             'obj_path': mesh_obj_path
         }
         return ret
@@ -258,10 +258,10 @@ def load_smpl(smpl_paths, seg, frame, kid):
     lh_parms = params2torch(params)
     output = model(**lh_parms)
     
-    jtr = output.joints
+    jtr = output.verts
     # select based on the names in https://github.com/vchoutas/smplx/blob/main/smplx/joint_names.py
-    jtr = torch.cat((jtr[:, :22], jtr[:, 28:29], jtr[:, 43:44]), dim=1) # (1, 24, 3)
-    jtr = jtr[0].detach().numpy()
+    #jtr = torch.cat((jtr[:, :22], jtr[:, 28:29], jtr[:, 43:44]), dim=1) # (1, 24, 3)
+    #jtr = jtr[0].detach().numpy()
     
     r, t = iu.get_rotation_translation(intercap_calib, seg, kid)
     jtr = (r@jtr.T ).T + t
