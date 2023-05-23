@@ -173,7 +173,7 @@ for id_data,dl in enumerate([(train_dl,"Train")]):
          ]
 
         bbox_project = data['bbox'].cuda()
-        bbox_project[:, :2] = bbox_project[:, :2] * -1
+        #bbox_project[:, :2] = bbox_project[:, :2] * -1
         patch_coord_projected, bbox_corners = calc_patch_coord(bbox_project, projector)
         bbox2d = transform_img(data["img_path"], bbox_corners)
 
