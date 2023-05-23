@@ -120,8 +120,8 @@ category = [
              {'id' : 28, 'name' :'chair', 'supercategory' : ""}, {'id' : 29, 'name' :'bottle', 'supercategory' : ""}, {'id' : 30, 'name' :'cup', 'supercategory' : ""}, 
              {'id' : 31, 'name' :'couch', 'supercategory' : ""} ]
 
-cat_conversion = [{"01" : "suitcaseint"}, {"02" : "skateboard"}, {"03" : "sportball"}, {"04" : "umbrella"}, {"05" : "tennisracket"}, {"06" : "handbag"}, 
-                  {"07" : "chair"}, {"08" : "bottle"}, {"09" : "cup"}, {"10" : "couch"}, ]
+cat_conversion = {"01" : "suitcaseint", "02" : "skateboard", "03" : "sportball", "04" : "umbrella", "05" : "tennisracket", "06" : "handbag", 
+                "07" : "chair", "08" : "bottle", "09" : "cup", "10" : "couch" }
 
 opt = TrainOptions().parse()
 train_dl, val_dl, test_dl = CreateDataLoader(opt)
@@ -168,8 +168,8 @@ for id_data,dl in enumerate([(train_dl,"Train")]):
                     print(cat_conversion[data["cat_id"][0]],"--------------------\n")
                     break
 
-        calibration_matrix = data['calibration_matrix'].cpu().numpy()
-        dist_coefs = data['dist_coefs'].cpu().numpy()
+        calibration_matrix = np.array(data['calibration_matrix'])
+        dist_coefs = np.array(data['dist_coefs'])
         projector = [
         bcu.get_local_projector(c, d) for c, d in zip(calibration_matrix, dist_coefs)
          ]
@@ -212,8 +212,8 @@ for id_data,dl in enumerate([(train_dl,"Train")]):
        
                     })
         
-        calibration_matrix = data['calibration_matrix'].cpu().numpy()
-        dist_coefs = data['dist_coefs'].cpu().numpy()
+        calibration_matrix = np.array(data['calibration_matrix'])
+        dist_coefs = np.array(data['dist_coefs'])
         projector = [
         bcu.get_local_projector(c, d) for c, d in zip(calibration_matrix, dist_coefs)  #TOOD needs a different projector for intercap, visualize the images to double check
          ]
@@ -271,8 +271,8 @@ for id_data,dl in enumerate([(train_dl,"Train")]):
        
                     })
         
-        calibration_matrix = data['calibration_matrix'].cpu().numpy()
-        dist_coefs = data['dist_coefs'].cpu().numpy()
+        calibration_matrix = np.array(data['calibration_matrix'])
+        dist_coefs = np.array(data['dist_coefs'])
         projector = [
         bcu.get_local_projector(c, d) for c, d in zip(calibration_matrix, dist_coefs)
          ]
