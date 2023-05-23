@@ -171,7 +171,7 @@ for id_data,dl in enumerate([(test_dl,"Test")]):
 
         calibration_matrix = data['calibration_matrix'].cpu().numpy()
         dist_coefs = data['dist_coefs'].cpu().numpy()
-        print(calibration_matrix.shape)
+        print(dist_coefs.shape)
         projector = [
         bcu.get_local_projector(c, d) for c, d in zip(calibration_matrix, dist_coefs)
          ]
