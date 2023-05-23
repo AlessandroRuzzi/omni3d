@@ -155,7 +155,7 @@ for id_data,dl in enumerate([(train_dl,"Train")]):
                             "width"			  : 1920,
                             "height"		  : 1080,
                             "file_path"		  : data["img_path"][0],
-                            "K"			      : data['calibration_matrix'].detach().cpu().numpy().reshape(3,3).tolist() ,
+                            "K"			      : np.array(data['calibration_matrix']).reshape(3,3).tolist() ,
                             "src_90_rotate"	  : 0,			
                             "src_flagged"	  : False,	
 
