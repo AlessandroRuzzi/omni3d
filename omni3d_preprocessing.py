@@ -120,7 +120,8 @@ category = [
              {'id' : 28, 'name' :'chair', 'supercategory' : ""}, {'id' : 29, 'name' :'bottle', 'supercategory' : ""}, {'id' : 30, 'name' :'cup', 'supercategory' : ""}, 
              {'id' : 31, 'name' :'couch', 'supercategory' : ""} ]
 
-cat_conversion = [{"suitcaseint" : "suitcase"}]
+cat_conversion = [{"01" : "suitcaseint"}, {"02" : "skateboard"}, {"03" : "sportball"}, {"04" : "umbrella"}, {"05" : "tennisracket"}, {"06" : "handbag"}, 
+                  {"07" : "chair"}, {"08" : "bottle"}, {"09" : "cup"}, {"10" : "couch"}, ]
 
 opt = TrainOptions().parse()
 train_dl, val_dl, test_dl = CreateDataLoader(opt)
@@ -151,8 +152,8 @@ for id_data,dl in enumerate([(train_dl,"Train")]):
 
                         	"id"			  : i,
                             "dataset_id"	  : id_data+2,
-                            "width"			  : 2048,
-                            "height"		  : 1536,
+                            "width"			  : 1920,
+                            "height"		  : 1080,
                             "file_path"		  : data["img_path"][0],
                             "K"			      : data['calibration_matrix'].detach().cpu().numpy().reshape(3,3).tolist() ,
                             "src_90_rotate"	  : 0,			
@@ -160,10 +161,11 @@ for id_data,dl in enumerate([(train_dl,"Train")]):
 
                     })
 
-        print(data["cat_str"][0])
         for j,elem in enumerate(category):
-            if elem['name'] == data["cat_str"][0]:
+            if elem['name'] == cat_conversion[data["cat_id"][0]]:
                     pos_category = j
+                    print("-------------------\n",category[pos_category]['name'])
+                    print(cat_conversion[data["cat_id"][0]],"--------------------\n")
                     break
 
         calibration_matrix = data['calibration_matrix'].cpu().numpy()

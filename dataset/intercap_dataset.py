@@ -17,6 +17,23 @@ from lib_smpl.smpl_utils import get_smplh
 import smplx
 import pickle
 
+split = {
+    "train": {"01", "02", "03", "04", "05", "06", "07"},
+    "val": {"08"},
+    "test": {"09", "10"}
+}
+cats = {
+    "01": "suitcase",
+    "02": "skateboard",
+    "03": "sprotball",
+    "04": "umbrella",
+    "05": "tennisracket",
+    "06": "handbag",
+    "07": "chair",
+    "08": "bottle",
+    "09": "cup",
+    "10": "couch"
+}
 
 class IntercapDataset(BaseDataset):
     def initialize(self, opt, phase='train', cat=None):
@@ -34,9 +51,15 @@ class IntercapDataset(BaseDataset):
                     continue
                 
                 h5_path = os.path.join(root, h5_file)
+                sp = h5_path.split("/")[-5]
+                if sp not in split[phase]:
+                    continue
+                cat_id = h5_path.split("/")[-4]
+                cat_name = cats[cat_id]
                 self.data.append({
                     "h5_path": h5_path,
-                    "cat": "None" # TODO: find cat label for each object
+                    "cat": cat_name,
+                    "cat_id": cat_id,
                 })
                 pbar.update(1)     
         
@@ -53,6 +76,7 @@ class IntercapDataset(BaseDataset):
     def __getitem__(self, index):
         
         cat_name = self.data[index]["cat"]
+        cat_id = self.data[index]["cat_id"]
         sdf_h5_file = self.data[index]["h5_path"]
 
         h5_f = h5py.File(sdf_h5_file, 'r')
@@ -65,7 +89,8 @@ class IntercapDataset(BaseDataset):
 
         ret = {
             'sdf': sdf,
-            'cat_str': cat_name, #TODO
+            'cat_str': cat_name,
+            'cat_id': cat_id,
             'path': sdf_h5_file,
         }
 
@@ -93,10 +118,15 @@ class IntercapImgDataset(BaseDataset):
                     continue
                 
                 h5_path = os.path.join(root, h5_file)
+                sp = h5_path.split("/")[-5]
+                if sp not in split[phase]:
+                    continue
                 kid = int(h5_path.split("_")[-2][1])
                 pvqout_path = h5_path.replace("sdf.h5", "new_pvqout.npz")
                 obj_path = h5_path.replace("_sdf.h5", ".obj")
                 seg = iu.get_seg(obj_path)
+                cat_id = h5_path.split("/")[-4]
+                cat_name = cats[cat_id]
                 
                 img_path = os.path.join(str(Path(h5_path).parent.parent), f"Frames_Cam{kid+1}", "color", f"{str(Path(h5_path).stem).split('_')[0]}.jpg")
                 smpl_path = os.path.join(str(Path(h5_path).parent.parent), "res_2.pkl")
@@ -104,7 +134,8 @@ class IntercapImgDataset(BaseDataset):
                 #print(img_path)
                 self.data.append({
                     "h5_path": h5_path,
-                    "cat": "None", # TODO: find cat label for each object
+                    "cat_id": cat_id,
+                    "cat": cat_name,
                     "kid": kid,
                     "seg": seg,
                     "obj_path": obj_path,
@@ -136,6 +167,7 @@ class IntercapImgDataset(BaseDataset):
         data = self.data[index]
         path = data['h5_path']
         cat_name = data["cat"]
+        cat_id = data["cat_id"]
         
         
         h5_file = h5py.File(path, 'r')
@@ -148,7 +180,8 @@ class IntercapImgDataset(BaseDataset):
         #                          'codeix'].astype(np.int64))
         
         norm_params = h5_file['norm_params'][:].astype(np.float32)
-        bbox = h5_file['sdf_params'][:].astype(np.float32)
+        #bbox = h5_file['sdf_params'][:].astype(np.float32)
+        bbox = np.array([-1.1672062, -1.134178,  -1.1588331,  1.1859713,  1.2189994,  1.1943444])
         norm_params = torch.Tensor(norm_params)
         bbox = torch.Tensor(bbox).view(2, 3)
         
@@ -180,7 +213,8 @@ class IntercapImgDataset(BaseDataset):
             'img_path': img_path, 
             'mask': "TODO", #TODO
             'mask_path': "TODO", #TODO
-            'cat_str': cat_name, #TODO
+            'cat_str': cat_name,
+            'cat_id': cat_id,
             'calibration_matrix': calibration_matrix,
             'dist_coefs': dist_coefs, 
             'bbox': bbox, 
