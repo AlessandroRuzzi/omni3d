@@ -258,7 +258,7 @@ def load_smpl(smpl_paths, seg, frame, kid):
     lh_parms = params2torch(params)
     output = model(**lh_parms)
     
-    jtr = output.verts
+    jtr = output.vertices
     # select based on the names in https://github.com/vchoutas/smplx/blob/main/smplx/joint_names.py
     #jtr = torch.cat((jtr[:, :22], jtr[:, 28:29], jtr[:, 43:44]), dim=1) # (1, 24, 3)
     #jtr = jtr[0].detach().numpy()
