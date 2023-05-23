@@ -129,7 +129,7 @@ class IntercapImgDataset(BaseDataset):
                 cat_name = cats[cat_id]
                 
                 img_path = os.path.join(str(Path(h5_path).parent.parent), f"Frames_Cam{kid+1}", "color", f"{str(Path(h5_path).stem).split('_')[0]}.jpg")
-                img_path.replace("Res", "RGBD_Images")
+                img_path = img_path.replace("Res", "RGBD_Images")
                 smpl_path = os.path.join(str(Path(h5_path).parent.parent), "res_2.pkl")
                 
                 #print(img_path)
