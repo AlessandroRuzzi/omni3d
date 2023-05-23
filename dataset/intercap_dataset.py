@@ -219,7 +219,7 @@ class IntercapImgDataset(BaseDataset):
             'calibration_matrix': calibration_matrix,
             'dist_coefs': dist_coefs, 
             'bbox': bbox, 
-            'smpl': load_smpl(data["smpl_path"], data["seg"],  data["frame_number"]),
+            'smpl': load_smpl(data["smpl_path"], data["seg"],  data["frame_number"], data["kid"]),
             'obj_path': mesh_obj_path
         }
         return ret
@@ -231,7 +231,7 @@ class IntercapImgDataset(BaseDataset):
     def name(self):
         return 'IntercapImgDataset'
 
-def load_smpl(smpl_paths, seg, frame):
+def load_smpl(smpl_paths, seg, frame, kid):
     with open(smpl_paths, 'rb') as fin:
         data = pickle.load(fin)
     GENDER = 'female'
@@ -263,7 +263,7 @@ def load_smpl(smpl_paths, seg, frame):
     jtr = torch.cat((jtr[:, :22], jtr[:, 28:29], jtr[:, 43:44]), dim=1) # (1, 24, 3)
     jtr = jtr[0].detach().numpy()
     
-    r, t = iu.get_rotation_translation(intercap_calib, seg, frame)
+    r, t = iu.get_rotation_translation(intercap_calib, seg, kid)
     jtr = (r@jtr.T ).T + t
     
     return jtr
