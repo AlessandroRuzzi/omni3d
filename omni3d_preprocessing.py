@@ -166,8 +166,8 @@ for id_data,dl in enumerate([(train_dl,"Train")]):
                     pos_category = j
                     break
 
-        calibration_matrix = np.array(data['calibration_matrix'], dtype=np.float64).reshape(1,3,3)
-        dist_coefs = np.array(data['dist_coefs'], dtype=np.float64).reshape(1,8)
+        calibration_matrix = np.asarray(data['calibration_matrix'], dtype=np.float64).reshape(1,3,3)
+        dist_coefs = np.asarray(data['dist_coefs'], dtype=np.float64).reshape(1,8)
         projector = [
         bcu.get_local_projector(c, d) for c, d in zip(calibration_matrix, dist_coefs)
          ]
@@ -210,8 +210,8 @@ for id_data,dl in enumerate([(train_dl,"Train")]):
        
                     })
         
-        calibration_matrix = np.array(data['calibration_matrix'], dtype=np.float64).reshape(1,3,3)
-        dist_coefs = np.array(data['dist_coefs'], dtype=np.float64).reshape(1,8)
+        calibration_matrix = np.asarray(data['calibration_matrix'], dtype=np.float64).reshape(1,3,3)
+        dist_coefs = np.asarray(data['dist_coefs'], dtype=np.float64).reshape(1,8)
         projector = [
         bcu.get_local_projector(c, d) for c, d in zip(calibration_matrix, dist_coefs)  #TOOD needs a different projector for intercap, visualize the images to double check
          ]
@@ -269,8 +269,8 @@ for id_data,dl in enumerate([(train_dl,"Train")]):
        
                     })
         
-        calibration_matrix = np.array(data['calibration_matrix'], dtype=np.float64).reshape(1,3,3)
-        dist_coefs = np.array(data['dist_coefs'], dtype=np.float64).reshape(1,8)
+        calibration_matrix = np.asarray(data['calibration_matrix'], dtype=np.float64).reshape(1,3,3)
+        dist_coefs = np.asarray(data['dist_coefs'], dtype=np.float64).reshape(1,8)
         projector = [
         bcu.get_local_projector(c, d) for c, d in zip(calibration_matrix, dist_coefs)
          ]
