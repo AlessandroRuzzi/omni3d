@@ -195,8 +195,8 @@ class IntercapImgDataset(BaseDataset):
         h5_file.close()
         
         thres = self.opt.trunc_thres
-        if thres != 0.0:
-            sdf = torch.clamp(sdf, min=-thres, max=thres)
+        #if thres != 0.0:
+            #sdf = torch.clamp(sdf, min=-thres, max=thres)
             
         calibration_matrix, dist_coefs = iu.get_calib_dist(intercap_calib, data["seg"], data["kid"])
         
