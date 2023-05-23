@@ -219,7 +219,7 @@ class IntercapImgDataset(BaseDataset):
             'calibration_matrix': calibration_matrix,
             'dist_coefs': dist_coefs, 
             'bbox': bbox, 
-            'smpl': load_smpl(data["smpl_path"], data["frame_number"]),
+            'smpl': load_smpl(data["smpl_path"], data["seg"],  data["frame_number"]),
             'obj_path': mesh_obj_path
         }
         return ret
