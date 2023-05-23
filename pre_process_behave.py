@@ -38,6 +38,7 @@ def generate_colors(i, bgr=False):
 
 def __calc_patch_coord(bbox_center, projector, nP, l):
     N = bbox_center.shape[0]
+    print("N ------->", N)
     res = []
     for i in range(N):
         """
@@ -170,10 +171,11 @@ for id_data,dl in enumerate([(test_dl,"Test")]):
 
         calibration_matrix = data['calibration_matrix'].cpu().numpy()
         dist_coefs = data['dist_coefs'].cpu().numpy()
+        print(calibration_matrix)
         projector = [
         bcu.get_local_projector(c, d) for c, d in zip(calibration_matrix, dist_coefs)
          ]
-
+        print("----------->",len(projector))
         bbox_project = data['bbox'].cuda()
         bbox_project[:, :2] = bbox_project[:, :2] * -1
         patch_coord_projected, bbox_corners = calc_patch_coord(bbox_project, projector)
