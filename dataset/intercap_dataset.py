@@ -110,10 +110,10 @@ class IntercapImgDataset(BaseDataset):
         
         pbar = tqdm(desc="Number of loaded images", unit="images")
         
-        for root, _, files in os.walk(intercap_root):
+        for root, _, files in sorted(os.walk(intercap_root)):
             if "Mesh" not in root:
                 continue
-            for h5_file in files:
+            for h5_file in sorted(files):
                 if "second_obj" not in h5_file or ".h5" not in h5_file:
                     continue
                 
