@@ -132,8 +132,6 @@ class IntercapImgDataset(BaseDataset):
                 img_path = img_path.replace("Res", "RGBD_Images")
                 smpl_path = os.path.join(str(Path(h5_path).parent.parent), "res_2.pkl")
 
-
-                print(img_path)
                 
                 #print(img_path)
                 self.data.append({
@@ -206,6 +204,7 @@ class IntercapImgDataset(BaseDataset):
         calibration_matrix, dist_coefs = iu.get_calib_dist(intercap_calib, data["seg"], data["kid"])
         
         img_path = data["img_path"]
+        print(img_path)
         img = Image.open(img_path).convert('RGB')
         img = self.to_tensor(img)
             
