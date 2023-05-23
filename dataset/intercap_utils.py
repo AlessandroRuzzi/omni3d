@@ -60,4 +60,4 @@ def get_calib_dist(root: str, seg: int, frame: int):
         cam_info = json.load(json_file)
     calib = cam_info["camera_mtx"]
     dist = cam_info["k"]
-    return calib, 
+    return calib, dist
