@@ -39,5 +39,5 @@ else:
     code = "/local/aruzzi/interaction-learning/AutoSDF-code" # path to your project main folder
     intercap_root = "/data/aruzzi/InterCap"
     intercap_calib = "/data/aruzzi/InterCap/Data" 
-    smplx_model_root = "local/home/aruzzi/smplx"
+    smplx_model_root = "/local/home/aruzzi/smplx"
 
