@@ -11,6 +11,13 @@ from functools import partial
 
 wandb.init(project = "Omni3D")
 
+def show_projection(ver, img):
+    #print(ver)
+    for i in range(ver.shape[0]):
+        img = cv2.circle(img, (ver[i, 0].int().item(), ver[i, 1].int().item()), 2, (255, 0, 0), 1)
+    images = wandb.Image(img, caption="Image with SMPL predictions")
+    wandb.log({"Image SMPL" : images})
+
 def plot_box_and_label(image, lw, box, label='', color=(128, 128, 128), txt_color=(255, 255, 255), font=cv2.FONT_HERSHEY_COMPLEX):
     # Add one xyxy box to image with label
     p1, p2 = (int(box[0]), int(box[1])), (int(box[2]), int(box[3]))
@@ -217,6 +224,7 @@ for id_data,dl in enumerate([(train_dl,"Train")]):
          ]
         
         verts = data['body_mesh_verts']
+        show_projection(torch.from_numpy(projector(verts[0].detach().cpu().numpy())), cv2.imread(data["img_path"][0])[:,:,::-1].copy())
         human_center = [(torch.min(verts[0,:,0]) + (torch.max(verts[0,:,0]) - torch.min(verts[0,:,0])) / 2.0).detach().cpu().float(), 
                 (torch.min(verts[0,:,1]) + (torch.max(verts[0,:,1]) - torch.min(verts[0,:,1])) / 2.0).detach().cpu().float(),
                 (torch.min(verts[0,:,2]) + (torch.max(verts[0,:,2]) - torch.min(verts[0,:,2])) / 2.0).detach().cpu().float()]
