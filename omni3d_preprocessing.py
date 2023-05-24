@@ -224,7 +224,8 @@ for id_data,dl in enumerate([(train_dl,"Train")]):
          ]
         
         verts = data['body_mesh_verts']
-        show_projection(torch.from_numpy(projector(np.array(verts))), cv2.imread(data["img_path"][0])[:,:,::-1].copy())
+        tmp_projector = get_local_projector(calibration_matrix[0], dist_coefs[0])
+        show_projection(torch.from_numpy(tmp_projector(verts[0].detach().cpu().numpy())), cv2.imread(data["img_path"][0])[:,:,::-1].copy())
         human_center = [(torch.min(verts[0,:,0]) + (torch.max(verts[0,:,0]) - torch.min(verts[0,:,0])) / 2.0).detach().cpu().float(), 
                 (torch.min(verts[0,:,1]) + (torch.max(verts[0,:,1]) - torch.min(verts[0,:,1])) / 2.0).detach().cpu().float(),
                 (torch.min(verts[0,:,2]) + (torch.max(verts[0,:,2]) - torch.min(verts[0,:,2])) / 2.0).detach().cpu().float()]
