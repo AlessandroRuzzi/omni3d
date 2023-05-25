@@ -268,6 +268,6 @@ def load_smpl(smpl_paths, seg, frame, kid):
     
     r, t = iu.get_rotation_translation(intercap_calib, seg, kid)
     print(r,t)
-    jtr = (r@jtr.T ).T + t
+    jtr = ((r + t)@jtr.T ).T 
     
     return jtr.detach().cpu()
