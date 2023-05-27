@@ -97,33 +97,16 @@ def as_mesh(scene_or_mesh):
 
 # from DISN create_point_sdf_grid
 def get_normalize_mesh(model_file, norm_mesh_sub_dir):
-    total = 16384
-    # print("[*] trimesh_load:", model_file)
-    mesh_list = trimesh.load_mesh(model_file, process=False)
-
-    mesh = as_mesh(mesh_list) # from s2s
-    if not isinstance(mesh, list):
-        mesh_list = [mesh]
-
-    area_sum = 0
-    area_lst = []
-    for idx, mesh in enumerate(mesh_list):
-        area = np.sum(mesh.area_faces)
-        area_lst.append(area)
-        area_sum+=area
-    area_lst = np.asarray(area_lst)
-    amount_lst = (area_lst * total / area_sum).astype(np.int32)
-    points_all=np.zeros((0,3), dtype=np.float32)
-    for i in range(amount_lst.shape[0]):
-        mesh = mesh_list[i]
-        points, index = trimesh.sample.sample_surface(mesh, amount_lst[i])
-        points_all = np.concatenate([points_all,points], axis=0)
-    centroid = np.mean(points_all, axis=0)
-    points_all = points_all - centroid
-    m = np.max(np.sqrt(np.sum(points_all ** 2, axis=1)))
     obj_file = os.path.join(norm_mesh_sub_dir, "pc_norm.obj")
     ori_mesh_list = trimesh.load_mesh(model_file, process=False)
     ori_mesh = as_mesh(ori_mesh_list)
+
+    # use the middle of the max and min align each axis as the centroid
+    centroid = (np.max(ori_mesh.vertices, axis=0) + np.min(ori_mesh.vertices, axis=0)) / 2
+    m = np.max(np.abs(ori_mesh.vertices - centroid))
+
+    # print(centroid, m, ori_mesh.vertices.shape)
+
     ori_mesh.vertices = (ori_mesh.vertices - centroid) / float(m)
     ori_mesh.export(obj_file)
 

@@ -183,7 +183,7 @@ class IntercapImgDataset(BaseDataset):
         
         norm_params = h5_file['norm_params'][:].astype(np.float32)
         #bbox = h5_file['sdf_params'][:].astype(np.float32)
-        bbox = np.asarray([-1.1672062, -1.134178,  -1.1588331,  1.1859713,  1.2189994,  1.1943444], dtype=np.float64)
+        bbox = np.asarray([-1.3, -1.3, -1.3, 1.3, 1.3, 1.3], dtype=np.float64)
         #bbox = np.asarray([-1.1314389, -1.1660855, -1.087482, 1.1583971, 1.1237504, 1.202354 ], dtype= np.float64)
         norm_params = torch.Tensor(norm_params)
         bbox = torch.Tensor(bbox).view(2, 3)
