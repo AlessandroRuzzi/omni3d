@@ -237,7 +237,7 @@ class IntercapImgDataset(BaseDataset):
 def load_smpl(smpl_paths, seg, frame, kid):
     with open(smpl_paths, 'rb') as fin:
         data = pickle.load(fin)
-    GENDER = 'female'
+    GENDER = 'male'
     
     params = {'body_pose': data['body_pose'].reshape([-1, 63])[frame, :].reshape(-1,63), 
         'right_hand_pose':data['right_hand_pose'][frame][np.newaxis, ...], 
@@ -261,13 +261,13 @@ def load_smpl(smpl_paths, seg, frame, kid):
     lh_parms = params2torch(params)
     output = model(**lh_parms)
     
-    jtr = output.vertices[0,:,:]
+    jtr = output.vertices.detach().numpy().reshape(-1,3)
     # select based on the names in https://github.com/vchoutas/smplx/blob/main/smplx/joint_names.py
     #jtr = torch.cat((jtr[:, :22], jtr[:, 28:29], jtr[:, 43:44]), dim=1) # (1, 24, 3)
     #jtr = jtr[0].detach().numpy()
     
     r, t = iu.get_rotation_translation(intercap_calib, seg, kid)
-    print(r,t)
+    #print(r,t)
     jtr = (r@jtr.T ).T + t
     
     return jtr.detach().cpu()
