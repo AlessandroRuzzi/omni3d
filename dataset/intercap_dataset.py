@@ -155,7 +155,7 @@ class IntercapImgDataset(BaseDataset):
         
         pbar.close()
         
-        #np.random.default_rng(seed=0).shuffle(self.data)
+        np.random.default_rng(seed=0).shuffle(self.data)
 
         if opt.max_dataset_size < len(self.data):
             self.data = self.data[:opt.max_dataset_size]
