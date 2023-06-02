@@ -88,13 +88,13 @@ def transform_img(img_path, bbox_corners):
     bottom = int(torch.max(bbox_corners[:, :, 1], dim=1)[0].int())
     right = int(torch.max(bbox_corners[:, :, 0], dim=1)[0].int())
 
-    img = cv2.imread(img_path[0])
+    #img = cv2.imread(img_path[0])
     xyxy = [left,top, right, bottom]
     #print((xyxy))
-    plot_box_and_label(img, max(round(sum(img.shape) / 2 * 0.003), 2), xyxy, color=generate_colors(1, True))
+    #plot_box_and_label(img, max(round(sum(img.shape) / 2 * 0.003), 2), xyxy, color=generate_colors(1, True))
 
-    images = wandb.Image(img, caption="Image with projected bounding boxes")
-    wandb.log({"Image YOLOv6" : images})
+    #images = wandb.Image(img, caption="Image with projected bounding boxes")
+    #wandb.log({"Image YOLOv6" : images})
 
     return xyxy
 
@@ -181,7 +181,7 @@ for id_data,dl in enumerate([(train_dl,"Train")]):
          ]
 
         bbox_project = data['bbox'].cuda()
-        bbox_project[:, :2] = bbox_project[:, :2] * -1
+        #bbox_project[:, :2] = bbox_project[:, :2] * -1
         patch_coord_projected, bbox_corners = calc_patch_coord(bbox_project, projector)
         bbox2d = transform_img(data["img_path"], bbox_corners)
 
@@ -242,7 +242,7 @@ for id_data,dl in enumerate([(train_dl,"Train")]):
         bbox_to_project.append(obj_length)
         bbox_to_project = [bbox_to_project]
         bbox_to_project = torch.FloatTensor(np.array(bbox_to_project)).cuda()
-        bbox_project[:, :2] = bbox_project[:, :2] * -1
+        #bbox_project[:, :2] = bbox_project[:, :2] * -1
 
         patch_coord_projected, bbox_corners = calc_patch_coord(bbox_to_project, projector)
         bbox2d = transform_img(data["img_path"], bbox_corners)
