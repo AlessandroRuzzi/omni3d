@@ -204,7 +204,7 @@ class IntercapImgDataset(BaseDataset):
         calibration_matrix, dist_coefs = iu.get_calib_dist(intercap_calib, data["seg"], data["kid"])
         
         img_path = data["img_path"]
-        print(img_path)
+        #print(img_path)
         img = Image.open(img_path).convert('RGB')
         img = self.to_tensor(img)
             
