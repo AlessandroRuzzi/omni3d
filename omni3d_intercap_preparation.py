@@ -11,6 +11,12 @@ from functools import partial
 
 wandb.init(project = "Omni3D")
 
+def show_projection(ver, img):
+    #print(ver)
+    for i in range(ver.shape[0]):
+        img = cv2.circle(img, (ver[i, 0].int().item(), ver[i, 1].int().item()), 2, (255, 0, 0), 1)
+    images = wandb.Image(img, caption="Image with SMPL predictions")
+    wandb.log({"Image SMPL" : images})
 
 def plot_box_and_label(image, lw, box, label='', color=(128, 128, 128), txt_color=(255, 255, 255), font=cv2.FONT_HERSHEY_COMPLEX):
     # Add one xyxy box to image with label
@@ -38,7 +44,6 @@ def generate_colors(i, bgr=False):
 
 def __calc_patch_coord(bbox_center, projector, nP, l):
     N = bbox_center.shape[0]
-    print("N ------->", N)
     res = []
     for i in range(N):
         """
@@ -53,9 +58,6 @@ def __calc_patch_coord(bbox_center, projector, nP, l):
         xyz += bbox_center[i].view(1, 1, 1, 1, 3)
         xyz = torch.flip(xyz, dims=(1,2)).permute(0, 3, 2, 1, 4)
         xyz = xyz.reshape(-1, 3).cpu().numpy()
-
-        # At this point, xyz is a tensor containing the coordinates of the center of patches
-        # Then we need to project them to the image plane
         res.append(projector[i](xyz))
 
         return torch.from_numpy(np.array(res)).view(N, nP, nP, nP, 2).detach().cpu().numpy()
@@ -63,14 +65,12 @@ def __calc_patch_coord(bbox_center, projector, nP, l):
 def calc_patch_coord(bbox, projector):
     bbox_center = bbox[:, :3]
     bbox_len = bbox[:, 3]
-    
     nP = 8
     l = bbox_len * (nP - 1) / nP / 2
     patch_coord_projected = __calc_patch_coord(bbox_center, projector, nP, l)
 
     l = bbox_len / 2
     bbox_corners = __calc_patch_coord(bbox_center, projector, 2, l)
-
     return patch_coord_projected, bbox_corners
 
 def transform_img(img_path, bbox_corners):
@@ -116,14 +116,14 @@ def show_projection(ver, img):
     images = wandb.Image(img, caption="Image with SMPL predictions")
     wandb.log({"Image SMPL" : images})
 
-category = [ {'id' : 0, 'name' : 'backpack', 'supercategory' : ""}, {'id' : 1, 'name' :'basketball', 'supercategory' : ""}, {'id' : 2, 'name' :'boxlarge', 'supercategory' : ""}, 
-             {'id' : 3, 'name' :'boxlong', 'supercategory' : ""}, {'id' : 4, 'name' :'boxmedium', 'supercategory' : ""}, {'id' : 5, 'name' :'boxsmall', 'supercategory' : ""}, 
-             {'id' : 6, 'name' :'boxtiny', 'supercategory' : ""}, {'id' : 7, 'name' :'chairblack', 'supercategory' : ""},{'id' : 8, 'name' :'chairwood', 'supercategory' : ""},
-             {'id' : 9, 'name' :'keyboard', 'supercategory' : ""},{'id' : 10, 'name' :'monitor', 'supercategory' : ""}, {'id' : 11, 'name' :'plasticcontainer', 'supercategory' : ""}, 
-             {'id' : 12, 'name' :'stool', 'supercategory' : ""}, {'id' : 13, 'name' :'suitcase', 'supercategory' : ""}, {'id' : 14, 'name' :'tablesmall', 'supercategory' : ""}, 
-             {'id' : 15, 'name' :'tablesquare', 'supercategory' : ""}, {'id' : 16, 'name' :'toolbox', 'supercategory' : ""}, {'id' : 17, 'name' :'trashbin', 'supercategory' : ""}, 
-             {'id' : 18, 'name' :'yogaball', 'supercategory' : ""}, {'id' : 19, 'name' :'yogamat', 'supercategory' : ""}, {'id' : 20, 'name' :'person', 'supercategory' : ""},
-             {'id' : 21, 'name' :'interaction', 'supercategory' : ""}]
+category = [
+             {'id' : 22, 'name' :'suitcaseint', 'supercategory' : ""}, {'id' : 23, 'name' :'skateboard', 'supercategory' : ""},{'id' : 24, 'name' :'sportball', 'supercategory' : ""}, 
+             {'id' : 25, 'name' :'umbrella', 'supercategory' : ""}, {'id' : 26, 'name' :'tennisracket', 'supercategory' : ""}, {'id' : 27, 'name' :'handbag', 'supercategory' : ""}, 
+             {'id' : 28, 'name' :'chair', 'supercategory' : ""}, {'id' : 29, 'name' :'bottle', 'supercategory' : ""}, {'id' : 30, 'name' :'cup', 'supercategory' : ""}, 
+             {'id' : 31, 'name' :'couch', 'supercategory' : ""} ]
+
+cat_conversion = {"01" : "suitcaseint", "02" : "skateboard", "03" : "sportball", "04" : "umbrella", "05" : "tennisracket", "06" : "handbag", 
+                "07" : "chair", "08" : "bottle", "09" : "cup", "10" : "couch" }
 
 opt = TrainOptions().parse()
 train_dl, val_dl, test_dl = CreateDataLoader(opt)
@@ -131,14 +131,14 @@ train_ds, test_ds = train_dl.dataset, test_dl.dataset
 
 val_ds = val_dl.dataset if val_dl is not None else None
 
-#for id_data,dl in enumerate([(train_dl,"Train")]):
-for id_data,dl in enumerate([(test_dl,"Test")]):
+for id_data,dl in enumerate([(train_dl,"Train")]):
+#for id_data,dl in enumerate([(test_dl,"Test")]):
     dataset = {}
     info = {
 
             "id"			: id_data,
-            "source"		: "Behave",
-            "name"			: f'Behave {dl[1]}',
+            "source"		: "InterCap",
+            "name"			: f'InterCap {dl[1]}',
             "split"			: f"{dl[1]}",
             "version"		: "1.0",
             "url"			: "",
@@ -148,36 +148,35 @@ for id_data,dl in enumerate([(test_dl,"Test")]):
     object = []
 
     for i, data in tqdm(enumerate(dl[0]), total=len(dl[0])):
-
+    
         pos_category = None
         image.append({
 
                         	"id"			  : i,
-                            "dataset_id"	  : id_data,
-                            "width"			  : 2048,
-                            "height"		  : 1536,
+                            "dataset_id"	  : id_data+2,
+                            "width"			  : 1920,
+                            "height"		  : 1080,
                             "file_path"		  : data["img_path"][0],
-                            "K"			      : data['calibration_matrix'].detach().cpu().numpy().reshape(3,3).tolist() ,
+                            "K"			      : np.array(data['calibration_matrix'], dtype=np.float64).reshape(3,3).tolist() ,
                             "src_90_rotate"	  : 0,			
                             "src_flagged"	  : False,	
 
                     })
 
-        
         for j,elem in enumerate(category):
-            if elem['name'] == data["cat_str"][0]:
+            if elem['name'] == cat_conversion[data["cat_id"][0]]:
                     pos_category = j
                     break
 
-        calibration_matrix = data['calibration_matrix'].cpu().numpy()
-        dist_coefs = data['dist_coefs'].cpu().numpy()
-        print(dist_coefs.shape)
+        calibration_matrix = np.asarray(data['calibration_matrix'], dtype=np.float64).reshape(1,3,3)
+        dist_coefs = np.asarray(data['dist_coefs'], dtype=np.float64).reshape(1,8)
+        #print(calibration_matrix, dist_coefs)
         projector = [
         bcu.get_local_projector(c, d) for c, d in zip(calibration_matrix, dist_coefs)
          ]
-        print("----------->",len(projector))
+
         bbox_project = data['bbox'].cuda()
-        bbox_project[:, :2] = bbox_project[:, :2] * -1
+        #bbox_project[:, :2] = bbox_project[:, :2] * -1
         patch_coord_projected, bbox_corners = calc_patch_coord(bbox_project, projector)
         bbox2d = transform_img(data["img_path"], bbox_corners)
 
@@ -191,7 +190,7 @@ for id_data,dl in enumerate([(test_dl,"Test")]):
 
                             "id"			  : i * 3,					
                             "image_id"		  : i,	
-                            "dataset_id"	  : id_data,				
+                            "dataset_id"	  : id_data+2,				
                             "category_id"	  : category[pos_category]['id'],					
                             "category_name"	  : category[pos_category]['name'],		
                             
@@ -213,14 +212,18 @@ for id_data,dl in enumerate([(test_dl,"Test")]):
                             "depth_error"	  : -1,				
        
                     })
-
-        calibration_matrix = data['calibration_matrix'].cpu().numpy()
-        dist_coefs = data['dist_coefs'].cpu().numpy()
+        
+        calibration_matrix = np.asarray(data['calibration_matrix'], dtype=np.float64).reshape(1,3,3)
+        dist_coefs = np.asarray(data['dist_coefs'], dtype=np.float64).reshape(1,8)
         projector = [
-        bcu.get_local_projector(c, d) for c, d in zip(calibration_matrix, dist_coefs)
+        bcu.get_local_projector(c, d) for c, d in zip(calibration_matrix, dist_coefs)  #TOOD needs a different projector for intercap, visualize the images to double check
          ]
         
         verts = data['body_mesh_verts']
+        #calibration_matrix[0,0,0] += 150.0
+        #calibration_matrix[0,1,1] += 150.0
+        tmp_projector = get_local_projector(calibration_matrix[0], dist_coefs[0])
+        show_projection(torch.from_numpy(tmp_projector(verts[0].detach().cpu().numpy())), cv2.imread(data["img_path"][0])[:,:,::-1].copy())
         human_center = [(torch.min(verts[0,:,0]) + (torch.max(verts[0,:,0]) - torch.min(verts[0,:,0])) / 2.0).detach().cpu().float(), 
                 (torch.min(verts[0,:,1]) + (torch.max(verts[0,:,1]) - torch.min(verts[0,:,1])) / 2.0).detach().cpu().float(),
                 (torch.min(verts[0,:,2]) + (torch.max(verts[0,:,2]) - torch.min(verts[0,:,2])) / 2.0).detach().cpu().float()]
@@ -250,7 +253,7 @@ for id_data,dl in enumerate([(test_dl,"Test")]):
 
                             "id"			  : (i * 3)+1,					
                             "image_id"		  : i,	
-                            "dataset_id"	  : id_data,				
+                            "dataset_id"	  : id_data+2,				
                             "category_id"	  : 20,					
                             "category_name"	  : 'person',		
                             
@@ -273,8 +276,8 @@ for id_data,dl in enumerate([(test_dl,"Test")]):
        
                     })
         
-        calibration_matrix = data['calibration_matrix'].cpu().numpy()
-        dist_coefs = data['dist_coefs'].cpu().numpy()
+        calibration_matrix = np.asarray(data['calibration_matrix'], dtype=np.float64).reshape(1,3,3)
+        dist_coefs = np.asarray(data['dist_coefs'], dtype=np.float64).reshape(1,8)
         projector = [
         bcu.get_local_projector(c, d) for c, d in zip(calibration_matrix, dist_coefs)
          ]
@@ -312,7 +315,7 @@ for id_data,dl in enumerate([(test_dl,"Test")]):
 
                             "id"			  : (i * 3)+2,					
                             "image_id"		  : i,	
-                            "dataset_id"	  : id_data,				
+                            "dataset_id"	  : id_data+2,				
                             "category_id"	  : 21,					
                             "category_name"	  : 'interaction',		
                             
@@ -342,6 +345,7 @@ for id_data,dl in enumerate([(test_dl,"Test")]):
     dataset['categories'] = category
     dataset['annotations'] = object
 
-    out_file = open(f'/data/aruzzi/Behave/Behave_interaction_{dl[1]}.json',"w") 
+    out_file = open(f'/data/aruzzi/InterCap/InterCap_{dl[1]}.json',"w") 
     json.dump(dataset, out_file, indent = 2)
     out_file.close()
+

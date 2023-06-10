@@ -43,6 +43,9 @@ def get_omni3d_categories(dataset="omni3d"):
     elif dataset in ["Behave_Train", "Behave_Test", "Behave_person_Train", "Behave_person_Test","Behave_person_tight_Train", "Behave_person_tight_Test", "Behave_interaction_Train", "Behave_interaction_Test"]:
         cats = set({'backpack', 'basketball', 'boxlarge', 'boxlong', 'boxmedium','boxsmall', 'boxtiny', 'chairblack','chairwood', 'keyboard', 'monitor', 'plasticcontainer', 'stool', 'suitcase', 'tablesmall', 'tablesquare', 'toolbox', 'trashbin', 'yogaball', 'yogamat', 'person', 'interaction'})
         assert len(cats) == 22
+    elif dataset in ["InterCap_Train", "InterCap_Test"]:
+        cats = set({'suitcaseint', 'skateboard', 'sportball', 'umbrella', 'tennisracket', 'handbag', 'chair', 'bottle', 'cup', 'couch'})
+        assert len(cats) == 10
     else:
         raise ValueError("%s dataset is not registered." % (dataset))
 

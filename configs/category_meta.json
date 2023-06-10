@@ -6,7 +6,12 @@
              {"id" : 12, "name" :"stool", "supercategory" : ""}, {"id" : 13, "name" :"suitcase", "supercategory" : ""}, {"id" : 14, "name" :"tablesmall", "supercategory" : ""}, 
              {"id" : 15, "name" :"tablesquare", "supercategory" : ""}, {"id" : 16, "name" :"toolbox", "supercategory" : ""}, {"id" : 17, "name" :"trashbin", "supercategory" : ""}, 
              {"id" : 18, "name" :"yogaball", "supercategory" : ""}, {"id" : 19, "name" :"yogamat", "supercategory" : ""}, {"id" : 20, "name" : "person", "supercategory" : ""},
-             {"id" : 21, "name" :"interaction", "supercategory" : ""}],
+             {"id" : 21, "name" :"interaction", "supercategory" : ""},
+             {"id" : 22, "name" :"suitcaseint", "supercategory" : ""}, {"id" : 23, "name" :"skateboard", "supercategory" : ""},{"id" : 24, "name" :"sportball", "supercategory" : ""}, 
+             {"id" : 25, "name" :"umbrella", "supercategory" : ""}, {"id" : 26, "name" :"tennisracket", "supercategory" : ""}, {"id" : 27, "name" :"handbag", "supercategory" : ""}, 
+             {"id" : 28, "name" :"chair", "supercategory" : ""}, {"id" : 29, "name" :"bottle", "supercategory" : ""}, {"id" : 30, "name" :"cup", "supercategory" : ""}, 
+             {"id" : 31, "name" :"couch", "supercategory" : ""}],
     "thing_classes": ["backpack", "basketball", "boxlarge", "boxlong", "boxmedium", "boxsmall", "boxtiny", "chairblack", "chairwood", "keyboard", "monitor", "plasticcontainer", "stool", "suitcase",
-                         "tablesmall", "tablesquare", "toolbox", "trashbin", "yogaball", "yogamat", "person", "interaction"]
+                         "tablesmall", "tablesquare", "toolbox", "trashbin", "yogaball", "yogamat", "person", "interaction",
+                         "suitcaseint", "skateboard", "sportball", "umbrella", "tennisracket", "handbag", "chair", "bottle", "cup", "couch"]
             }

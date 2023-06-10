@@ -239,3 +239,92 @@ If you use the Omni3D benchmark, we kindly ask you to additionally cite all data
 [pyt]: https://pytorch.org/
 [coco]: https://cocodataset.org/
 
+
+
+# Instruction to train Omni3d
+
+## Data Preparation
+
+0) Change the paths in ```configs/paths.py```, and set the ```Weigths & Biases``` account.
+
+1) First run the following command to pre-process the Intercap dataset (some lines are commented out because they cannot be run without ```sudo```):
+
+```
+python pre_process_intercap.py
+```
+
+2) After you have pre-processed Intercap and Behave you can start preparing the datasets for Omni3D (Remember to change the dataset mode at line ```48``` in ```dataset/base_options.py```, you can choose between ```behave_img``` and ```intercap_img```):
+
+```
+python omni3d_behave_preparation.py
+```
+
+```
+python omni3d_intercap_preparation.py
+```
+
+3) To Create a small test dataset for both datasets you should comment line ```134``` and uncomment line ```135``` in ```omni3d_behave_preparation.py```, and then reduce the dataset dimension by commeting line ```55``` and uncommenting line ```54``` in ```dataset/base_options.py```. Then do the same for line ```139``` and ```140``` in ```omni3d_intercap_preparation.py```
+
+4) You can visualize if the data preparation is going well by uncommeting lines ```86```,```89```,```91```,```92```. It will log the images on ```Weigths & Biases```.
+
+## Training 
+
+1) There are a lot of config files where the category names are repeated: 
+  - ```configs/Base_Behave.yaml```
+  -  ```cubercnn/data/builtin.py```
+  - ```configs/category_meta.json``` 
+  - ```omni3d_behave_preparation.py``` (line 119) 
+  - ```omni3d_intercap_preparation.py``` (line 119) 
+  
+    So everytime you change or add a category name make sure to change it in every file.
+
+2) To start the training run the following command:
+
+```
+python tools/train_net.py --config-file configs/Base_Behave.yaml
+```
+
+3) On the config file ```Base_Behave.yaml``` you can set the ```Train``` and ```Test ```dataset, the ```category names``` and ```category number```.
+
+4) The predictions on the Test set will be logged on ```Weights & Biases``` during the training.
+
+
+## Evaluation
+
+1) First You need to generate the ```Json file``` with the GT bboxes and GT human vertices, you can do this by running (you need to change the path at line ```37```):
+
+```
+python generate_json.py
+```
+
+    Note that this file is only for ```Behave``` and should be modified for the ```Intercap``` dataset.
+
+2) Genrate the full test dataset for both ```Behave``` and ```Intercap``` by running step ```2)``` of ```Data Preparation``` but without commeting line ```55``` and uncommenting line ```54```.
+
+3) Then you need to generate the Json file with the predicted bboxes for both Behave and Intercap (You need to change the path at lines ```37```, ```68```, ```72```, ```189```, and also in the python command):
+
+```
+python generate_bbox_person.py --config-file configs/Base_Behave.yaml --input-folder="PATH TO THE DATASET" --threshold 0.25 MODEL.WEIGHTS checkpoint/YOUR_CHECKPOINT OUTPUT_DIR YOUR_OUTPUT_FOLDER
+```
+
+4) Finally you can evaluate the Omni3d model by running
+
+```
+python evaluation_script_person.py
+```
+
+    Note that you need to change the paths at line ```670```, ```671```, ```672``` (You will to put the Json files previously generated in step 2). 
+
+    And you also need to comment and uncomment some ```function calls```, based on what you want to evaluate. 
+
+5) Function to evaluate the model in ```evaluation_script_person.py``` 
+- ```calc_errors_on_high_prob_bbox``` : Calculate the error using the high probability bboxes.
+- ```calc_errors_using_closest_bbox``` : Calculate the error choosing the best bbox based on the distance from the GT bbox.
+- ```calc_errors_on_closest_bbox_human``` : Calculate the error choosing the best bbox based on the confidence and also the distance from the person.
+- ```save_pdf_visualisation``` : Save in a PDF the visalizations of the predicted bboxex.
+- ```calc_chamfer_on_different_iou``` : Calculate the chamfer distance dividing the images based on the IOU of the object (IOU>0.3 and IOU<0.3). The input is a json file path with the chamfer distance for each image.
+- ```calc_iou_on_3d_bbox``` : Calculate the 3d IOU between the GT and predicted 3D bounding boxes.
+- ```calc_iou_on_3d_bbox_by_class``` : Calculate the 3d IOU between the GT and predicted 3D bounding boxes, dividing the results by object catogories.
+- ```calc_errors_on_closest_bbox_human_by_class_relative``` : Calculate the relative error (based on the object length) choosing the best bbox based on the confidence and also the distance from the person. It divide the result by object categories.
+- ```calc_errors_on_closest_bbox_human_by_class_absolute``` : Calculate the absolute error choosing the best bbox based on the confidence and also the distance from the person. It divide the result by object categories.
+- ```calc_num_wrong_bbox``` : Calculate number of high probability bboxes that are not inside the GT bbox.
